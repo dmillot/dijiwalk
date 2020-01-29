@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj": {}
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj": {}
   },
   "projects": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj": {
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj",
+        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj",
         "projectName": "DijiWalk.UWP",
-        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj",
+        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.UWP\\DijiWalk.UWP.csproj",
         "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk.UWP\\obj\\",
+        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.UWP\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -33,8 +33,8 @@
         "frameworks": {
           "uap10.0.16299": {
             "projectReferences": {
-              "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
-                "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj"
+              "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+                "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj"
               }
             }
           }
@@ -43,6 +43,10 @@
       "frameworks": {
         "uap10.0.16299": {
           "dependencies": {
+            "Forms.Controls.FlexButton": {
+              "target": "Package",
+              "version": "[0.11.0, )"
+            },
             "Microsoft.NETCore.UniversalWindowsPlatform": {
               "target": "Package",
               "version": "[6.2.9, )"
@@ -51,7 +55,27 @@
               "target": "Package",
               "version": "[7.2.0.1422, )"
             },
+            "Sharpnado.Forms.HorizontalListView": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Xamarin.FFImageLoading.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Svg.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Transformations": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
             "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
+            "Xamarin.Forms.Visual.Material": {
               "target": "Package",
               "version": "[4.4.0.991537, )"
             }
@@ -87,14 +111,14 @@
         }
       }
     },
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "projectName": "DijiWalk",
-        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\obj\\",
+        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -125,6 +149,10 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "Forms.Controls.FlexButton": {
+              "target": "Package",
+              "version": "[0.11.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
@@ -135,7 +163,31 @@
               "target": "Package",
               "version": "[7.2.0.1422, )"
             },
+            "Sharpnado.Forms.HorizontalListView": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Xam.Plugins.Forms.ImageCircle": {
+              "target": "Package",
+              "version": "[3.0.0.5, )"
+            },
+            "Xamarin.FFImageLoading.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Svg.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Transformations": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
             "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
+            "Xamarin.Forms.Visual.Material": {
               "target": "Package",
               "version": "[4.4.0.991537, )"
             }

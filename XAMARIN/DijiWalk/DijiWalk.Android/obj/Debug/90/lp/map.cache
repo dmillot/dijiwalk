@@ -1,5 +1,14 @@
+FFImageLoading.Forms.Platform
+FFImageLoading.Platform
+FFImageLoading.Svg.Forms
+FFImageLoading.Svg.Platform
+FFImageLoading.Transformations
+Flex.Android
 FormsViewGroup
+ImageCircle.Forms.Plugin
 Prism.Forms
+Sharpnado.Presentation.Forms.Droid
+SkiaSharp
 Xamarin.Android.Arch.Core.Common
 Xamarin.Android.Arch.Core.Runtime
 Xamarin.Android.Arch.Lifecycle.Common
@@ -39,5 +48,6 @@ Xamarin.Android.Support.v7.RecyclerView
 Xamarin.Android.Support.Vector.Drawable
 Xamarin.Android.Support.VersionedParcelable
 Xamarin.Android.Support.ViewPager
+Xamarin.Forms.Material
 Xamarin.Forms.Platform.Android
 Xamarin.Forms.Platform

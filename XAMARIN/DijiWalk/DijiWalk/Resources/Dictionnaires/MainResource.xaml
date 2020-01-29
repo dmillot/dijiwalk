@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+
+    <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeBrands">
+        <On Platform="Android" Value="FontAwesomeBrands.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesomeBrands-Regular" />
+        <On Platform="UWP" Value="/Assets/FontAwesomeBrands.otf" />
+    </OnPlatform>
+
+    <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeSolid">
+        <On Platform="Android" Value="FontAwesomeSolid.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesomeSolid-Solid" />
+        <On Platform="UWP" Value="/Assets/FontAwesomeSolid.otf" />
+    </OnPlatform>
+
+    <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeRegular">
+        <On Platform="Android" Value="FontAwesomeRegular.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesomeRegular-Regular" />
+        <On Platform="UWP" Value="/Assets/FontAwesomeRegular.otf" />
+    </OnPlatform>
+
+    <Color x:Key="PrimaryColor">#D18D28</Color>
+    <Color x:Key="SecondaryColor">#C40B0B</Color>
+    <Color x:Key="SecondaryDarkColor">#910808</Color>
+    <Color x:Key="LightColor">#c9c9c9</Color>
+    <Color x:Key="LightDarkColor">#b0b0b0</Color>
+    <Color x:Key="WhiteColor">#f0f0f0</Color>
+
+
+</ResourceDictionary>

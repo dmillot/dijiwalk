@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "projectName": "DijiWalk",
-        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\obj\\",
+        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -42,6 +42,10 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "Forms.Controls.FlexButton": {
+              "target": "Package",
+              "version": "[0.11.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
@@ -52,7 +56,31 @@
               "target": "Package",
               "version": "[7.2.0.1422, )"
             },
+            "Sharpnado.Forms.HorizontalListView": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Xam.Plugins.Forms.ImageCircle": {
+              "target": "Package",
+              "version": "[3.0.0.5, )"
+            },
+            "Xamarin.FFImageLoading.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Svg.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Transformations": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
             "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
+            "Xamarin.Forms.Visual.Material": {
               "target": "Package",
               "version": "[4.4.0.991537, )"
             }
