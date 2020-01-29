@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
+    "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+    "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectUniqueName": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "projectName": "DijiWalk",
-        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
-        "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\DijiWalk\\DijiWalk\\obj\\",
+        "projectPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "packagesPath": "C:\\Users\\clemg\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\clemg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
@@ -51,6 +52,18 @@
             "Prism.DryIoc.Forms": {
               "target": "Package",
               "version": "[7.2.0.1422, )"
+            },
+            "Prism.Forms": {
+              "target": "Package",
+              "version": "[7.2.0.1422, )"
+            },
+            "Xam.Plugin.Media": {
+              "target": "Package",
+              "version": "[4.0.1.5, )"
+            },
+            "Xamarin.Android.Support.Design": {
+              "target": "Package",
+              "version": "[28.0.0.3, )"
             },
             "Xamarin.Forms": {
               "target": "Package",
