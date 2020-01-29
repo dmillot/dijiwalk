@@ -9,12 +9,16 @@
     ".NETStandard,Version=v2.0/": {
       "DijiWalk/1.0.0": {
         "dependencies": {
+          "Forms.Controls.FlexButton": "0.11.0",
           "NETStandard.Library": "2.0.3",
           "Prism.DryIoc.Forms": "7.2.0.1422",
-          "Prism.Forms": "7.2.0.1422",
-          "Xam.Plugin.Media": "4.0.1.5",
+          "Sharpnado.Forms.HorizontalListView": "1.4.0",
+          "Xam.Plugins.Forms.ImageCircle": "3.0.0.5",
+          "Xamarin.FFImageLoading.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
           "Xamarin.Forms": "4.4.0.991537",
-          "Mono.Android": "0.0.0.0"
+          "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "runtime": {
           "DijiWalk.dll": {}
@@ -31,19 +35,22 @@
           }
         }
       },
+      "Forms.Controls.FlexButton/0.11.0": {
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Flex.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
-        }
-      },
-      "Plugin.Permissions/3.0.0.12": {
-        "runtime": {
-          "lib/netstandard2.0/Plugin.Permissions.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
         }
       },
       "Prism.Core/7.2.0.1422": {
@@ -75,6 +82,34 @@
           "lib/netstandard2.0/Prism.Forms.dll": {
             "assemblyVersion": "7.2.0.1422",
             "fileVersion": "7.2.0.1422"
+          }
+        }
+      },
+      "Sharpnado.Forms.HorizontalListView/1.4.0": {
+        "dependencies": {
+          "Sharpnado.TaskMonitor": "1.0.0",
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Sharpnado.Presentation.Forms.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "Sharpnado.TaskMonitor/1.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/Sharpnado.TaskMonitor.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "SkiaSharp/1.68.0": {
+        "runtime": {
+          "lib/netstandard1.3/SkiaSharp.dll": {
+            "assemblyVersion": "1.68.0.0",
+            "fileVersion": "1.68.0.0"
           }
         }
       },
@@ -150,14 +185,73 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Xam.Plugin.Media/4.0.1.5": {
+      "Xam.Plugins.Forms.ImageCircle/3.0.0.5": {
         "dependencies": {
-          "Plugin.Permissions": "3.0.0.12"
+          "Xamarin.Forms": "4.4.0.991537"
         },
         "runtime": {
-          "lib/netstandard2.0/Plugin.Media.dll": {
+          "lib/netstandard2.0/ImageCircle.Forms.Plugin.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Xamarin.FFImageLoading/2.4.11.982": {
+        "runtime": {
+          "lib/netstandard1.0/FFImageLoading.Platform.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
+          },
+          "lib/netstandard1.0/FFImageLoading.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
+          }
+        }
+      },
+      "Xamarin.FFImageLoading.Forms/2.4.11.982": {
+        "dependencies": {
+          "Xamarin.FFImageLoading": "2.4.11.982",
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "runtime": {
+          "lib/netstandard1.0/FFImageLoading.Forms.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
+          }
+        }
+      },
+      "Xamarin.FFImageLoading.Svg/2.4.11.982": {
+        "dependencies": {
+          "SkiaSharp": "1.68.0",
+          "Xamarin.FFImageLoading": "2.4.11.982"
+        },
+        "runtime": {
+          "lib/netstandard1.0/FFImageLoading.Svg.Platform.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
+          }
+        }
+      },
+      "Xamarin.FFImageLoading.Svg.Forms/2.4.11.982": {
+        "dependencies": {
+          "Xamarin.FFImageLoading.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Svg": "2.4.11.982"
+        },
+        "runtime": {
+          "lib/netstandard1.0/FFImageLoading.Svg.Forms.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
+          }
+        }
+      },
+      "Xamarin.FFImageLoading.Transformations/2.4.11.982": {
+        "dependencies": {
+          "Xamarin.FFImageLoading": "2.4.11.982"
+        },
+        "runtime": {
+          "lib/netstandard1.0/FFImageLoading.Transformations.dll": {
+            "assemblyVersion": "2.4.11.982",
+            "fileVersion": "2.4.11.982"
           }
         }
       },
@@ -177,12 +271,9 @@
           }
         }
       },
-      "Mono.Android/0.0.0.0": {
-        "runtime": {
-          "Mono.Android.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
+      "Xamarin.Forms.Visual.Material/4.4.0.991537": {
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
         }
       }
     }
@@ -199,6 +290,13 @@
       "sha512": "sha512-CHSWiSNf0tTpnHFt+DPB8mzgQMM9PbaFk7DP4g70+kTXsAS7fQlUI/yW4S+b6COOYsVQ+FPhxAw9NMU/2PGE7Q==",
       "path": "dryioc.dll/4.0.7",
       "hashPath": "dryioc.dll.4.0.7.nupkg.sha512"
+    },
+    "Forms.Controls.FlexButton/0.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IP+O34ihJrUOuoEZsLcD54vatQcwxzuGrTBq6M5CV/V9zOgRSsK14xmZ36shLo7l3I7KeD6zH3OQGux/N562gw==",
+      "path": "forms.controls.flexbutton/0.11.0",
+      "hashPath": "forms.controls.flexbutton.0.11.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
@@ -221,13 +319,6 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Plugin.Permissions/3.0.0.12": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-VrYqI/ufk3bH6gTP1JJlLByjhS0CHu3riKmdozhX9/qXA9hlvLolmcqKJdyAqpzmrVC74m3ZtirUBIrBxvT1Lw==",
-      "path": "plugin.permissions/3.0.0.12",
-      "hashPath": "plugin.permissions.3.0.0.12.nupkg.sha512"
-    },
     "Prism.Core/7.2.0.1422": {
       "type": "package",
       "serviceable": true,
@@ -248,6 +339,27 @@
       "sha512": "sha512-wrSjIoSp2o8W0JdHx1f5K7pM48lSA2yraQ+QRjl5PLRPs5FhzMwhOA2G1YoD0mhE1WzwzJoBBMnDfDaoFudmyQ==",
       "path": "prism.forms/7.2.0.1422",
       "hashPath": "prism.forms.7.2.0.1422.nupkg.sha512"
+    },
+    "Sharpnado.Forms.HorizontalListView/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZzGAOP38qF/+3eblqAsJPjO0E4CX1OzzMqtwsAYRmMVqySuvJHShB8b1v2hNJk0w0AfnMyd2y8uDT2gfJvwE2w==",
+      "path": "sharpnado.forms.horizontallistview/1.4.0",
+      "hashPath": "sharpnado.forms.horizontallistview.1.4.0.nupkg.sha512"
+    },
+    "Sharpnado.TaskMonitor/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Yc3P4jOWrF3IVpJSfEookkGkmkbcdvyp/2WLz8dNR5b7/7iyI7tDo64HnyNJ5HVy45g8nrPaGwuauG6rHhZAZg==",
+      "path": "sharpnado.taskmonitor/1.0.0",
+      "hashPath": "sharpnado.taskmonitor.1.0.0.nupkg.sha512"
+    },
+    "SkiaSharp/1.68.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ptuxAKk9FiClNnAgWM8hVMCYw/B0hUJWZ8W6efnIAtJmJn/Xl4jvxxDF5WOqfQYCLVzxXw5gvBPVxvTLblFp0g==",
+      "path": "skiasharp/1.68.0",
+      "hashPath": "skiasharp.1.68.0.nupkg.sha512"
     },
     "System.IO/4.3.0": {
       "type": "package",
@@ -305,12 +417,47 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Xam.Plugin.Media/4.0.1.5": {
+    "Xam.Plugins.Forms.ImageCircle/3.0.0.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-a5l/M2Tl06BqBX/uhM/pr+q1jDkh2tRQr5Ne9rjAuD9VYn5STE+7kVFTzIUNPMnMr9PZLJkWP5WAr/tBN5oepw==",
-      "path": "xam.plugin.media/4.0.1.5",
-      "hashPath": "xam.plugin.media.4.0.1.5.nupkg.sha512"
+      "sha512": "sha512-59HyuAaUzuloQmu/PVCDCJQMRuuhqmIpCQ+d5hH5Qp8AZsa/vDi5ulrXDKRMZSZt/xbXsyZV+aZ/W/SZaYt2Mg==",
+      "path": "xam.plugins.forms.imagecircle/3.0.0.5",
+      "hashPath": "xam.plugins.forms.imagecircle.3.0.0.5.nupkg.sha512"
+    },
+    "Xamarin.FFImageLoading/2.4.11.982": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M0sNIQgUPs+le6C2TS4RmZQAURnzaRVizRtnZIZ6/1//qGcEAtEXAGt/tBJz6I1zlP6XlMxq8io6b4sjFP5N9Q==",
+      "path": "xamarin.ffimageloading/2.4.11.982",
+      "hashPath": "xamarin.ffimageloading.2.4.11.982.nupkg.sha512"
+    },
+    "Xamarin.FFImageLoading.Forms/2.4.11.982": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7X4t3J1wJj0/0o8+vd91hzSYlrqEeMFC7Mj+0T8O+fcbRSHo/c+QbWscEQiT4AaKCwyO709xq+7aY2XXbK/H7g==",
+      "path": "xamarin.ffimageloading.forms/2.4.11.982",
+      "hashPath": "xamarin.ffimageloading.forms.2.4.11.982.nupkg.sha512"
+    },
+    "Xamarin.FFImageLoading.Svg/2.4.11.982": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-acXrd+afkdQTXy24+/ZPY4W2z3/Yb3LyvQy/I+yeaV0X6bDWQ+niAUvxfyd3/ulbLvvPJzI2QT+bAcRXZo0Ztw==",
+      "path": "xamarin.ffimageloading.svg/2.4.11.982",
+      "hashPath": "xamarin.ffimageloading.svg.2.4.11.982.nupkg.sha512"
+    },
+    "Xamarin.FFImageLoading.Svg.Forms/2.4.11.982": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CniN9JB2/iKZivEbHIZaiueoxwxML0fmmiPlw2AnmjzJE8Dcth23Hl++BG7Y61FZMuEqkfsntGsrG9w6PsAt6w==",
+      "path": "xamarin.ffimageloading.svg.forms/2.4.11.982",
+      "hashPath": "xamarin.ffimageloading.svg.forms.2.4.11.982.nupkg.sha512"
+    },
+    "Xamarin.FFImageLoading.Transformations/2.4.11.982": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cNG6zhiEBTENAGgIc9lY54YMJ0tg2dJ9+tj8tYgrOEQT8gxlj3OUzzNWZgaQWpcx28y5iIt/qM+Bd6jUwtAn1Q==",
+      "path": "xamarin.ffimageloading.transformations/2.4.11.982",
+      "hashPath": "xamarin.ffimageloading.transformations.2.4.11.982.nupkg.sha512"
     },
     "Xamarin.Forms/4.4.0.991537": {
       "type": "package",
@@ -319,10 +466,12 @@
       "path": "xamarin.forms/4.4.0.991537",
       "hashPath": "xamarin.forms.4.4.0.991537.nupkg.sha512"
     },
-    "Mono.Android/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
+    "Xamarin.Forms.Visual.Material/4.4.0.991537": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cuz9cWwr/lwKtUzCrTr2XrvnjlHsevN/rAgUGoetve0eSv2FP8Acox5YoRGLi8z8tYS9cZaKRRgYbEaE5hYURg==",
+      "path": "xamarin.forms.visual.material/4.4.0.991537",
+      "hashPath": "xamarin.forms.visual.material.4.4.0.991537.nupkg.sha512"
     }
   }
 }

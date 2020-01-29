@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+    "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
         "projectName": "DijiWalk",
-        "projectPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
-        "packagesPath": "C:\\Users\\clemg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\obj\\",
+        "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj",
+        "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\clemg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
@@ -43,6 +42,10 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "Forms.Controls.FlexButton": {
+              "target": "Package",
+              "version": "[0.11.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
@@ -53,19 +56,35 @@
               "target": "Package",
               "version": "[7.2.0.1422, )"
             },
-            "Prism.Forms": {
+            "Sharpnado.Forms.HorizontalListView": {
               "target": "Package",
-              "version": "[7.2.0.1422, )"
+              "version": "[1.4.0, )"
             },
-            "Xam.Plugin.Media": {
+            "Xam.Plugins.Forms.ImageCircle": {
               "target": "Package",
-              "version": "[4.0.1.5, )"
+              "version": "[3.0.0.5, )"
             },
-            "Xamarin.Android.Support.Design": {
+            "Xamarin.FFImageLoading.Forms": {
               "target": "Package",
-              "version": "[28.0.0.3, )"
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Svg.Forms": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
+            },
+            "Xamarin.FFImageLoading.Transformations": {
+              "target": "Package",
+              "version": "[2.4.11.982, )"
             },
             "Xamarin.Forms": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
+            "Xamarin.Forms.Maps": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
+            "Xamarin.Forms.Visual.Material": {
               "target": "Package",
               "version": "[4.4.0.991537, )"
             }

@@ -14,33 +14,18 @@
           "lib/netstandard2.0/DryIoc.dll": {}
         }
       },
-      "Plugin.CurrentActivity/2.1.0.4": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Java.Interop"
-        ],
-        "compile": {
-          "lib/monoandroid44/Plugin.CurrentActivity.dll": {}
-        },
-        "runtime": {
-          "lib/monoandroid44/Plugin.CurrentActivity.dll": {}
-        }
-      },
-      "Plugin.Permissions/3.0.0.12": {
+      "Forms.Controls.FlexButton/0.11.0": {
         "type": "package",
         "dependencies": {
-          "Plugin.CurrentActivity": "2.1.0.2",
-          "Xamarin.Android.Support.Compat": "25.4.0.2",
-          "Xamarin.Android.Support.Core.Utils": "25.4.0.2"
+          "Xamarin.Forms": "3.3.0.912540"
         },
-        "frameworkAssemblies": [
-          "Java.Interop"
-        ],
         "compile": {
-          "lib/monoandroid71/Plugin.Permissions.dll": {}
+          "lib/monoandroid10/Flex.Android.dll": {},
+          "lib/monoandroid10/Flex.dll": {}
         },
         "runtime": {
-          "lib/monoandroid71/Plugin.Permissions.dll": {}
+          "lib/monoandroid10/Flex.Android.dll": {},
+          "lib/monoandroid10/Flex.dll": {}
         }
       },
       "Prism.Core/7.2.0.1422": {
@@ -81,6 +66,61 @@
           "lib/monoandroid81/Prism.Forms.dll": {}
         }
       },
+      "Sharpnado.Forms.HorizontalListView/1.4.0": {
+        "type": "package",
+        "dependencies": {
+          "Sharpnado.TaskMonitor": "1.0.0",
+          "Xamarin.Forms": "3.4.0"
+        },
+        "compile": {
+          "lib/MonoAndroid10/Sharpnado.Presentation.Forms.Droid.dll": {},
+          "lib/MonoAndroid10/Sharpnado.Presentation.Forms.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/Sharpnado.Presentation.Forms.Droid.dll": {},
+          "lib/MonoAndroid10/Sharpnado.Presentation.Forms.dll": {}
+        }
+      },
+      "Sharpnado.TaskMonitor/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Sharpnado.TaskMonitor.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Sharpnado.TaskMonitor.dll": {}
+        }
+      },
+      "SkiaSharp/1.68.0": {
+        "type": "package",
+        "compile": {
+          "lib/MonoAndroid/SkiaSharp.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid/SkiaSharp.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/osx/native/libSkiaSharp.dylib": {
+            "assetType": "native",
+            "rid": "osx"
+          },
+          "runtimes/tizen-armel/native/libSkiaSharp.so": {
+            "assetType": "native",
+            "rid": "tizen-armel"
+          },
+          "runtimes/tizen-x86/native/libSkiaSharp.so": {
+            "assetType": "native",
+            "rid": "tizen-x86"
+          },
+          "runtimes/win-x64/native/libSkiaSharp.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/libSkiaSharp.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
       "System.Reflection.Emit.Lightweight/4.3.0": {
         "type": "package",
         "compile": {
@@ -90,20 +130,19 @@
           "lib/MonoAndroid10/_._": {}
         }
       },
-      "Xam.Plugin.Media/4.0.1.5": {
+      "Xam.Plugins.Forms.ImageCircle/3.0.0.5": {
         "type": "package",
         "dependencies": {
-          "Plugin.Permissions": "3.0.0.12",
-          "Xamarin.Android.Support.Core.Utils": "25.4.0.2"
+          "Xamarin.Forms": "3.0.0.446417"
         },
         "frameworkAssemblies": [
           "Java.Interop"
         ],
         "compile": {
-          "lib/monoandroid71/Plugin.Media.dll": {}
+          "lib/monoandroid71/ImageCircle.Forms.Plugin.dll": {}
         },
         "runtime": {
-          "lib/monoandroid71/Plugin.Media.dll": {}
+          "lib/monoandroid71/ImageCircle.Forms.Plugin.dll": {}
         }
       },
       "Xamarin.Android.Arch.Core.Common/1.1.1.3": {
@@ -887,6 +926,79 @@
           "build/monoandroid90/Xamarin.Android.Support.ViewPager.targets": {}
         }
       },
+      "Xamarin.Build.Download/0.4.9": {
+        "type": "package",
+        "build": {
+          "build/_._": {}
+        }
+      },
+      "Xamarin.FFImageLoading/2.4.11.982": {
+        "type": "package",
+        "compile": {
+          "lib/MonoAndroid10/FFImageLoading.Platform.dll": {},
+          "lib/MonoAndroid10/FFImageLoading.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/FFImageLoading.Platform.dll": {},
+          "lib/MonoAndroid10/FFImageLoading.dll": {}
+        }
+      },
+      "Xamarin.FFImageLoading.Forms/2.4.11.982": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.FFImageLoading": "2.4.11.982",
+          "Xamarin.Forms": "3.3.0.912540"
+        },
+        "compile": {
+          "lib/MonoAndroid10/FFImageLoading.Forms.Platform.dll": {},
+          "lib/MonoAndroid10/FFImageLoading.Forms.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/FFImageLoading.Forms.Platform.dll": {},
+          "lib/MonoAndroid10/FFImageLoading.Forms.dll": {}
+        }
+      },
+      "Xamarin.FFImageLoading.Svg/2.4.11.982": {
+        "type": "package",
+        "dependencies": {
+          "SkiaSharp": "1.68.0",
+          "Xamarin.FFImageLoading": "2.4.11.982"
+        },
+        "frameworkAssemblies": [
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "lib/MonoAndroid10/FFImageLoading.Svg.Platform.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/FFImageLoading.Svg.Platform.dll": {}
+        }
+      },
+      "Xamarin.FFImageLoading.Svg.Forms/2.4.11.982": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.FFImageLoading.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Svg": "2.4.11.982"
+        },
+        "compile": {
+          "lib/MonoAndroid10/FFImageLoading.Svg.Forms.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/FFImageLoading.Svg.Forms.dll": {}
+        }
+      },
+      "Xamarin.FFImageLoading.Transformations/2.4.11.982": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.FFImageLoading": "2.4.11.982"
+        },
+        "compile": {
+          "lib/MonoAndroid10/FFImageLoading.Transformations.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid10/FFImageLoading.Transformations.dll": {}
+        }
+      },
       "Xamarin.Forms/4.4.0.991537": {
         "type": "package",
         "dependencies": {
@@ -915,14 +1027,119 @@
           "build/Xamarin.Forms.targets": {}
         }
       },
+      "Xamarin.Forms.Maps/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Android.Support.v7.AppCompat": "28.0.0.3",
+          "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.GooglePlayServices.Maps": "60.1142.1"
+        },
+        "compile": {
+          "lib/MonoAndroid90/Xamarin.Forms.Maps.Android.dll": {},
+          "lib/MonoAndroid90/Xamarin.Forms.Maps.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid90/Xamarin.Forms.Maps.Android.dll": {},
+          "lib/MonoAndroid90/Xamarin.Forms.Maps.dll": {}
+        }
+      },
+      "Xamarin.Forms.Visual.Material/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Android.Support.Design": "28.0.0.3",
+          "Xamarin.Android.Support.v7.AppCompat": "28.0.0.3"
+        },
+        "compile": {
+          "lib/MonoAndroid90/Xamarin.Forms.Material.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid90/Xamarin.Forms.Material.dll": {}
+        },
+        "build": {
+          "build/MonoAndroid10/Xamarin.Forms.Visual.Material.targets": {}
+        }
+      },
+      "Xamarin.GooglePlayServices.Base/60.1142.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.GooglePlayServices.Basement": "[60.1142.1]",
+          "Xamarin.GooglePlayServices.Tasks": "[60.1142.1]"
+        },
+        "compile": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Base.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Base.dll": {}
+        },
+        "build": {
+          "build/MonoAndroid80/_._": {}
+        }
+      },
+      "Xamarin.GooglePlayServices.Basement/60.1142.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Android.Support.Compat": "26.0.2",
+          "Xamarin.Android.Support.Core.UI": "26.0.2",
+          "Xamarin.Android.Support.Core.Utils": "26.0.2",
+          "Xamarin.Android.Support.Fragment": "26.0.2",
+          "Xamarin.Android.Support.Media.Compat": "26.0.2",
+          "Xamarin.Build.Download": "0.4.9"
+        },
+        "compile": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Basement.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Basement.dll": {}
+        },
+        "build": {
+          "build/MonoAndroid80/_._": {}
+        }
+      },
+      "Xamarin.GooglePlayServices.Maps/60.1142.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.GooglePlayServices.Base": "[60.1142.1]",
+          "Xamarin.GooglePlayServices.Basement": "[60.1142.1]"
+        },
+        "compile": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Maps.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Maps.dll": {}
+        },
+        "build": {
+          "build/MonoAndroid80/_._": {}
+        }
+      },
+      "Xamarin.GooglePlayServices.Tasks/60.1142.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.GooglePlayServices.Basement": "[60.1142.1]"
+        },
+        "compile": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Tasks.dll": {}
+        },
+        "runtime": {
+          "lib/MonoAndroid80/Xamarin.GooglePlayServices.Tasks.dll": {}
+        },
+        "build": {
+          "build/MonoAndroid80/_._": {}
+        }
+      },
       "DijiWalk/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "Forms.Controls.FlexButton": "0.11.0",
           "Prism.DryIoc.Forms": "7.2.0.1422",
-          "Prism.Forms": "7.2.0.1422",
-          "Xam.Plugin.Media": "4.0.1.5",
-          "Xamarin.Forms": "4.4.0.991537"
+          "Sharpnado.Forms.HorizontalListView": "1.4.0",
+          "Xam.Plugins.Forms.ImageCircle": "3.0.0.5",
+          "Xamarin.FFImageLoading.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
+          "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
+          "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.Forms.Maps": "4.4.0.991537",
+          "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "compile": {
           "bin/placeholder/DijiWalk.dll": {}
@@ -963,41 +1180,23 @@
         "lib/portable-net45+win8+wp8+wpa81/DryIoc.xml"
       ]
     },
-    "Plugin.CurrentActivity/2.1.0.4": {
-      "sha512": "m8xaXvXUzBSqP6xRe5PeIG347WxsG/VWrZta7MnPpSvNuPf0RLB/S49UCCQyBKSsfu053+apvYm14BC7GU6Zzg==",
+    "Forms.Controls.FlexButton/0.11.0": {
+      "sha512": "IP+O34ihJrUOuoEZsLcD54vatQcwxzuGrTBq6M5CV/V9zOgRSsK14xmZ36shLo7l3I7KeD6zH3OQGux/N562gw==",
       "type": "package",
-      "path": "plugin.currentactivity/2.1.0.4",
+      "path": "forms.controls.flexbutton/0.11.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/monoandroid44/Plugin.CurrentActivity.dll",
-        "lib/monoandroid44/Plugin.CurrentActivity.xml",
-        "plugin.currentactivity.2.1.0.4.nupkg.sha512",
-        "plugin.currentactivity.nuspec",
-        "readme.txt"
-      ]
-    },
-    "Plugin.Permissions/3.0.0.12": {
-      "sha512": "VrYqI/ufk3bH6gTP1JJlLByjhS0CHu3riKmdozhX9/qXA9hlvLolmcqKJdyAqpzmrVC74m3ZtirUBIrBxvT1Lw==",
-      "type": "package",
-      "path": "plugin.permissions/3.0.0.12",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/monoandroid71/Plugin.Permissions.dll",
-        "lib/monoandroid71/Plugin.Permissions.xml",
-        "lib/netstandard1.0/Plugin.Permissions.dll",
-        "lib/netstandard1.0/Plugin.Permissions.xml",
-        "lib/netstandard2.0/Plugin.Permissions.dll",
-        "lib/netstandard2.0/Plugin.Permissions.xml",
-        "lib/uap10.0.10240/Plugin.Permissions.dll",
-        "lib/uap10.0.10240/Plugin.Permissions.pri",
-        "lib/uap10.0.10240/Plugin.Permissions.xml",
-        "lib/xamarinios10/Plugin.Permissions.dll",
-        "lib/xamarinios10/Plugin.Permissions.xml",
-        "plugin.permissions.3.0.0.12.nupkg.sha512",
-        "plugin.permissions.nuspec",
-        "readme.txt"
+        "forms.controls.flexbutton.0.11.0.nupkg.sha512",
+        "forms.controls.flexbutton.nuspec",
+        "lib/monoandroid10/Flex.Android.dll",
+        "lib/monoandroid10/Flex.dll",
+        "lib/netstandard1.0/Flex.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/Flex.dll",
+        "lib/uap10.0/Flex.UWP.dll",
+        "lib/uap10.0/Flex.dll",
+        "lib/xamarinios10/Flex.dll",
+        "lib/xamarinios10/Flex.iOS.dll"
       ]
     },
     "Prism.Core/7.2.0.1422": {
@@ -1055,6 +1254,87 @@
         "prism.forms.nuspec"
       ]
     },
+    "Sharpnado.Forms.HorizontalListView/1.4.0": {
+      "sha512": "ZzGAOP38qF/+3eblqAsJPjO0E4CX1OzzMqtwsAYRmMVqySuvJHShB8b1v2hNJk0w0AfnMyd2y8uDT2gfJvwE2w==",
+      "type": "package",
+      "path": "sharpnado.forms.horizontallistview/1.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/Sharpnado.Presentation.Forms.Droid.dll",
+        "lib/MonoAndroid10/Sharpnado.Presentation.Forms.Droid.pdb",
+        "lib/MonoAndroid10/Sharpnado.Presentation.Forms.dll",
+        "lib/MonoAndroid10/Sharpnado.Presentation.Forms.pdb",
+        "lib/Xamarin.iOS10/Sharpnado.Presentation.Forms.dll",
+        "lib/Xamarin.iOS10/Sharpnado.Presentation.Forms.iOS.dll",
+        "lib/Xamarin.iOS10/Sharpnado.Presentation.Forms.iOS.pdb",
+        "lib/Xamarin.iOS10/Sharpnado.Presentation.Forms.pdb",
+        "lib/netstandard2.0/Sharpnado.Presentation.Forms.dll",
+        "lib/netstandard2.0/Sharpnado.Presentation.Forms.pdb",
+        "sharpnado.forms.horizontallistview.1.4.0.nupkg.sha512",
+        "sharpnado.forms.horizontallistview.nuspec"
+      ]
+    },
+    "Sharpnado.TaskMonitor/1.0.0": {
+      "sha512": "Yc3P4jOWrF3IVpJSfEookkGkmkbcdvyp/2WLz8dNR5b7/7iyI7tDo64HnyNJ5HVy45g8nrPaGwuauG6rHhZAZg==",
+      "type": "package",
+      "path": "sharpnado.taskmonitor/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Sharpnado.TaskMonitor.dll",
+        "sharpnado.taskmonitor.1.0.0.nupkg.sha512",
+        "sharpnado.taskmonitor.nuspec"
+      ]
+    },
+    "SkiaSharp/1.68.0": {
+      "sha512": "ptuxAKk9FiClNnAgWM8hVMCYw/B0hUJWZ8W6efnIAtJmJn/Xl4jvxxDF5WOqfQYCLVzxXw5gvBPVxvTLblFp0g==",
+      "type": "package",
+      "path": "skiasharp/1.68.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "THIRD-PARTY-NOTICES.txt",
+        "build/net45/SkiaSharp.targets",
+        "build/tizen40/SkiaSharp.targets",
+        "lib/MonoAndroid/SkiaSharp.dll",
+        "lib/MonoAndroid/SkiaSharp.xml",
+        "lib/Xamarin.Mac20/SkiaSharp.dll",
+        "lib/Xamarin.Mac20/SkiaSharp.xml",
+        "lib/Xamarin.TVOS/SkiaSharp.dll",
+        "lib/Xamarin.TVOS/SkiaSharp.xml",
+        "lib/Xamarin.WatchOS/SkiaSharp.dll",
+        "lib/Xamarin.WatchOS/SkiaSharp.xml",
+        "lib/Xamarin.iOS/SkiaSharp.dll",
+        "lib/Xamarin.iOS/SkiaSharp.xml",
+        "lib/net45/SkiaSharp.dll",
+        "lib/net45/SkiaSharp.xml",
+        "lib/netstandard1.3/SkiaSharp.dll",
+        "lib/netstandard1.3/SkiaSharp.xml",
+        "lib/tizen40/SkiaSharp.dll",
+        "lib/tizen40/SkiaSharp.xml",
+        "lib/uap10.0/SkiaSharp.dll",
+        "lib/uap10.0/SkiaSharp.xml",
+        "runtimes/osx/native/libSkiaSharp.dylib",
+        "runtimes/tizen-armel/native/libSkiaSharp.so",
+        "runtimes/tizen-x86/native/libSkiaSharp.so",
+        "runtimes/win-x64/native/libSkiaSharp.dll",
+        "runtimes/win-x86/native/libSkiaSharp.dll",
+        "runtimes/win10-arm/nativeassets/uap10.0/libEGL.dll",
+        "runtimes/win10-arm/nativeassets/uap10.0/libGLESv2.dll",
+        "runtimes/win10-arm/nativeassets/uap10.0/libSkiaSharp.dll",
+        "runtimes/win10-x64/nativeassets/uap10.0/libEGL.dll",
+        "runtimes/win10-x64/nativeassets/uap10.0/libGLESv2.dll",
+        "runtimes/win10-x64/nativeassets/uap10.0/libSkiaSharp.dll",
+        "runtimes/win10-x86/nativeassets/uap10.0/libEGL.dll",
+        "runtimes/win10-x86/nativeassets/uap10.0/libGLESv2.dll",
+        "runtimes/win10-x86/nativeassets/uap10.0/libSkiaSharp.dll",
+        "skiasharp.1.68.0.nupkg.sha512",
+        "skiasharp.nuspec",
+        "xamarin.interactive/SkiaSharp.Workbooks.dll"
+      ]
+    },
     "System.Reflection.Emit.Lightweight/4.3.0": {
       "sha512": "oadVHGSMsTmZsAF864QYN1t1QzZjIcuKU3l2S9cZOwDdDueNTrqq1yRj7koFfIGEnKpt6NjpL3rOzRhs4ryOgA==",
       "type": "package",
@@ -1100,29 +1380,26 @@
         "system.reflection.emit.lightweight.nuspec"
       ]
     },
-    "Xam.Plugin.Media/4.0.1.5": {
-      "sha512": "a5l/M2Tl06BqBX/uhM/pr+q1jDkh2tRQr5Ne9rjAuD9VYn5STE+7kVFTzIUNPMnMr9PZLJkWP5WAr/tBN5oepw==",
+    "Xam.Plugins.Forms.ImageCircle/3.0.0.5": {
+      "sha512": "59HyuAaUzuloQmu/PVCDCJQMRuuhqmIpCQ+d5hH5Qp8AZsa/vDi5ulrXDKRMZSZt/xbXsyZV+aZ/W/SZaYt2Mg==",
       "type": "package",
-      "path": "xam.plugin.media/4.0.1.5",
+      "path": "xam.plugins.forms.imagecircle/3.0.0.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/monoandroid71/Plugin.Media.dll",
-        "lib/monoandroid71/Plugin.Media.xml",
-        "lib/netstandard1.0/Plugin.Media.dll",
-        "lib/netstandard1.0/Plugin.Media.xml",
-        "lib/netstandard2.0/Plugin.Media.dll",
-        "lib/netstandard2.0/Plugin.Media.xml",
-        "lib/tizen40/Plugin.Media.dll",
-        "lib/tizen40/Plugin.Media.xml",
-        "lib/uap10.0.10240/Plugin.Media.dll",
-        "lib/uap10.0.10240/Plugin.Media.pri",
-        "lib/uap10.0.10240/Plugin.Media.xml",
-        "lib/xamarinios10/Plugin.Media.dll",
-        "lib/xamarinios10/Plugin.Media.xml",
-        "readme.txt",
-        "xam.plugin.media.4.0.1.5.nupkg.sha512",
-        "xam.plugin.media.nuspec"
+        "lib/monoandroid71/ImageCircle.Forms.Plugin.dll",
+        "lib/monoandroid71/ImageCircle.Forms.Plugin.xml",
+        "lib/netstandard1.0/ImageCircle.Forms.Plugin.dll",
+        "lib/netstandard1.0/ImageCircle.Forms.Plugin.xml",
+        "lib/netstandard2.0/ImageCircle.Forms.Plugin.dll",
+        "lib/netstandard2.0/ImageCircle.Forms.Plugin.xml",
+        "lib/uap10.0.16299/ImageCircle.Forms.Plugin.dll",
+        "lib/uap10.0.16299/ImageCircle.Forms.Plugin.pri",
+        "lib/uap10.0.16299/ImageCircle.Forms.Plugin.xml",
+        "lib/xamarinios10/ImageCircle.Forms.Plugin.dll",
+        "lib/xamarinios10/ImageCircle.Forms.Plugin.xml",
+        "xam.plugins.forms.imagecircle.3.0.0.5.nupkg.sha512",
+        "xam.plugins.forms.imagecircle.nuspec"
       ]
     },
     "Xamarin.Android.Arch.Core.Common/1.1.1.3": {
@@ -1921,6 +2198,230 @@
         "xamarin.android.support.viewpager.nuspec"
       ]
     },
+    "Xamarin.Build.Download/0.4.9": {
+      "sha512": "HDQzyew/2Kb8sOjbzcHtFFxLbCclln+1T8bssKx9zAs9HNuK/1mugf077A9VxzID/fFBMmBXvL/z2jUpNlgX2A==",
+      "type": "package",
+      "path": "xamarin.build.download/0.4.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "THIRD-PARTY-NOTICES.txt",
+        "build/Mono.Cecil.dll",
+        "build/Newtonsoft.Json.dll",
+        "build/System.Net.Http.Formatting.dll",
+        "build/Xamarin.Build.Download.dll",
+        "build/Xamarin.Build.Download.props",
+        "build/Xamarin.Build.Download.targets",
+        "xamarin.build.download.0.4.9.nupkg.sha512",
+        "xamarin.build.download.nuspec"
+      ]
+    },
+    "Xamarin.FFImageLoading/2.4.11.982": {
+      "sha512": "M0sNIQgUPs+le6C2TS4RmZQAURnzaRVizRtnZIZ6/1//qGcEAtEXAGt/tBJz6I1zlP6XlMxq8io6b4sjFP5N9Q==",
+      "type": "package",
+      "path": "xamarin.ffimageloading/2.4.11.982",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/FFImageLoading.Platform.dll",
+        "lib/MonoAndroid10/FFImageLoading.Platform.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Platform.xml",
+        "lib/MonoAndroid10/FFImageLoading.dll",
+        "lib/MonoAndroid10/FFImageLoading.pdb",
+        "lib/MonoAndroid10/FFImageLoading.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Platform.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Platform.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Platform.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Platform.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Platform.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Platform.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.xml",
+        "lib/netstandard1.0/FFImageLoading.Platform.dll",
+        "lib/netstandard1.0/FFImageLoading.Platform.xml",
+        "lib/netstandard1.0/FFImageLoading.dll",
+        "lib/netstandard1.0/FFImageLoading.pdb",
+        "lib/netstandard1.0/FFImageLoading.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Platform.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Platform.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.pdb",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.xml",
+        "lib/tizen40/FFImageLoading.Platform.dll",
+        "lib/tizen40/FFImageLoading.Platform.pdb",
+        "lib/tizen40/FFImageLoading.Platform.xml",
+        "lib/tizen40/FFImageLoading.dll",
+        "lib/tizen40/FFImageLoading.pdb",
+        "lib/tizen40/FFImageLoading.xml",
+        "lib/uap/FFImageLoading.Platform.dll",
+        "lib/uap/FFImageLoading.Platform.pdb",
+        "lib/uap/FFImageLoading.Platform.xml",
+        "lib/uap/FFImageLoading.dll",
+        "lib/uap/FFImageLoading.pdb",
+        "lib/uap/FFImageLoading.xml",
+        "lib/win81/FFImageLoading.Platform.dll",
+        "lib/win81/FFImageLoading.Platform.pdb",
+        "lib/win81/FFImageLoading.Platform.xml",
+        "lib/win81/FFImageLoading.dll",
+        "lib/win81/FFImageLoading.pdb",
+        "lib/win81/FFImageLoading.xml",
+        "lib/wpa81/FFImageLoading.Platform.dll",
+        "lib/wpa81/FFImageLoading.Platform.pdb",
+        "lib/wpa81/FFImageLoading.Platform.xml",
+        "lib/wpa81/FFImageLoading.dll",
+        "lib/wpa81/FFImageLoading.pdb",
+        "lib/wpa81/FFImageLoading.xml",
+        "xamarin.ffimageloading.2.4.11.982.nupkg.sha512",
+        "xamarin.ffimageloading.nuspec"
+      ]
+    },
+    "Xamarin.FFImageLoading.Forms/2.4.11.982": {
+      "sha512": "7X4t3J1wJj0/0o8+vd91hzSYlrqEeMFC7Mj+0T8O+fcbRSHo/c+QbWscEQiT4AaKCwyO709xq+7aY2XXbK/H7g==",
+      "type": "package",
+      "path": "xamarin.ffimageloading.forms/2.4.11.982",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/FFImageLoading.Forms.Platform.dll",
+        "lib/MonoAndroid10/FFImageLoading.Forms.Platform.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Forms.Platform.xml",
+        "lib/MonoAndroid10/FFImageLoading.Forms.dll",
+        "lib/MonoAndroid10/FFImageLoading.Forms.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Forms.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.Platform.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.Platform.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.Platform.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Forms.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.Platform.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.Platform.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.Platform.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Forms.xml",
+        "lib/netstandard1.0/FFImageLoading.Forms.dll",
+        "lib/netstandard1.0/FFImageLoading.Forms.pdb",
+        "lib/netstandard1.0/FFImageLoading.Forms.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Forms.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Forms.pdb",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Forms.xml",
+        "lib/tizen40/FFImageLoading.Forms.Platform.dll",
+        "lib/tizen40/FFImageLoading.Forms.Platform.pdb",
+        "lib/tizen40/FFImageLoading.Forms.Platform.xml",
+        "lib/tizen40/FFImageLoading.Forms.dll",
+        "lib/tizen40/FFImageLoading.Forms.pdb",
+        "lib/tizen40/FFImageLoading.Forms.xml",
+        "lib/uap/FFImageLoading.Forms.Platform.dll",
+        "lib/uap/FFImageLoading.Forms.Platform.pdb",
+        "lib/uap/FFImageLoading.Forms.Platform.xml",
+        "lib/uap/FFImageLoading.Forms.dll",
+        "lib/uap/FFImageLoading.Forms.pdb",
+        "lib/uap/FFImageLoading.Forms.xml",
+        "xamarin.ffimageloading.forms.2.4.11.982.nupkg.sha512",
+        "xamarin.ffimageloading.forms.nuspec"
+      ]
+    },
+    "Xamarin.FFImageLoading.Svg/2.4.11.982": {
+      "sha512": "acXrd+afkdQTXy24+/ZPY4W2z3/Yb3LyvQy/I+yeaV0X6bDWQ+niAUvxfyd3/ulbLvvPJzI2QT+bAcRXZo0Ztw==",
+      "type": "package",
+      "path": "xamarin.ffimageloading.svg/2.4.11.982",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Platform.dll",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Platform.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Platform.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Platform.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Platform.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Platform.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Platform.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Platform.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Platform.xml",
+        "lib/netstandard1.0/FFImageLoading.Svg.Platform.dll",
+        "lib/netstandard1.0/FFImageLoading.Svg.Platform.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Svg.Platform.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Svg.Platform.xml",
+        "lib/tizen40/FFImageLoading.Svg.Platform.dll",
+        "lib/tizen40/FFImageLoading.Svg.Platform.pdb",
+        "lib/tizen40/FFImageLoading.Svg.Platform.xml",
+        "lib/uap/FFImageLoading.Svg.Platform.dll",
+        "lib/uap/FFImageLoading.Svg.Platform.pdb",
+        "lib/uap/FFImageLoading.Svg.Platform.xml",
+        "xamarin.ffimageloading.svg.2.4.11.982.nupkg.sha512",
+        "xamarin.ffimageloading.svg.nuspec"
+      ]
+    },
+    "Xamarin.FFImageLoading.Svg.Forms/2.4.11.982": {
+      "sha512": "CniN9JB2/iKZivEbHIZaiueoxwxML0fmmiPlw2AnmjzJE8Dcth23Hl++BG7Y61FZMuEqkfsntGsrG9w6PsAt6w==",
+      "type": "package",
+      "path": "xamarin.ffimageloading.svg.forms/2.4.11.982",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Forms.dll",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Forms.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Svg.Forms.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Forms.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Forms.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Svg.Forms.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Forms.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Forms.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Svg.Forms.xml",
+        "lib/netstandard1.0/FFImageLoading.Svg.Forms.dll",
+        "lib/netstandard1.0/FFImageLoading.Svg.Forms.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Svg.Forms.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Svg.Forms.xml",
+        "lib/tizen40/FFImageLoading.Svg.Forms.dll",
+        "lib/tizen40/FFImageLoading.Svg.Forms.pdb",
+        "lib/tizen40/FFImageLoading.Svg.Forms.xml",
+        "lib/uap/FFImageLoading.Svg.Forms.dll",
+        "lib/uap/FFImageLoading.Svg.Forms.pdb",
+        "lib/uap/FFImageLoading.Svg.Forms.xml",
+        "xamarin.ffimageloading.svg.forms.2.4.11.982.nupkg.sha512",
+        "xamarin.ffimageloading.svg.forms.nuspec"
+      ]
+    },
+    "Xamarin.FFImageLoading.Transformations/2.4.11.982": {
+      "sha512": "cNG6zhiEBTENAGgIc9lY54YMJ0tg2dJ9+tj8tYgrOEQT8gxlj3OUzzNWZgaQWpcx28y5iIt/qM+Bd6jUwtAn1Q==",
+      "type": "package",
+      "path": "xamarin.ffimageloading.transformations/2.4.11.982",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10/FFImageLoading.Transformations.dll",
+        "lib/MonoAndroid10/FFImageLoading.Transformations.pdb",
+        "lib/MonoAndroid10/FFImageLoading.Transformations.xml",
+        "lib/Xamarin.Mac20/FFImageLoading.Transformations.dll",
+        "lib/Xamarin.Mac20/FFImageLoading.Transformations.pdb",
+        "lib/Xamarin.Mac20/FFImageLoading.Transformations.xml",
+        "lib/Xamarin.iOS10/FFImageLoading.Transformations.dll",
+        "lib/Xamarin.iOS10/FFImageLoading.Transformations.pdb",
+        "lib/Xamarin.iOS10/FFImageLoading.Transformations.xml",
+        "lib/netstandard1.0/FFImageLoading.Transformations.dll",
+        "lib/netstandard1.0/FFImageLoading.Transformations.xml",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Transformations.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/FFImageLoading.Transformations.xml",
+        "lib/tizen40/FFImageLoading.Transformations.dll",
+        "lib/tizen40/FFImageLoading.Transformations.pdb",
+        "lib/tizen40/FFImageLoading.Transformations.xml",
+        "lib/uap/FFImageLoading.Transformations.dll",
+        "lib/uap/FFImageLoading.Transformations.pdb",
+        "lib/uap/FFImageLoading.Transformations.xml",
+        "lib/win81/FFImageLoading.Transformations.dll",
+        "lib/win81/FFImageLoading.Transformations.pdb",
+        "lib/win81/FFImageLoading.Transformations.xml",
+        "lib/wpa81/FFImageLoading.Transformations.dll",
+        "lib/wpa81/FFImageLoading.Transformations.pdb",
+        "lib/wpa81/FFImageLoading.Transformations.xml",
+        "xamarin.ffimageloading.transformations.2.4.11.982.nupkg.sha512",
+        "xamarin.ffimageloading.transformations.nuspec"
+      ]
+    },
     "Xamarin.Forms/4.4.0.991537": {
       "sha512": "ZoOvfinSUma4gbXe/0mp6Uk/NTliFLkOwV9qLe/TW2VwSlBEhoiok99gr4esZVU+RwCPEqnsgmtlWFSMNzn2iw==",
       "type": "package",
@@ -2153,6 +2654,112 @@
         "xamarin.forms.nuspec"
       ]
     },
+    "Xamarin.Forms.Maps/4.4.0.991537": {
+      "sha512": "tyd1krw46bplZD4sOO2hwLYhsIBqY9dpWfgR7NWQe8csAegIyf3KZu2mwBVKH0m/zT5dzoe6r55L1ptmpWAx/Q==",
+      "type": "package",
+      "path": "xamarin.forms.maps/4.4.0.991537",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.Android.dll",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.dll",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.xml",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.Android.dll",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.dll",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.xml",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.dll",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.macOS.dll",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.xml",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.xml",
+        "lib/netstandard1.0/Xamarin.Forms.Maps.dll",
+        "lib/netstandard1.0/Xamarin.Forms.Maps.xml",
+        "lib/netstandard2.0/Xamarin.Forms.Maps.dll",
+        "lib/netstandard2.0/Xamarin.Forms.Maps.xml",
+        "lib/tizen40/Xamarin.Forms.Maps.Tizen.dll",
+        "lib/tizen40/Xamarin.Forms.Maps.dll",
+        "lib/tizen40/Xamarin.Forms.Maps.xml",
+        "lib/uap10.0/Xamarin.Forms.Maps.UWP.dll",
+        "lib/uap10.0/Xamarin.Forms.Maps.UWP.pri",
+        "lib/uap10.0/Xamarin.Forms.Maps.dll",
+        "xamarin.forms.maps.4.4.0.991537.nupkg.sha512",
+        "xamarin.forms.maps.nuspec"
+      ]
+    },
+    "Xamarin.Forms.Visual.Material/4.4.0.991537": {
+      "sha512": "cuz9cWwr/lwKtUzCrTr2XrvnjlHsevN/rAgUGoetve0eSv2FP8Acox5YoRGLi8z8tYS9cZaKRRgYbEaE5hYURg==",
+      "type": "package",
+      "path": "xamarin.forms.visual.material/4.4.0.991537",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid10/Xamarin.Forms.Visual.Material.targets",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoAndroid90/Xamarin.Forms.Material.dll",
+        "lib/MonoAndroid90/Xamarin.Forms.Material.pdb",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Material.dll",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Material.pdb",
+        "lib/netstandard1.0/_._",
+        "lib/tizen40/Xamarin.Forms.Material.dll",
+        "lib/tizen40/Xamarin.Forms.Material.pdb",
+        "xamarin.forms.visual.material.4.4.0.991537.nupkg.sha512",
+        "xamarin.forms.visual.material.nuspec"
+      ]
+    },
+    "Xamarin.GooglePlayServices.Base/60.1142.1": {
+      "sha512": "XI1JjQRV3sYgZ8AfMzL67ttVtlELkXf2wUQr8XI06MbCAX7lCC7yw/Bdwyf6atTsDCa7CRIrL0PkWMf0riAbOA==",
+      "type": "package",
+      "path": "xamarin.googleplayservices.base/60.1142.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid80/Xamarin.GooglePlayServices.Base.targets",
+        "lib/MonoAndroid80/Xamarin.GooglePlayServices.Base.dll",
+        "xamarin.googleplayservices.base.60.1142.1.nupkg.sha512",
+        "xamarin.googleplayservices.base.nuspec"
+      ]
+    },
+    "Xamarin.GooglePlayServices.Basement/60.1142.1": {
+      "sha512": "G4PFBPoAovRwmCdO7jpdeZ5N974JsOjiLKDnOcZxC+4IjYs0ZvoBP/dyYDI32tCbpzNEbb/00oqx35Gjgl5f2g==",
+      "type": "package",
+      "path": "xamarin.googleplayservices.basement/60.1142.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid80/Xamarin.GooglePlayServices.Basement.targets",
+        "build/MonoAndroid80/Xamarin.GooglePlayServices.Tasks.dll",
+        "lib/MonoAndroid80/Xamarin.GooglePlayServices.Basement.dll",
+        "xamarin.googleplayservices.basement.60.1142.1.nupkg.sha512",
+        "xamarin.googleplayservices.basement.nuspec"
+      ]
+    },
+    "Xamarin.GooglePlayServices.Maps/60.1142.1": {
+      "sha512": "vfoDYOOtox8RDjEAV2AYmoTQpKj3dhy5Zhn8EpYB2uelTTkTAfp+5CWZ57ZQHs4PdpSyjFmRS+nVEAP4Fn2qkg==",
+      "type": "package",
+      "path": "xamarin.googleplayservices.maps/60.1142.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid80/Xamarin.GooglePlayServices.Maps.targets",
+        "lib/MonoAndroid80/Xamarin.GooglePlayServices.Maps.dll",
+        "xamarin.googleplayservices.maps.60.1142.1.nupkg.sha512",
+        "xamarin.googleplayservices.maps.nuspec"
+      ]
+    },
+    "Xamarin.GooglePlayServices.Tasks/60.1142.1": {
+      "sha512": "DS4MgQWwbAuAf5gXGPAPCpuCVkElQSTv/iguZ9Ca5vmiXpbrbvCpN5JhxBYu2qGkSn1wwX37bI+EHib/FVQthg==",
+      "type": "package",
+      "path": "xamarin.googleplayservices.tasks/60.1142.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid80/Xamarin.GooglePlayServices.Tasks.targets",
+        "lib/MonoAndroid80/Xamarin.GooglePlayServices.Tasks.dll",
+        "xamarin.googleplayservices.tasks.60.1142.1.nupkg.sha512",
+        "xamarin.googleplayservices.tasks.nuspec"
+      ]
+    },
     "DijiWalk/1.0.0": {
       "type": "project",
       "path": "../DijiWalk/DijiWalk.csproj",
@@ -2162,38 +2769,41 @@
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v9.0": [
       "DijiWalk >= 1.0.0",
-      "Plugin.CurrentActivity >= 2.1.0.4",
+      "Forms.Controls.FlexButton >= 0.11.0",
       "Prism.DryIoc.Forms >= 7.2.0.1422",
-      "Prism.Forms >= 7.2.0.1422",
-      "Xam.Plugin.Media >= 4.0.1.5",
+      "Sharpnado.Forms.HorizontalListView >= 1.4.0",
       "Xamarin.Android.Support.CustomTabs >= 28.0.0.3",
       "Xamarin.Android.Support.Design >= 28.0.0.3",
       "Xamarin.Android.Support.v4 >= 28.0.0.3",
       "Xamarin.Android.Support.v7.AppCompat >= 28.0.0.3",
       "Xamarin.Android.Support.v7.CardView >= 28.0.0.3",
       "Xamarin.Android.Support.v7.MediaRouter >= 28.0.0.3",
-      "Xamarin.Forms >= 4.4.0.991537"
+      "Xamarin.FFImageLoading.Forms >= 2.4.11.982",
+      "Xamarin.FFImageLoading.Svg.Forms >= 2.4.11.982",
+      "Xamarin.FFImageLoading.Transformations >= 2.4.11.982",
+      "Xamarin.Forms >= 4.4.0.991537",
+      "Xamarin.Forms.Visual.Material >= 4.4.0.991537"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\clemg\\.nuget\\packages\\": {},
+    "C:\\Users\\natha\\.nuget\\packages\\": {},
     "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\DijiWalk.Android.csproj",
+      "projectUniqueName": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\DijiWalk.Android.csproj",
       "projectName": "DijiWalk.Android",
-      "projectPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\DijiWalk.Android.csproj",
-      "packagesPath": "C:\\Users\\clemg\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\obj\\",
+      "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\DijiWalk.Android.csproj",
+      "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk.Android\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\clemg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -2207,8 +2817,8 @@
       "frameworks": {
         "monoandroid90": {
           "projectReferences": {
-            "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
-              "projectPath": "C:\\Users\\clemg\\Source\\Repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj"
+            "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj": {
+              "projectPath": "C:\\Users\\natha\\source\\repos\\DijiWalk\\XAMARIN\\DijiWalk\\DijiWalk\\DijiWalk.csproj"
             }
           }
         }
@@ -2217,21 +2827,17 @@
     "frameworks": {
       "monoandroid90": {
         "dependencies": {
-          "Plugin.CurrentActivity": {
+          "Forms.Controls.FlexButton": {
             "target": "Package",
-            "version": "[2.1.0.4, )"
+            "version": "[0.11.0, )"
           },
           "Prism.DryIoc.Forms": {
             "target": "Package",
             "version": "[7.2.0.1422, )"
           },
-          "Prism.Forms": {
+          "Sharpnado.Forms.HorizontalListView": {
             "target": "Package",
-            "version": "[7.2.0.1422, )"
-          },
-          "Xam.Plugin.Media": {
-            "target": "Package",
-            "version": "[4.0.1.5, )"
+            "version": "[1.4.0, )"
           },
           "Xamarin.Android.Support.CustomTabs": {
             "target": "Package",
@@ -2257,7 +2863,23 @@
             "target": "Package",
             "version": "[28.0.0.3, )"
           },
+          "Xamarin.FFImageLoading.Forms": {
+            "target": "Package",
+            "version": "[2.4.11.982, )"
+          },
+          "Xamarin.FFImageLoading.Svg.Forms": {
+            "target": "Package",
+            "version": "[2.4.11.982, )"
+          },
+          "Xamarin.FFImageLoading.Transformations": {
+            "target": "Package",
+            "version": "[2.4.11.982, )"
+          },
           "Xamarin.Forms": {
+            "target": "Package",
+            "version": "[4.4.0.991537, )"
+          },
+          "Xamarin.Forms.Visual.Material": {
             "target": "Package",
             "version": "[4.4.0.991537, )"
           }

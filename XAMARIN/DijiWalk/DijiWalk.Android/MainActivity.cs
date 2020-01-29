@@ -1,8 +1,12 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using FFImageLoading.Forms.Platform;
+using FFImageLoading.Svg.Forms;
 using Prism;
 using Prism.Ioc;
+using Sharpnado.Presentation.Forms.Droid;
+using Xamarin.Forms;
 
 namespace DijiWalk.Droid
 {
@@ -15,8 +19,11 @@ namespace DijiWalk.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+            Forms.Init(this, bundle);
+            FormsMaterial.Init(this, bundle);
+            CachedImageRenderer.Init(enableFastRenderer: true);
+            CachedImageRenderer.InitImageViewHandler();
+            SharpnadoInitializer.Initialize(enableInternalLogger: true);
             LoadApplication(new App(new AndroidInitializer()));
         }
     }

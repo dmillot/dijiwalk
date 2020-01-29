@@ -1,8 +1,12 @@
-﻿using Foundation;
+﻿using FFImageLoading.Forms.Platform;
+using FFImageLoading.Svg.Forms;
+using Flex;
+using Foundation;
 using Prism;
 using Prism.Ioc;
+using Sharpnado.Presentation.Forms.iOS;
 using UIKit;
-
+using Xamarin.Forms;
 
 namespace DijiWalk.iOS
 {
@@ -22,6 +26,11 @@ namespace DijiWalk.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            global::Xamarin.Forms.FormsMaterial.Init();
+            CachedImageRenderer.Init();
+            CachedImageRenderer.InitImageSourceHandler();
+            FlexButton.Init();
+            SharpnadoInitializer.Initialize(enableInternalLogger: true);
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);
