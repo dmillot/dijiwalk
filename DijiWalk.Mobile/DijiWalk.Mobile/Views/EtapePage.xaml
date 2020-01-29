@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DijiWalk.Mobile.Views.EtapePage"
+             Title="Étape"
+             BackgroundColor="#D18D28">
+
+    <Grid> 
+        <Grid.RowDefinitions >
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="20*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackLayout >
+            <StackLayout Margin="0,0,0,50" HorizontalOptions="Center" Grid.Row="0">
+            <Label TextColor="White" FontSize="35"  Text="Étape 1" />
+                <Label TextColor="White" HorizontalTextAlignment="Center" Text="06/01/2020"></Label>
+            </StackLayout>
+
+            <StackLayout Margin="0,0,0,50" HorizontalOptions="Center" Grid.Row="1">
+                <Label TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" Text="Enigme : "></Label>
+                <Label TextColor="White" Text="La première étape se trouve près d'une chouette !"></Label>
+            </StackLayout>
+            
+            <StackLayout  Spacing="20" Margin="10,0,10,50"  Grid.Row="2">
+                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Valider"></Button>
+                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Quizz"></Button>
+                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Chat"></Button>
+            </StackLayout>
+            
+            <StackLayout HorizontalOptions="CenterAndExpand" Grid.Row="3">
+                <Label TextColor="White" HorizontalTextAlignment="Center"  FontSize="Large"  Text="Indice: "></Label>
+                <Label TextColor="White" Text="Près d'une église."></Label>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
+</ContentPage>
