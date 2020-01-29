@@ -178,6 +178,10 @@
               "target": "Package",
               "version": "[4.4.0.991537, )"
             },
+            "Xamarin.Forms.Maps": {
+              "target": "Package",
+              "version": "[4.4.0.991537, )"
+            },
             "Xamarin.Forms.Visual.Material": {
               "target": "Package",
               "version": "[4.4.0.991537, )"

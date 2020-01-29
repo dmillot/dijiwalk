@@ -338,6 +338,20 @@
           "build/Xamarin.Forms.targets": {}
         }
       },
+      "Xamarin.Forms.Maps/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "compile": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        },
+        "runtime": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        }
+      },
       "Xamarin.Forms.Visual.Material/4.4.0.991537": {
         "type": "package",
         "dependencies": {
@@ -371,6 +385,7 @@
           "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
           "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
           "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.Forms.Maps": "4.4.0.991537",
           "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "compile": {
@@ -696,6 +711,20 @@
           "build/Xamarin.Forms.targets": {}
         }
       },
+      "Xamarin.Forms.Maps/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "compile": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        },
+        "runtime": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        }
+      },
       "Xamarin.Forms.Visual.Material/4.4.0.991537": {
         "type": "package",
         "dependencies": {
@@ -729,6 +758,7 @@
           "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
           "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
           "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.Forms.Maps": "4.4.0.991537",
           "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "compile": {
@@ -1057,6 +1087,20 @@
           "build/Xamarin.Forms.targets": {}
         }
       },
+      "Xamarin.Forms.Maps/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "compile": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        },
+        "runtime": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        }
+      },
       "Xamarin.Forms.Visual.Material/4.4.0.991537": {
         "type": "package",
         "dependencies": {
@@ -1090,6 +1134,7 @@
           "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
           "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
           "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.Forms.Maps": "4.4.0.991537",
           "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "compile": {
@@ -1418,6 +1463,20 @@
           "build/Xamarin.Forms.targets": {}
         }
       },
+      "Xamarin.Forms.Maps/4.4.0.991537": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.Forms": "4.4.0.991537"
+        },
+        "compile": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        },
+        "runtime": {
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll": {},
+          "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll": {}
+        }
+      },
       "Xamarin.Forms.Visual.Material/4.4.0.991537": {
         "type": "package",
         "dependencies": {
@@ -1451,6 +1510,7 @@
           "Xamarin.FFImageLoading.Svg.Forms": "2.4.11.982",
           "Xamarin.FFImageLoading.Transformations": "2.4.11.982",
           "Xamarin.Forms": "4.4.0.991537",
+          "Xamarin.Forms.Maps": "4.4.0.991537",
           "Xamarin.Forms.Visual.Material": "4.4.0.991537"
         },
         "compile": {
@@ -2165,6 +2225,39 @@
         "lib/uap10.0/Xamarin.Forms.Xaml.xml",
         "xamarin.forms.4.4.0.991537.nupkg.sha512",
         "xamarin.forms.nuspec"
+      ]
+    },
+    "Xamarin.Forms.Maps/4.4.0.991537": {
+      "sha512": "tyd1krw46bplZD4sOO2hwLYhsIBqY9dpWfgR7NWQe8csAegIyf3KZu2mwBVKH0m/zT5dzoe6r55L1ptmpWAx/Q==",
+      "type": "package",
+      "path": "xamarin.forms.maps/4.4.0.991537",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.Android.dll",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.dll",
+        "lib/MonoAndroid81/Xamarin.Forms.Maps.xml",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.Android.dll",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.dll",
+        "lib/MonoAndroid90/Xamarin.Forms.Maps.xml",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.dll",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.macOS.dll",
+        "lib/Xamarin.Mac/Xamarin.Forms.Maps.xml",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.dll",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.iOS.dll",
+        "lib/Xamarin.iOS10/Xamarin.Forms.Maps.xml",
+        "lib/netstandard1.0/Xamarin.Forms.Maps.dll",
+        "lib/netstandard1.0/Xamarin.Forms.Maps.xml",
+        "lib/netstandard2.0/Xamarin.Forms.Maps.dll",
+        "lib/netstandard2.0/Xamarin.Forms.Maps.xml",
+        "lib/tizen40/Xamarin.Forms.Maps.Tizen.dll",
+        "lib/tizen40/Xamarin.Forms.Maps.dll",
+        "lib/tizen40/Xamarin.Forms.Maps.xml",
+        "lib/uap10.0/Xamarin.Forms.Maps.UWP.dll",
+        "lib/uap10.0/Xamarin.Forms.Maps.UWP.pri",
+        "lib/uap10.0/Xamarin.Forms.Maps.dll",
+        "xamarin.forms.maps.4.4.0.991537.nupkg.sha512",
+        "xamarin.forms.maps.nuspec"
       ]
     },
     "Xamarin.Forms.Visual.Material/4.4.0.991537": {
