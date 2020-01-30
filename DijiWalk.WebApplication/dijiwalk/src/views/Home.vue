@@ -1,20 +1,19 @@
 <template>
-  <q-page class="flex flex-center q-px-xl">
-    <div class="home">
+  <q-page class="q-px-xl">
 
-      <h5 class="text-bold">Accueil</h5>
+    <h5 class="text-bold text-left">Accueil</h5>
 
-      <div class="row justify-center q-col-gutter-xl">
+    <div class="row flex-center full-width justify-center q-col-gutter-xl">
 
-        <Card link="/" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
-        <Card link="/" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
-        <Card link="/" icon="fas fa-users" title="Équipes" description="Page de gestion des équipes ainsi que la définition du leader du groupe" />
-        <Card link="/" icon="fas fa-map-marker-alt" title="Étapes" description="Page de gestion des étapes" />
-        <Card link="/" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
-        <Card link="/" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
+      <Card link="/" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
+      <Card link="/" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
+      <Card link="/" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
+      <Card link="/" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
+      <Card link="/" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
+      <Card link="/" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
 
-      </div>
     </div>
+
   </q-page>
 </template>
 
