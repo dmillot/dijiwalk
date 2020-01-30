@@ -32,6 +32,10 @@ namespace DijiWalk.Mobile.Droid
             await CrossMedia.Current.Initialize();
             CrossCurrentActivity.Current.Init(this, bundle);
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            FormsMaterial.Init(this, bundle);
+            CachedImageRenderer.Init(enableFastRenderer: true);
+            CachedImageRenderer.InitImageViewHandler();
+            SharpnadoInitializer.Initialize(enableInternalLogger: true);
             LoadApplication(new App());
         }
 

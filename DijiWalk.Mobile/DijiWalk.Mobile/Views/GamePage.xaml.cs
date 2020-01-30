@@ -20,15 +20,39 @@ namespace DijiWalk.Mobile.Views
             InitializeComponent();
         }
 
-        private void BtnActualGame_TouchedDown(object sender, EventArgs e)
+        private void BtnActualStep_TouchedDown(object sender, EventArgs e)
         {
             ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
         }
 
-        private void BtnActualGame_TouchedUp(object sender, EventArgs e)
+        private void BtnActualStep_TouchedUp(object sender, EventArgs e)
         {
             
             ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
+        }
+
+        private void BtnBack_Pressed(object sender, EventArgs e)
+        {
+            ShadowBtnBack.IsVisible = false;
+            (sender as ImageButton).Margin = new Thickness(3, 3, 0, 0);
+        }
+
+        private void BtnBack_Released(object sender, EventArgs e)
+        {
+            ShadowBtnBack.IsVisible = true;
+            (sender as ImageButton).Margin = new Thickness(0);
+        }
+
+        private void BtnClose_Released(object sender, EventArgs e)
+        {
+            ShadowBtnClose.IsVisible = true;
+            (sender as ImageButton).Margin = new Thickness(0);
+        }
+
+        private void BtnClose_Pressed(object sender, EventArgs e)
+        {
+            ShadowBtnClose.IsVisible = false;
+            (sender as ImageButton).Margin = new Thickness(3, 3, 0, 0);
         }
 
         private void ListViewGroupes_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -44,5 +68,7 @@ namespace DijiWalk.Mobile.Views
                 ((sender as ListView).SelectedItem as ViewTeam).IsSelected = true;
             }
         }
+
+      
     }
 }
