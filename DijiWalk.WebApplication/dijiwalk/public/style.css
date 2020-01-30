@@ -1,0 +1,10 @@
+body {
+    background-color: #D18D28;
+}
+
+@media screen and (min-width: 720px) {
+    body {
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
