@@ -23,7 +23,7 @@ namespace DijiWalk.Mobile
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/GamePage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -34,6 +34,7 @@ namespace DijiWalk.Mobile
             containerRegistry.RegisterForNavigation<EtapePage, EtapePageViewModel>();
             containerRegistry.RegisterForNavigation<WaitingPage, WaitingPageViewModel>();
             containerRegistry.RegisterForNavigation<ValidationPage, ValidationPageViewModel>();
+            containerRegistry.RegisterForNavigation<GamePage, GamePageViewModel>();
         }
     }
 }
