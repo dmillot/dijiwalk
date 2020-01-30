@@ -9,7 +9,7 @@
             <template v-if="!login">
               <div class="row justify-between">
                 <div class="col-5">
-                  <q-input color="red-9" v-model="firstName" label="Prenom *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un pr�nom.']">
+                  <q-input color="red-9" v-model="firstName" label="Prénom *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
                     <template v-slot:prepend>
                       <q-icon name="fas fa-user" />
                     </template>
@@ -54,7 +54,7 @@
             <div class="q-mt-lg">
               <q-btn v-if="login" label="Se connecter" type="submit" color="red-14" />
               <q-btn v-else label="Envoyer" type="submit" color="red-14" />
-              <q-btn label="Reinitialiser" type="reset" color="red-14" flat class="q-ml-sm" />
+              <q-btn label="Réinitialiser" type="reset" color="red-14" flat class="q-ml-sm" />
             </div>
 
             <q-btn @click="login = !login" v-if="login" outline color="red-14" label="Demander un compte organisateur" class="q-mt-lg" />
