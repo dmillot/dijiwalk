@@ -14,7 +14,7 @@ namespace DijiWalk.Repositories.Contracts
     public interface IMessageRepository
     {
         /// <summary>
-        /// Definition of the function that will Add the GaMessageme passed in the parameters to the database
+        /// Definition of the function that will Add the Message passed in the parameters to the database
         /// </summary>
         /// <param name="message">Object Message to Add</param>
         void Add(Message message);

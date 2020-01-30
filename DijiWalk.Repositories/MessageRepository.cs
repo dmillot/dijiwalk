@@ -11,7 +11,7 @@ namespace DijiWalk.Repositories
     using DijiWalk.Repositories.Contracts;
 
     /// <summary>
-    /// Class that connect the Object Game to the database
+    /// Class that connect the Object Message to the database
     /// </summary>
     public class MessageRepository : IMessageRepository
     {
