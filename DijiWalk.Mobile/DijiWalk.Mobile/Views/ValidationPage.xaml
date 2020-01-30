@@ -5,32 +5,24 @@
              Title="Étape"
              BackgroundColor="#D18D28">
 
-    <Grid>
-        <Grid.RowDefinitions >
-            <RowDefinition Height="30*" />
-            <RowDefinition Height="40*" />
-            <RowDefinition Height="30*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <StackLayout >
-            <StackLayout Margin="0,0,0,50" HorizontalOptions="Center" Grid.Row="0">
-                <Label TextColor="White" FontSize="35"  Text="Validation" />
-                <Label TextColor="White" HorizontalTextAlignment="Center" Text="06/01/2020"></Label>
-            </StackLayout>
-
-            <StackLayout Margin="0,0,0,10" HorizontalOptions="Center" Grid.Row="1">
-                <Image Source="monument.jpg" ></Image>
-            </StackLayout>
-
-            <StackLayout  Spacing="20" Margin="10,0,10,50"  Grid.Row="2">
-                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Prendre photo"></Button>
-                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Valider"></Button>
-                <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Retour"></Button>
-            </StackLayout>
-
+    <StackLayout >
+        <StackLayout Margin="0,0,0,50" HorizontalOptions="Center" >
+            <Label TextColor="White" FontSize="35"  Text="Validation" />
+            <Label TextColor="White" HorizontalTextAlignment="Center" Text="06/01/2020"></Label>
         </StackLayout>
-    </Grid>
+
+        <StackLayout Margin="0,0,0,10" HorizontalOptions="Center">
+           
+            <Image x:Name="MyImage" HeightRequest="300" WidthRequest="300"></Image>
+        </StackLayout>
+
+        <StackLayout  Spacing="20" Margin="10,0,10,50">
+            <Button x:Name="TakePhoto" Clicked="Button_Clicked" CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Prendre photo"></Button>
+            <Button x:Name="Valider" Clicked ="Valider_Button_Clicked" CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Valider"></Button>
+            <Button x:Name="Retour" CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Retour"></Button>
+            <Button CornerRadius="10" TextColor="White" BackgroundColor="Red" Text="Contacter l'organisateur"></Button>
+        </StackLayout>
+
+    </StackLayout>
 </ContentPage>
