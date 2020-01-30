@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DijiWalk.EntitiesContext\DijiWalk.EntitiesContext.csproj" />
+    <ProjectReference Include="..\DijiWalk.Repositories.Contracts\DijiWalk.Repositories.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
