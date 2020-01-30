@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:effects="clr-namespace:DijiWalk.Mobile.Resources.effects"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:fontawesome="clr-namespace:FontAwesome"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:converters="clr-namespace:DijiWalk.Mobile.Resources.converters"
+             x:Class="DijiWalk.Mobile.Views.GamePage"
+             Title="Jeu"
+             BackgroundColor="#D18D28">
+    <Grid>
+        <StackLayout Spacing="15">
+            <Label Text="Jeu 1" HorizontalOptions="CenterAndExpand" FontSize="Title" TextColor="{StaticResource WhiteColor}">
+                <Label.Effects>
+                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                        <effects:ShadowEffect.Color>
+                            <OnPlatform x:TypeArguments="Color">
+                                <On Platform="iOS" Value="Black" />
+                                <On Platform="Android" Value="Black" />
+                            </OnPlatform>
+                        </effects:ShadowEffect.Color>
+                    </effects:ShadowEffect>
+                </Label.Effects>
+            </Label>
+            <Label Text="23/01/2020" HorizontalOptions="CenterAndExpand" FontSize="Subtitle" TextColor="{StaticResource WhiteColor}">
+                <Label.Effects>
+                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                        <effects:ShadowEffect.Color>
+                            <OnPlatform x:TypeArguments="Color">
+                                <On Platform="iOS" Value="Black" />
+                                <On Platform="Android" Value="Black" />
+                            </OnPlatform>
+                        </effects:ShadowEffect.Color>
+                    </effects:ShadowEffect>
+                </Label.Effects>
+            </Label>
+            <Grid HeightRequest="140" Margin="25,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1"/>
+                </Grid.RowDefinitions>
+                <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnActualGame" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
+                <flex:FlexButton x:Name="BtnActualGame"  Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="step.png" IconOrientation="Left" Text="ÉTAPE ACTUEL" ForegroundColor="{StaticResource LightColor}"
+                BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnActualGame_TouchedDown" TouchedUp="BtnActualGame_TouchedUp"/>
+            </Grid>
+            <Grid HeightRequest="450" Margin="25,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1"/>
+                </Grid.RowDefinitions>
+                <Frame Grid.RowSpan="2" Grid.ColumnSpan="2" BackgroundColor="{StaticResource SecondaryDarkestColor}" BorderColor="{StaticResource SecondaryDarkestColor}" Margin="3,3,0,0" CornerRadius="0" Padding="2">
+                    <BoxView Color="{StaticResource SecondaryDarkColor}"  />
+                </Frame>
+                <Frame OutlineColor="{StaticResource LightColor}" BackgroundColor="{StaticResource LightColor}" BorderColor="{StaticResource LightColor}" CornerRadius="0" Padding="2">
+                    <Image Grid.RowSpan="1" Grid.ColumnSpan="1" Source="jeux1.png" HorizontalOptions="FillAndExpand" Aspect="AspectFill"/>
+                </Frame>
+            </Grid>
+
+
+
+            <ListView x:Name="ListViewGroupes" ItemsSource="{Binding Groupes}" SeparatorVisibility="Default" SeparatorColor="{StaticResource SecondaryDarkColor}" HasUnevenRows="True" CachingStrategy="RecycleElement,RecycleElementAndDataTemplate" ItemTapped="ListViewGroupes_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout>
+                                    <Grid HeightRequest="50">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Name}" FontSize="Title" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" FontAttributes="Bold"/>
+                                        <Label Grid.Column="1" Text="{x:Static fontawesome:FontAwesomeIcons.ChevronDown}" FontFamily="{StaticResource FontAwesomeSolid}" VerticalTextAlignment="Center" TextColor="{StaticResource LightColor}" FontSize="30" Margin="0,0,5,0"/>
+                                    </Grid>
+                                    <ListView ItemsSource="{Binding TeamPlayers}" SeparatorVisibility="Default" SeparatorColor="{StaticResource SecondaryDarkColor}" IsEnabled="False" IsVisible="{Binding IsSelected}"  CachingStrategy="RecycleElement,RecycleElementAndDataTemplate" RowHeight="50">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ViewCell>
+                                                    <StackLayout Orientation="Horizontal" Margin="5,0,0,0" Padding="5">
+                                                        <ffimageloading:CachedImage  DownsampleToViewSize="true" Source="{Binding Player.Picture}">
+                                                            <ffimageloading:CachedImage.Transformations>
+                                                                <fftransformations:CircleTransformation />
+                                                            </ffimageloading:CachedImage.Transformations>
+                                                        </ffimageloading:CachedImage>
+                                                        <Label Text="{x:Static fontawesome:FontAwesomeIcons.Star}" FontFamily="{StaticResource FontAwesomeSolid}" VerticalTextAlignment="Center" TextColor="{StaticResource LightColor}" IsVisible="{Binding IsCapitaine}" FontSize="30" Margin="0,0,5,0"/>
+                                                        <Label Text="{Binding Player.FirstName}" FontSize="Subtitle" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding Player.LastName}" FontSize="Subtitle" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" Margin="3,0,0,0" FontAttributes="Bold"/>
+                                                    </StackLayout>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </Grid>
+</ContentPage>
