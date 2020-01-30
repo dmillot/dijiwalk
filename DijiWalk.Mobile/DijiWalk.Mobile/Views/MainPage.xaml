@@ -45,7 +45,6 @@
                             <OnPlatform x:TypeArguments="Color">
                                 <On Platform="iOS" Value="Black" />
                                 <On Platform="Android" Value="Black" />
-                                <On Platform="UWP" Value="Black" />
                             </OnPlatform>
                         </effects:ShadowEffect.Color>
                     </effects:ShadowEffect>
@@ -58,7 +57,6 @@
                             <OnPlatform x:TypeArguments="Color">
                                 <On Platform="iOS" Value="Black" />
                                 <On Platform="Android" Value="Black" />
-                                <On Platform="UWP" Value="Black" />
                             </OnPlatform>
                         </effects:ShadowEffect.Color>
                     </effects:ShadowEffect>
