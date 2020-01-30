@@ -27,7 +27,7 @@ namespace DijiWalk.WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +55,7 @@ namespace DijiWalk.WebApplication
             {
                 if (env.IsDevelopment())
                 {
-                    spa.Options.SourcePath = "ClientApp";
+                    spa.Options.SourcePath = "DijiWalk";
                     spa.UseVueCli(npmScript: "serve");
                 }
                 else
