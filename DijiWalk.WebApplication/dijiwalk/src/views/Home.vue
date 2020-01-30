@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <q-page class="flex flex-center q-px-xl">
+    <div class="home">
+
+      <h5 class="text-bold">Accueil</h5>
+
+      <div class="row justify-center q-col-gutter-xl">
+
+        <Card link="/" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
+        <Card link="/" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
+        <Card link="/" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
+        <Card link="/" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
+        <Card link="/" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
+        <Card link="/" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
+
+      </div>
+    </div>
+  </q-page>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Card from '@/components/Card.vue'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    Card
   }
 }
 </script>
