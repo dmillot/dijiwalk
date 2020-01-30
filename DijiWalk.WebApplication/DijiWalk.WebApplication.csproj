@@ -7,11 +7,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
     <PackageReference Include="VueCliMiddleware" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\DijiWalk.EntitiesContext\DijiWalk.EntitiesContext.csproj" />
+    <ProjectReference Include="..\DijiWalk.Repositories\DijiWalk.Repositories.csproj" />
   </ItemGroup>
 
 
