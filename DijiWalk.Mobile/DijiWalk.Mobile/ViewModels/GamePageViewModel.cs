@@ -1,5 +1,7 @@
 ﻿using DijiWalk.Entities;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
+using DijiWalk.Mobile.Views;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
@@ -12,7 +14,11 @@ namespace DijiWalk.Mobile.ViewModels
 {
     public class GamePageViewModel : BindableBase, INavigationAware
     {
+        #region Properties
         public INavigationService NavigationService { get; private set; }
+        public DelegateCommand<object> NavigateToMainPage { get; set; }
+        public DelegateCommand<object> NavigateToStepPage { get; set; }
+        public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
         private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
         public ObservableCollection<ViewTeam> Groupes
@@ -35,6 +41,7 @@ namespace DijiWalk.Mobile.ViewModels
             get { return _teamSelected; }
             set { SetProperty(ref _teamSelected, value); }
         }
+        #endregion
 
         public GamePageViewModel(INavigationService navigationService)
         {
@@ -97,11 +104,42 @@ namespace DijiWalk.Mobile.ViewModels
                 team.Captain = capitaine.Player;
                 Groupes.Add(team);
             }
+            this.NavigateToMainPage = new DelegateCommand<object>(GoToMain);
+            this.NavigateToStepPage = new DelegateCommand<object>(GoToStep);
+            this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
         }
 
+        #region NavigationFunction
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut retourner sur la page d'accueil.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GoToMain(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(MainPage), null);
+        }
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut aller sur le détails de l'étape actuelle.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GoToStep(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(EtapePage), null);
+        }
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut se déconnecter.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GoToLogin(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(LoginPage), null);
+        }
+        #endregion
 
 
-
+        #region OnNavigatedFunction
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
 
@@ -111,6 +149,7 @@ namespace DijiWalk.Mobile.ViewModels
         {
 
         }
+        #endregion
 
     }
 }

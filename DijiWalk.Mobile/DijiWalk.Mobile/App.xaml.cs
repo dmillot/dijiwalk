@@ -22,7 +22,7 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/ValidationPage");
+            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
 
         }
 

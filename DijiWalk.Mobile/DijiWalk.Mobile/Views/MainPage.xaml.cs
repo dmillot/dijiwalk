@@ -37,7 +37,6 @@ namespace DijiWalk.Mobile.Views
         private void BtnClassement_TouchedUp(object sender, EventArgs e)
         {
             ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-
         }
 
         private void BtnClassement_TouchedDown(object sender, EventArgs e)
