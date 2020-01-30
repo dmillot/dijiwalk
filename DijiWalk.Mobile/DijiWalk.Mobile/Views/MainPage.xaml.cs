@@ -1,4 +1,5 @@
-﻿using Flex.Controls;
+﻿using DijiWalk.Common.Animations;
+using Flex.Controls;
 using System;
 using Xamarin.Forms;
 
@@ -13,12 +14,12 @@ namespace DijiWalk.Mobile.Views
 
         private void BtnActualGame_TouchedDown(object sender, EventArgs e)
         {
-            TouchedBtn(sender, true);
+            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
         }
 
         private void BtnActualGame_TouchedUp(object sender, EventArgs e)
         {
-            TouchedBtn(sender, false);
+            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
         }
 
         private void BtnClose_Pressed(object sender, EventArgs e)
@@ -35,22 +36,15 @@ namespace DijiWalk.Mobile.Views
 
         private void BtnClassement_TouchedUp(object sender, EventArgs e)
         {
-            TouchedBtn(sender, false);
+            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
 
         }
 
         private void BtnClassement_TouchedDown(object sender, EventArgs e)
         {
-            TouchedBtn(sender, true);
+            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
         }
 
-        private void TouchedBtn(object sender, bool down)
-        {
-            Grid.SetColumnSpan(sender as FlexButton, down ? 2 : 1);
-            Grid.SetRowSpan(sender as FlexButton, down ? 2 : 1);
-            (sender as FlexButton).BackgroundColor = (Color)Application.Current.Resources[down ? "SecondaryDarkColor" : "SecondaryColor"];
-            (sender as FlexButton).ForegroundColor = (Color)Application.Current.Resources[down ? "LightDarkColor" : "LightColor"];
-
-        }
+       
     }
 }
