@@ -23,7 +23,7 @@ namespace DijiWalk.Mobile
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/ValidationPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
