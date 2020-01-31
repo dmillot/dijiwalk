@@ -21,6 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DijiWalk.Repositories.Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DijiWalk.Repositories", "DijiWalk.Repositories\DijiWalk.Repositories.csproj", "{014EC2DE-BFB5-44DE-B484-3A090297D551}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D098CAB-BC8A-42D1-BD33-A51B20079D93}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Downloads\Settings.StyleCop = ..\..\Downloads\Settings.StyleCop
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
