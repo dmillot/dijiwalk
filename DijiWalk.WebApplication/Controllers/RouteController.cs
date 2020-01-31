@@ -20,13 +20,13 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private RouteRepository with which we will interact with the database
         /// </summary>
-        private IAdministratorRepository _repository;
+        private IRouteRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public RouteController(IAdministratorRepository repository)
+        public RouteController(IRouteRepository repository)
         {
             this._repository = repository;
         }
