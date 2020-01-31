@@ -37,13 +37,6 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<Trial> Trials { get; set; }
         public virtual DbSet<Entities.Type> Types { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=localhost\\DIIAGE;Database=SmartCity; Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

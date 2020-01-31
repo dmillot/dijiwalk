@@ -15,10 +15,16 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class PlayerRepository : IPlayerRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public PlayerRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
+
 
         /// <summary>
         /// Method to Add the Player passed in the parameters to the database
@@ -26,8 +32,8 @@ namespace DijiWalk.Repositories
         /// <param name="player">Object Player to Add</param>
         public void Add(Player player)
         {
-            this._smartCityContext.Players.Add(player);
-            this._smartCityContext.SaveChanges();
+           _context.Players.Add(player);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="player">Object Player to Delete</param>
         public void Delete(Player player)
         {
-            this._smartCityContext.Players.Remove(player);
-            this._smartCityContext.SaveChanges();
+           _context.Players.Remove(player);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Player with the Id researched</returns>
         public Player Find(int id)
         {
-            return this._smartCityContext.Players.Find(id);
+            return _context.Players.Find(id);
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Players</returns>
         public IEnumerable<Player> FindAll()
         {
-            return this._smartCityContext.Players;
+            return _context.Players;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace DijiWalk.Repositories
         /// <param name="player">Object Player to Update</param>
         public void Update(Player player)
         {
-            this._smartCityContext.Players.Update(player);
-            this._smartCityContext.SaveChanges();
+           _context.Players.Update(player);
+           _context.SaveChanges();
         }
     }
 }

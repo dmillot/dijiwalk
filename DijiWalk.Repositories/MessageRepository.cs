@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class MessageRepository : IMessageRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public MessageRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Message passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="message">Object Message to Add</param>
         public void Add(Message message)
         {
-            this._smartCityContext.Messages.Add(message);
-            this._smartCityContext.SaveChanges();
+           _context.Messages.Add(message);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="message">Object Message to Delete</param>
         public void Delete(Message message)
         {
-            this._smartCityContext.Messages.Remove(message);
-            this._smartCityContext.SaveChanges();
+           _context.Messages.Remove(message);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Message with the Id researched</returns>
         public Message Find(int id)
         {
-            return this._smartCityContext.Messages.Find(id);
+            return _context.Messages.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Messages</returns>
         public IEnumerable<Message> FindAll()
         {
-            return this._smartCityContext.Messages;
+            return _context.Messages;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="message">Object Message to Update</param>
         public void Update(Message message)
         {
-            this._smartCityContext.Messages.Update(message);
-            this._smartCityContext.SaveChanges();
+           _context.Messages.Update(message);
+           _context.SaveChanges();
         }
     }
 }

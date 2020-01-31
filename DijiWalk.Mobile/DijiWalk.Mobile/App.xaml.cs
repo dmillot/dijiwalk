@@ -4,6 +4,8 @@ using DijiWalk.Mobile.ViewModels;
 using DijiWalk.Mobile.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using DijiWalk.Mobile.Services.Interfaces;
+using DijiWalk.Mobile.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DijiWalk.Mobile
@@ -28,6 +30,8 @@ namespace DijiWalk.Mobile
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+
+            containerRegistry.RegisterSingleton<IGameService, GameService>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();

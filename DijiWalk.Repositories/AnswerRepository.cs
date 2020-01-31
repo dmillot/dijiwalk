@@ -15,10 +15,16 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class AnswerRepository : IAnswerRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public AnswerRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
+
 
         /// <summary>
         /// Method to Add the Answer passed in the parameters to the database
@@ -26,8 +32,8 @@ namespace DijiWalk.Repositories
         /// <param name="answer">Object Answer to Add</param>
         public void Add(Answer answer)
         {
-            this._smartCityContext.Answers.Add(answer);
-            this._smartCityContext.SaveChanges();
+           _context.Answers.Add(answer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="answer">Object Answer to Delete</param>
         public void Delete(Answer answer)
         {
-            this._smartCityContext.Answers.Remove(answer);
-            this._smartCityContext.SaveChanges();
+           _context.Answers.Remove(answer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Answer with the Id researched</returns>
         public Answer Find(int id)
         {
-            return this._smartCityContext.Answers.Find(id);
+            return _context.Answers.Find(id);
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Answers</returns>
         public IEnumerable<Answer> FindAll()
         {
-            return this._smartCityContext.Answers;
+            return _context.Answers;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace DijiWalk.Repositories
         /// <param name="answer">Object Answer to Update</param>
         public void Update(Answer answer)
         {
-            this._smartCityContext.Answers.Update(answer);
-            this._smartCityContext.SaveChanges();
+           _context.Answers.Update(answer);
+           _context.SaveChanges();
         }
     }
 }

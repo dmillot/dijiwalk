@@ -15,19 +15,23 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TeamPlayerRepository : ITeamPlayerRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
-
+        public TeamPlayerRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
         /// <summary>
         /// Method to Add the TeamPlayer passed in the parameters to the database
         /// </summary>
         /// <param name="teamPlayer">Object TeamPlayer to Add</param>
         public void Add(TeamPlayer teamPlayer)
         {
-            this._smartCityContext.Teamplayers.Add(teamPlayer);
-            this._smartCityContext.SaveChanges();
+           _context.Teamplayers.Add(teamPlayer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +40,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamPlayer">Object TeamPlayer to Delete</param>
         public void Delete(TeamPlayer teamPlayer)
         {
-            this._smartCityContext.Teamplayers.Remove(teamPlayer);
-            this._smartCityContext.SaveChanges();
+           _context.Teamplayers.Remove(teamPlayer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +51,7 @@ namespace DijiWalk.Repositories
         /// <returns>The TeamPlayer with the Id researched</returns>
         public TeamPlayer Find(int id)
         {
-            return this._smartCityContext.Teamplayers.Find(id);
+            return _context.Teamplayers.Find(id);
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all TeamPlayers</returns>
         public IEnumerable<TeamPlayer> FindAll()
         {
-            return this._smartCityContext.Teamplayers;
+            return _context.Teamplayers;
         }
 
         /// <summary>
@@ -65,8 +69,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamPlayer">Object TeamPlayer to Update</param>
         public void Update(TeamPlayer teamPlayer)
         {
-            this._smartCityContext.Teamplayers.Update(teamPlayer);
-            this._smartCityContext.SaveChanges();
+           _context.Teamplayers.Update(teamPlayer);
+           _context.SaveChanges();
         }
     }
 }

@@ -4,6 +4,7 @@ using Foundation;
 using Prism;
 using Prism.Ioc;
 using Sharpnado.Presentation.Forms.iOS;
+using System.Net;
 using UIKit;
 
 
@@ -24,6 +25,9 @@ namespace DijiWalk.Mobile.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            ServicePointManager
+            .ServerCertificateValidationCallback +=
+            (sender, cert, chain, sslPolicyErrors) => true;
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
             CachedImageRenderer.Init();

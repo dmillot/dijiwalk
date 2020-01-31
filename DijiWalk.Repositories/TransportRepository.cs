@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TransportRepository : ITransportRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TransportRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Transport passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="transport">Object Transport to Add</param>
         public void Add(Transport transport)
         {
-            this._smartCityContext.Transports.Add(transport);
-            this._smartCityContext.SaveChanges();
+            _context.Transports.Add(transport);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="transport">Object Transport to Delete</param>
         public void Delete(Transport transport)
         {
-            this._smartCityContext.Transports.Remove(transport);
-            this._smartCityContext.SaveChanges();
+            _context.Transports.Remove(transport);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Transport with the Id researched</returns>
         public Transport Find(int id)
         {
-            return this._smartCityContext.Transports.Find(id);
+            return _context.Transports.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Transport</returns>
         public IEnumerable<Transport> FindAll()
         {
-            return this._smartCityContext.Transports;
+            return _context.Transports;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="transport">Object Transport to Update</param>
         public void Update(Transport transport)
         {
-            this._smartCityContext.Transports.Update(transport);
-            this._smartCityContext.SaveChanges();
+            _context.Transports.Update(transport);
+            _context.SaveChanges();
         }
     }
 }
