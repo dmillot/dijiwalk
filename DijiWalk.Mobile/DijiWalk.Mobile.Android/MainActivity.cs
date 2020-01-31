@@ -8,6 +8,7 @@ using Plugin.Permissions;
 using Prism;
 using Prism.Ioc;
 using Sharpnado.Presentation.Forms.Droid;
+using System.Net;
 using Xamarin.Forms;
 
 
@@ -26,9 +27,10 @@ namespace DijiWalk.Mobile.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+            ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
 
             base.OnCreate(bundle);
-
+            
             await CrossMedia.Current.Initialize();
             CrossCurrentActivity.Current.Init(this, bundle);
             global::Xamarin.Forms.Forms.Init(this, bundle);

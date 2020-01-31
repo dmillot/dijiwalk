@@ -13,19 +13,18 @@ namespace DijiWalk.Mobile.ViewModels
         #region Properties
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToMainPage { get; set; }
-       
+        private readonly GameService _gameService;
 
         #endregion
 
-        public LoginPageViewModel(INavigationService navigationService)
+        public LoginPageViewModel(GameService gameService,INavigationService navigationService)
         {
             NavigationService = navigationService;
             this.NavigateToMainPage = new DelegateCommand<object>(GoToMain);
-            test = new GameService();
+            _gameService = gameService;
 
         }
 
-        GameService test;
 
         #region NavigationFunction
         /// <summary>
@@ -34,10 +33,8 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         async void GoToMain(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(MainPage), null);
-           
-            var dsfdsf = await test.GetGameById(2);
-            var podskfd = "fzf";
+            //this.NavigationService.NavigateAsync(nameof(MainPage), null);
+            var dsfdsf = await _gameService.GetGameById(2);
         }
 
         
