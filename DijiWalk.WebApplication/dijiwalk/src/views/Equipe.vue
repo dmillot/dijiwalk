@@ -64,7 +64,7 @@
       </div>
       <div v-for="equipe in equipes" v-bind:key="equipe.id" class="col-xs-12 col-md-4 col-grow">
         <q-card  class="my-card">
-          <div class="row" style="border: 1px blue solid;">
+          <div class="row" >
             <div v-for="participant in participantsOptions" v-bind:key="participant.id" class="col-6">
               <div v-if=" equipe.id === participant.IdEquipe" >
                 <q-img class="flex" :src="participant.Image"
