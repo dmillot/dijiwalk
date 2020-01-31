@@ -17,9 +17,19 @@ const routes = [
     component: Home
   },
   {
+    path: '/jeuActuel',
+    name: 'jeuActuel',
+    component: () => import('../views/JeuActuel.vue')
+  },
+  {
     path: '/jeu',
     name: 'jeu',
     component: () => import('../views/Jeu.vue')
+  },
+  {
+    path: '/etape',
+    name: 'etape',
+    component: () => import('../views/Etape.vue')
   }
 ]
 
