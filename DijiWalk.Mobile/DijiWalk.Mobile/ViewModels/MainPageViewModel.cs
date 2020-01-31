@@ -5,13 +5,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using DijiWalk.Entities;
+using Prism.Commands;
+using DijiWalk.Mobile.Views;
 
 namespace DijiWalk.Mobile.ViewModels
 {
     public class MainPageViewModel : BindableBase, INavigationAware
     {
 
+        #region Properties
         public INavigationService NavigationService { get; private set; }
+        public DelegateCommand<object> NavigateToGamePage { get; set; }
+        public DelegateCommand<object> NavigateToActualGamePage { get; set; }
+        public DelegateCommand<object> NavigateToClassementPage { get; set; }
+        public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
 
         private ObservableCollection<Game> _anciensJeux;
@@ -20,6 +27,7 @@ namespace DijiWalk.Mobile.ViewModels
             get { return _anciensJeux; }
             set { SetProperty(ref _anciensJeux, value); }
         }
+        #endregion
 
         public MainPageViewModel(INavigationService navigationService)
         {
@@ -37,9 +45,54 @@ namespace DijiWalk.Mobile.ViewModels
                 new Game {Id = 9, CreationDate = DateTime.Now.Date},
                 new Game {Id = 10, CreationDate = DateTime.Now.Date},
             };
+            this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
+            this.NavigateToActualGamePage = new DelegateCommand<object>(GoToActualGame);
+            this.NavigateToClassementPage = new DelegateCommand<object>(GoToClassement);
+            this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
         }
 
 
+
+        #region NavigationFunction
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut aller sur la page des classement.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GoToClassement(object parameters)
+        {
+            //this.NavigationService.NavigateAsync(nameof(MainPage), null); TO DO //////////////////////////////////////////////////////////
+        }
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut aller sur la page du jeu actuel.
+        /// </summary>
+        /// <param name="parameters">Id du jeu</param>
+        void GoToActualGame(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(GamePage), null);
+        }
+
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut aller sur la page d'un jeu (pas forcément actuel).
+        /// </summary>
+        /// <param name="parameters">Id du jeu</param>
+        void GoToGame(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(GamePage), null);
+        }
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut se déconnecter.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GoToLogin(object parameters)
+        {
+            this.NavigationService.NavigateAsync(nameof(LoginPage), null);
+        }
+        #endregion
+
+        #region OnNavigatedFunction
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
 
@@ -49,6 +102,7 @@ namespace DijiWalk.Mobile.ViewModels
         {
 
         }
+        #endregion
 
     }
 }

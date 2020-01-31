@@ -22,8 +22,8 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
+            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
 
-            await NavigationService.NavigateAsync("NavigationPage/GamePage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
