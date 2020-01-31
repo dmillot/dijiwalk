@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AdministratorController.cs" company="DijiWalk">
+// <copyright file="StepController.cs" company="DijiWalk">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
