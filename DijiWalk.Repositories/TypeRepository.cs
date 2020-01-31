@@ -15,10 +15,16 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TypeRepository : ITypeRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TypeRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
+
 
         /// <summary>
         /// Method to Add the Type passed in the parameters to the database
@@ -26,8 +32,8 @@ namespace DijiWalk.Repositories
         /// <param name="type">Object Type to Add</param>
         public void Add(Type type)
         {
-            this._smartCityContext.Types.Add(type);
-            this._smartCityContext.SaveChanges();
+            _context.Types.Add(type);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="type">Object Type to Delete</param>
         public void Delete(Type type)
         {
-            this._smartCityContext.Types.Remove(type);
-            this._smartCityContext.SaveChanges();
+            _context.Types.Remove(type);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Type with the Id researched</returns>
         public Type Find(int id)
         {
-            return this._smartCityContext.Types.Find(id);
+            return _context.Types.Find(id);
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Type</returns>
         public IEnumerable<Type> FindAll()
         {
-            return this._smartCityContext.Types;
+            return _context.Types;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace DijiWalk.Repositories
         /// <param name="type">Object Type to Update</param>
         public void Update(Type type)
         {
-            this._smartCityContext.Types.Update(type);
-            this._smartCityContext.SaveChanges();
+            _context.Types.Update(type);
+            _context.SaveChanges();
         }
     }
 }

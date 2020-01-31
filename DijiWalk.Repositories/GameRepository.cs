@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Linq;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -15,10 +16,17 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class GameRepository : IGameRepository
     {
+
+
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public GameRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Game passed in the parameters to the database
@@ -26,8 +34,8 @@ namespace DijiWalk.Repositories
         /// <param name="game">Object Game to Add</param>
         public void Add(Game game)
         {
-            this._smartCityContext.Games.Add(game);
-            this._smartCityContext.SaveChanges();
+            _context.Games.Add(game);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +44,8 @@ namespace DijiWalk.Repositories
         /// <param name="game">Object Game to Delete</param>
         public void Delete(Game game)
         {
-            this._smartCityContext.Games.Remove(game);
-            this._smartCityContext.SaveChanges();
+            _context.Games.Remove(game);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +55,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public Game Find(int id)
         {
-            return this._smartCityContext.Games.Find(id);
+            return _context.Games.Find(id);
         }
 
         /// <summary>
@@ -56,7 +64,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Games</returns>
         public IEnumerable<Game> FindAll()
         {
-            return this._smartCityContext.Games;
+            return _context.Games;
         }
 
         /// <summary>
@@ -65,8 +73,8 @@ namespace DijiWalk.Repositories
         /// <param name="game">Object Game to Update</param>
         public void Update(Game game)
         {
-            this._smartCityContext.Games.Update(game);
-            this._smartCityContext.SaveChanges();
+            _context.Games.Update(game);
+            _context.SaveChanges();
         }
     }
 }

@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class RouteTagRepository : IRouteTagRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public RouteTagRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the RouteTag passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeTag">Object RouteTag to Add</param>
         public void Add(RouteTag routeTag)
         {
-            this._smartCityContext.Routetags.Add(routeTag);
-            this._smartCityContext.SaveChanges();
+            _context.Routetags.Add(routeTag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeTag">Object RouteTag to Delete</param>
         public void Delete(RouteTag routeTag)
         {
-            this._smartCityContext.Routetags.Remove(routeTag);
-            this._smartCityContext.SaveChanges();
+            _context.Routetags.Remove(routeTag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The RouteTag with the Id researched</returns>
         public RouteTag Find(int id)
         {
-            return this._smartCityContext.Routetags.Find(id);
+            return _context.Routetags.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all RouteTags</returns>
         public IEnumerable<RouteTag> FindAll()
         {
-            return this._smartCityContext.Routetags;
+            return _context.Routetags;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeTag">Object RouteTag to Update</param>
         public void Update(RouteTag routeTag)
         {
-            this._smartCityContext.Routetags.Update(routeTag);
-            this._smartCityContext.SaveChanges();
+            _context.Routetags.Update(routeTag);
+            _context.SaveChanges();
         }
     }
 }

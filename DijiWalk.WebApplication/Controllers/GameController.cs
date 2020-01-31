@@ -8,13 +8,15 @@ namespace DijiWalk.WebApplication.Controllers
     using System;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Controller for the Game
+    /// Controller for the Games
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class GameController : Controller
     {
         /// <summary>
@@ -41,7 +43,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.Find(id), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -58,7 +60,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return Ok(this._repository.FindAll());
             }
             catch (Exception e)
             {

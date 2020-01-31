@@ -20,7 +20,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private MissionRepository with which we will interact with the database
         /// </summary>
-        private IMissionRepository _repository;
+        private readonly IMissionRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MissionController" /> class.
@@ -41,7 +41,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.Find(id), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -58,7 +58,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.FindAll());
             }
             catch (Exception e)
             {

@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Forms.Controls.FlexButton" Version="0.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Sharpnado.Forms.HorizontalListView" Version="1.4.0" />
     <PackageReference Include="Sharpnado.Presentation.Forms" Version="1.4.0" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.5" />

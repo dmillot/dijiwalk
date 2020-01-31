@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class OrganizerRepository : IOrganizerRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public OrganizerRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Organizer passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="organizer">Object Organizer to Add</param>
         public void Add(Organizer organizer)
         {
-            this._smartCityContext.Organizers.Add(organizer);
-            this._smartCityContext.SaveChanges();
+           _context.Organizers.Add(organizer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="organizer">Object Organizer to Delete</param>
         public void Delete(Organizer organizer)
         {
-            this._smartCityContext.Organizers.Remove(organizer);
-            this._smartCityContext.SaveChanges();
+           _context.Organizers.Remove(organizer);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Organizer with the Id researched</returns>
         public Organizer Find(int id)
         {
-            return this._smartCityContext.Organizers.Find(id);
+            return _context.Organizers.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Organizers</returns>
         public IEnumerable<Organizer> FindAll()
         {
-            return this._smartCityContext.Organizers;
+            return _context.Organizers;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="organizer">Object Organizer to Update</param>
         public void Update(Organizer organizer)
         {
-            this._smartCityContext.Organizers.Update(organizer);
-            this._smartCityContext.SaveChanges();
+           _context.Organizers.Update(organizer);
+           _context.SaveChanges();
         }
     }
 }

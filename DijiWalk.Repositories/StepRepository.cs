@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class StepRepository : IStepRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public StepRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Step passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="step">Object Step to Add</param>
         public void Add(Step step)
         {
-            this._smartCityContext.Steps.Add(step);
-            this._smartCityContext.SaveChanges();
+            _context.Steps.Add(step);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="step">Object Step to Delete</param>
         public void Delete(Step step)
         {
-            this._smartCityContext.Steps.Remove(step);
-            this._smartCityContext.SaveChanges();
+            _context.Steps.Remove(step);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public Step Find(int id)
         {
-            return this._smartCityContext.Steps.Find(id);
+            return _context.Steps.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Steps</returns>
         public IEnumerable<Step> FindAll()
         {
-            return this._smartCityContext.Steps;
+            return _context.Steps;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="step">Object Step to Update</param>
         public void Update(Step step)
         {
-            this._smartCityContext.Steps.Update(step);
-            this._smartCityContext.SaveChanges();
+            _context.Steps.Update(step);
+            _context.SaveChanges();
         }
     }
 }

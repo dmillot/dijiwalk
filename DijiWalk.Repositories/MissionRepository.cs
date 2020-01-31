@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class MissionRepository : IMissionRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public MissionRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Mission passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="mission">Object Mission to Add</param>
         public void Add(Mission mission)
         {
-            this._smartCityContext.Missions.Add(mission);
-            this._smartCityContext.SaveChanges();
+           _context.Missions.Add(mission);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="mission">Object Mission to Delete</param>
         public void Delete(Mission mission)
         {
-            this._smartCityContext.Missions.Remove(mission);
-            this._smartCityContext.SaveChanges();
+           _context.Missions.Remove(mission);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Mission with the Id researched</returns>
         public Mission Find(int id)
         {
-            return this._smartCityContext.Missions.Find(id);
+            return _context.Missions.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Mission</returns>
         public IEnumerable<Mission> FindAll()
         {
-            return this._smartCityContext.Missions;
+            return _context.Missions;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="mission">Object Mission to Update</param>
         public void Update(Mission mission)
         {
-            this._smartCityContext.Missions.Update(mission);
-            this._smartCityContext.SaveChanges();
+           _context.Missions.Update(mission);
+           _context.SaveChanges();
         }
     }
 }

@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class RouteStepRepository : IRouteStepRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public RouteStepRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the RouteStep passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeStep">Object RouteStep to Add</param>
         public void Add(RouteStep routeStep)
         {
-            this._smartCityContext.Routesteps.Add(routeStep);
-            this._smartCityContext.SaveChanges();
+            _context.Routesteps.Add(routeStep);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeStep">Object RouteStep to Delete</param>
         public void Delete(RouteStep routeStep)
         {
-            this._smartCityContext.Routesteps.Remove(routeStep);
-            this._smartCityContext.SaveChanges();
+            _context.Routesteps.Remove(routeStep);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The RouteStep with the Id researched</returns>
         public RouteStep Find(int id)
         {
-            return this._smartCityContext.Routesteps.Find(id);
+            return _context.Routesteps.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all RouteSteps</returns>
         public IEnumerable<RouteStep> FindAll()
         {
-            return this._smartCityContext.Routesteps;
+            return _context.Routesteps;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="routeStep">Object RouteStep to Update</param>
         public void Update(RouteStep routeStep)
         {
-            this._smartCityContext.Routesteps.Update(routeStep);
-            this._smartCityContext.SaveChanges();
+            _context.Routesteps.Update(routeStep);
+            _context.SaveChanges();
         }
     }
 }
