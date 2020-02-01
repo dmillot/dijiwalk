@@ -1,7 +1,7 @@
 ﻿using FFImageLoading.Forms.Platform;
+using FFImageLoading.Svg.Forms;
 using Flex;
 using Foundation;
-using PCLAppConfig;
 using Prism;
 using Prism.Ioc;
 using Sharpnado.Presentation.Forms.iOS;
@@ -34,6 +34,7 @@ namespace DijiWalk.Mobile.iOS
             global::Xamarin.Forms.FormsMaterial.Init();
             CachedImageRenderer.Init();
             CachedImageRenderer.InitImageSourceHandler();
+            var ignore = typeof(SvgCachedImage);
             FlexButton.Init();
             SharpnadoInitializer.Initialize(enableInternalLogger: true);
             LoadApplication(new App(new iOSInitializer()));

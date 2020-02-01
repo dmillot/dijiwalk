@@ -2,6 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using FFImageLoading.Forms.Platform;
+using FFImageLoading.Svg.Forms;
 using Plugin.CurrentActivity;
 using Plugin.Media;
 using Plugin.Permissions;
@@ -38,6 +39,7 @@ namespace DijiWalk.Mobile.Droid
             FormsMaterial.Init(this, bundle);
             CachedImageRenderer.Init(enableFastRenderer: true);
             CachedImageRenderer.InitImageViewHandler();
+            var ignore = typeof(SvgCachedImage);
             SharpnadoInitializer.Initialize(enableInternalLogger: true);
   
             LoadApplication(new App());
