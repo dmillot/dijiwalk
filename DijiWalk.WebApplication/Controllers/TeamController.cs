@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private TeamRepository with which we will interact with the database
         /// </summary>
-        private ITeamRepository _repository;
+        private readonly ITeamRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeamController" /> class.
@@ -36,7 +37,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Team</param>
         /// <returns>A Team</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
@@ -53,7 +54,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Team 
         /// </summary>
         /// <returns>A list of Team</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try

@@ -26,8 +26,6 @@ namespace DijiWalk.Mobile.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::ModernHttpClient.Resource.String.app_name = global::DijiWalk.Mobile.Droid.Resource.String.app_name;
-			global::ModernHttpClient.Resource.String.hello = global::DijiWalk.Mobile.Droid.Resource.String.hello;
 			global::Prism.Resource.Animation.abc_fade_in = global::DijiWalk.Mobile.Droid.Resource.Animation.abc_fade_in;
 			global::Prism.Resource.Animation.abc_fade_out = global::DijiWalk.Mobile.Droid.Resource.Animation.abc_fade_out;
 			global::Prism.Resource.Animation.abc_grow_fade_in_from_bottom = global::DijiWalk.Mobile.Droid.Resource.Animation.abc_grow_fade_in_from_bottom;

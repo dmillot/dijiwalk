@@ -1,10 +1,12 @@
 ﻿using FFImageLoading.Forms.Platform;
 using Flex;
 using Foundation;
+using PCLAppConfig;
 using Prism;
 using Prism.Ioc;
 using Sharpnado.Presentation.Forms.iOS;
 using System.Net;
+using System.Reflection;
 using UIKit;
 
 

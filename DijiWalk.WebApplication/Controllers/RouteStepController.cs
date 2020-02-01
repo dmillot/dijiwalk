@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private RouteStepRepository with which we will interact with the database
         /// </summary>
-        private IRouteStepRepository _repository;
+        private readonly IRouteStepRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteStepController" /> class.
@@ -36,7 +37,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the RouteStep</param>
         /// <returns>A RouteStep</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
@@ -53,7 +54,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all RouteStep 
         /// </summary>
         /// <returns>A list of RouteStep</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try

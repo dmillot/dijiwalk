@@ -9,6 +9,7 @@ using Prism;
 using Prism.Ioc;
 using Sharpnado.Presentation.Forms.Droid;
 using System.Net;
+using System.Reflection;
 using Xamarin.Forms;
 
 
@@ -38,6 +39,7 @@ namespace DijiWalk.Mobile.Droid
             CachedImageRenderer.Init(enableFastRenderer: true);
             CachedImageRenderer.InitImageViewHandler();
             SharpnadoInitializer.Initialize(enableInternalLogger: true);
+  
             LoadApplication(new App());
         }
 
