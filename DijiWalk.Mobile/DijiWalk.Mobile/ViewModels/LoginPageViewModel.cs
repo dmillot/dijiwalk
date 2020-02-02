@@ -33,7 +33,7 @@ namespace DijiWalk.Mobile.ViewModels
         /// Fonction appelée quand l'utilisateur veut se connecter et que ses informations sont correct.
         /// </summary>
         /// <param name="parameters">Command parameter</param>
-        async void GoToMain(object parameters)
+        public void GoToMain(object parameters)
         {
             this.NavigationService.NavigateAsync(nameof(MainPage), null);
         }

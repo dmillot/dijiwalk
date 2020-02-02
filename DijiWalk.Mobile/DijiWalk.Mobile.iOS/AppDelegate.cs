@@ -4,11 +4,12 @@ using Flex;
 using Foundation;
 using Prism;
 using Prism.Ioc;
+using Rg.Plugins.Popup;
 using Sharpnado.Presentation.Forms.iOS;
 using System.Net;
 using System.Reflection;
 using UIKit;
-
+using XamEffects.iOS;
 
 namespace DijiWalk.Mobile.iOS
 {
@@ -36,6 +37,8 @@ namespace DijiWalk.Mobile.iOS
             CachedImageRenderer.InitImageSourceHandler();
             var ignore = typeof(SvgCachedImage);
             FlexButton.Init();
+            Popup.Init();
+            Effects.Init();
             SharpnadoInitializer.Initialize(enableInternalLogger: true);
             LoadApplication(new App(new iOSInitializer()));
 

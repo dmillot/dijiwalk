@@ -12,6 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "login",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -19,6 +20,7 @@
     "DijiWalk.WebApplication": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "login",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

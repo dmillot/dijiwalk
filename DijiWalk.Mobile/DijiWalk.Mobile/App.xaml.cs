@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DijiWalk.Mobile.Services.Interfaces;
 using DijiWalk.Mobile.Services;
+using Rg.Plugins.Popup.Contracts;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DijiWalk.Mobile
@@ -24,10 +25,11 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/GamePage");
 
             #region Property configuration
             Application.Current.Properties["url"] = "https://10.0.2.2:5001/api/";
+            Application.Current.Properties["APIKey"] = "AIzaSyCDgp4RQYA4bzroTJM2ltv0ef6ceuqW254";
             #endregion
 
         }

@@ -22,7 +22,12 @@
     <Color x:Key="SecondaryDarkestColor">#6b0606</Color>
     <Color x:Key="LightColor">#c9c9c9</Color>
     <Color x:Key="LightDarkColor">#b0b0b0</Color>
+    <Color x:Key="GrayColor">#8f8f8f</Color>
     <Color x:Key="WhiteColor">#f0f0f0</Color>
+    <Color x:Key="ValidationColor">#25ae88</Color>
+    <Color x:Key="ValidationDarkColor">#1e8f6f</Color>
+    <Color x:Key="ErrorColor">#d75a4a</Color>
+    <Color x:Key="ErrorDarkColor">#c53d2b</Color>
 
 
 </ResourceDictionary>

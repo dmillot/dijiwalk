@@ -1,14 +1,17 @@
-﻿using DijiWalk.Entities;
+﻿using DijiWalk.Mobile.Resources.Utils;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
 using DijiWalk.Mobile.Views;
+using DijiWalk.Mobile.Views.PopUp;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.Navigation.Xaml;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -19,6 +22,7 @@ namespace DijiWalk.Mobile.ViewModels
         public DelegateCommand<object> NavigateToMainPage { get; set; }
         public DelegateCommand<object> NavigateToStepPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
+        public DelegateCommand<object> PopUpStep { get; set; }
 
         private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
         public ObservableCollection<ViewTeam> Groupes
@@ -26,7 +30,6 @@ namespace DijiWalk.Mobile.ViewModels
             get { return _groupes; }
             set { SetProperty(ref _groupes, value); }
         }
-
 
         private ObservableCollection<ViewPlayer> _participants = new ObservableCollection<ViewPlayer>();
         public ObservableCollection<ViewPlayer> Participants
@@ -40,6 +43,13 @@ namespace DijiWalk.Mobile.ViewModels
         {
             get { return _teamSelected; }
             set { SetProperty(ref _teamSelected, value); }
+        }
+
+        private ObservableCollection<ViewStep> _steps = new ObservableCollection<ViewStep>();
+        public ObservableCollection<ViewStep> Steps
+        {
+            get { return _steps; }
+            set { SetProperty(ref _steps, value); }
         }
         #endregion
 
@@ -104,9 +114,20 @@ namespace DijiWalk.Mobile.ViewModels
                 team.Captain = capitaine.Player;
                 Groupes.Add(team);
             }
+            Dictionary<string, string> validationColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ValidationColor"]) } };
+            Steps = new ObservableCollection<ViewStep>
+            {
+                new ViewStep {Id = 1, Name = "Étape 1", Description="Étape 1 description !", CreationDate = DateTime.Today, ColorValidation = validationColor, NotFirst = false, Validation = true },
+                new ViewStep {Id = 2, Name = "Étape 2", Description="Étape 2 description !", CreationDate = DateTime.Today,ColorValidation = validationColor, Validation = true },
+                new ViewStep {Id = 3, Name = "Étape 3", Description="Étape 3 description !", CreationDate = DateTime.Today},
+                new ViewStep {Id = 4, Name = "Étape 4", Description="Étape 4 description !", CreationDate = DateTime.Today},
+                new ViewStep {Id = 5, Name = "Étape 5", Description="Étape 5 description !", CreationDate = DateTime.Today, NotLast = false}
+            };
+
             this.NavigateToMainPage = new DelegateCommand<object>(GoToMain);
             this.NavigateToStepPage = new DelegateCommand<object>(GoToStep);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
+            this.PopUpStep = new DelegateCommand<object>(GotToPopUpStep);
         }
 
         #region NavigationFunction
@@ -135,6 +156,16 @@ namespace DijiWalk.Mobile.ViewModels
         void GoToLogin(object parameters)
         {
             this.NavigationService.NavigateAsync(nameof(LoginPage), null);
+        }
+
+        /// <summary>
+        /// Fonction appelée quand l'utilisateur veut plus de détails sur une étape déjà réalisé.
+        /// </summary>
+        /// <param name="parameters">Command parameter</param>
+        void GotToPopUpStep(object parameters)
+        {
+            var popup = new StepPopUp((ViewStep)parameters);
+            PopupNavigation.Instance.PushAsync(popup);
         }
         #endregion
 

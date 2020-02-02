@@ -76,6 +76,7 @@ namespace DijiWalk.WebApplication
 
             services.AddDbContext<SmartCityContext>(optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
 
+            #region JWT Token
             var jwtSection = Configuration.GetSection("JWTSettings");
             services.Configure<JWTSettings>(jwtSection);
 
@@ -99,7 +100,7 @@ namespace DijiWalk.WebApplication
                     ValidateAudience = false
                 };
             });
-
+            #endregion
 
         }
 
