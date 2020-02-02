@@ -6,15 +6,23 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
     using DijiWalk.Repositories.Contracts;
+    using DijiWalk.WebApplication.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
     using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json;
 
     /// <summary>
     /// Controller for the Games
     /// </summary>
+
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class GameController : Controller
@@ -22,7 +30,8 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private GameRepository with which we will interact with the database
         /// </summary>
-        private IGameRepository _repository;
+        private readonly IGameRepository _repository;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameController" /> class.
@@ -38,7 +47,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Game</param>
         /// <returns>An Game</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
@@ -55,7 +64,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Game 
         /// </summary>
         /// <returns>A list of Game</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try

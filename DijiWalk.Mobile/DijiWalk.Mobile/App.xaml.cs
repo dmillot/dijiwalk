@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DijiWalk.Mobile.Services.Interfaces;
 using DijiWalk.Mobile.Services;
+using Rg.Plugins.Popup.Contracts;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DijiWalk.Mobile
@@ -24,14 +25,41 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/GamePage");
+
+            #region Property configuration
+            Application.Current.Properties["url"] = "https://10.0.2.2:5001/api/";
+            Application.Current.Properties["APIKey"] = "AIzaSyCDgp4RQYA4bzroTJM2ltv0ef6ceuqW254";
+            #endregion
 
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            #region Services
+            containerRegistry.RegisterSingleton<IAdministratorService, AdministratorService>();
+            containerRegistry.RegisterSingleton<IAnswerService, AnswerService>();
             containerRegistry.RegisterSingleton<IGameService, GameService>();
+            containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+            containerRegistry.RegisterSingleton<IMissionService, MissionService>();
+            containerRegistry.RegisterSingleton<IOrganizerService, OrganizerService>();
+            containerRegistry.RegisterSingleton<IPlayerService, PlayerService>();
+            containerRegistry.RegisterSingleton<IPlayService, PlayService>();
+            containerRegistry.RegisterSingleton<IRouteService, RouteService>();
+            containerRegistry.RegisterSingleton<IRouteStepService, RouteStepService>();
+            containerRegistry.RegisterSingleton<IRouteTagService, RouteTagService>();
+            containerRegistry.RegisterSingleton<IStepService, StepService>();
+            containerRegistry.RegisterSingleton<ITagService, TagService>();
+            containerRegistry.RegisterSingleton<ITeamAnswerService, TeamAnswerService>();
+            containerRegistry.RegisterSingleton<ITeamPlayerService, TeamPlayerService>();
+            containerRegistry.RegisterSingleton<ITeamRouteService, TeamRouteService>();
+            containerRegistry.RegisterSingleton<ITeamService, TeamService>();
+            containerRegistry.RegisterSingleton<ITransportService, TransportService>();
+            containerRegistry.RegisterSingleton<ITrialService, TrialService>();
+            containerRegistry.RegisterSingleton<ITypeService, TypeService>();
+            #endregion
+
+            #region Pages / Navigation
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
@@ -39,6 +67,7 @@ namespace DijiWalk.Mobile
             containerRegistry.RegisterForNavigation<WaitingPage, WaitingPageViewModel>();
             containerRegistry.RegisterForNavigation<ValidationPage, ValidationPageViewModel>();
             containerRegistry.RegisterForNavigation<GamePage, GamePageViewModel>();
+            #endregion
         }
     }
 }

@@ -5,12 +5,17 @@
 
     <div class="row flex-center full-width justify-center q-col-gutter-xl">
 
-      <Card link="/" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
-      <Card link="/" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
-      <Card link="/" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
-      <Card link="/" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
-      <Card link="/" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
-      <Card link="/" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
+        <div class="col-12 col-grow">
+            <q-card @click="onJeuxActuels" link="/jeuActuel" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+               <p class="text-white text-bold q-ma-none text-h4">JEU(X) ACTUEL(S)</p>
+            </q-card>
+        </div>
+        <Card link="/" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
+        <Card link="/" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
+        <Card link="/" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
+        <Card link="/etape" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
+        <Card link="/" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
+        <Card link="/jeu" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
 
     </div>
 
@@ -25,6 +30,11 @@ export default {
   name: 'home',
   components: {
     Card
-  }
+        },
+        methods: {
+            onJeuxActuels() {
+                 this.$router.push("/jeuActuel")
+            }
+        }
 }
 </script>

@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private TagRepository with which we will interact with the database
         /// </summary>
-        private ITagRepository _repository;
+        private readonly ITagRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TagController" /> class.
@@ -36,7 +37,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Tag</param>
         /// <returns>A Tag</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
@@ -53,7 +54,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Tag 
         /// </summary>
         /// <returns>A list of Tag</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try

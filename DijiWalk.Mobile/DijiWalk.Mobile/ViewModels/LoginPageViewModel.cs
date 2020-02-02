@@ -4,6 +4,7 @@ using DijiWalk.Mobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using System;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -13,6 +14,7 @@ namespace DijiWalk.Mobile.ViewModels
         #region Properties
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToMainPage { get; set; }
+
         private readonly GameService _gameService;
 
         #endregion
@@ -31,10 +33,9 @@ namespace DijiWalk.Mobile.ViewModels
         /// Fonction appelée quand l'utilisateur veut se connecter et que ses informations sont correct.
         /// </summary>
         /// <param name="parameters">Command parameter</param>
-        async void GoToMain(object parameters)
+        public void GoToMain(object parameters)
         {
-            //this.NavigationService.NavigateAsync(nameof(MainPage), null);
-            var dsfdsf = await _gameService.GetGameById(2);
+            this.NavigationService.NavigateAsync(nameof(MainPage), null);
         }
 
         
