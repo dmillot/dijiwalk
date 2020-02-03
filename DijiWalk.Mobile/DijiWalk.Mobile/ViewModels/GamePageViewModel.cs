@@ -24,7 +24,10 @@ namespace DijiWalk.Mobile.ViewModels
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
         public DelegateCommand<object> PopUpStep { get; set; }
 
-        private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
+        public Dictionary<string, string>  ColorValidation = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color) Application.Current.Resources["ValidationColor"]) }};
+
+
+private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
         public ObservableCollection<ViewTeam> Groupes
         {
             get { return _groupes; }

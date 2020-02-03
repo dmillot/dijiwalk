@@ -357,5 +357,20 @@
   <ItemGroup>
     <BundleResource Include="Resources\marker.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\square.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\random.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\losange.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\linedialog.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\circle.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

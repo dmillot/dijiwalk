@@ -23,11 +23,36 @@
     <Color x:Key="LightColor">#c9c9c9</Color>
     <Color x:Key="LightDarkColor">#b0b0b0</Color>
     <Color x:Key="GrayColor">#8f8f8f</Color>
-    <Color x:Key="WhiteColor">#f0f0f0</Color>
+    
     <Color x:Key="ValidationColor">#25ae88</Color>
     <Color x:Key="ValidationDarkColor">#1e8f6f</Color>
     <Color x:Key="ErrorColor">#d75a4a</Color>
     <Color x:Key="ErrorDarkColor">#c53d2b</Color>
+
+
+    <Color x:Key="WhiteColor">#f0f0f0</Color>
+    <Color x:Key="WhiteDarkColor">#d6d6d6</Color>
+
+    <Color x:Key="OnePrimaryColor">#63353f</Color>
+    <Color x:Key="OnePrimaryDarkColor">#49272f</Color>
+    
+    <Color x:Key="TwoPrimaryColor">#32804e</Color>
+    <Color x:Key="TwoPrimaryDarkColor">#296a41</Color>
+
+    <Color x:Key="ThreePrimaryColor">#46485f</Color>
+    <Color x:Key="ThreePrimaryDarkColor">#363849</Color>
+
+    <Color x:Key="FourPrimaryColor">#b29531</Color>
+    <Color x:Key="FourPrimaryDarkColor">#98802a</Color>
+    <Color x:Key="FourSecondaryColor">#63353f</Color>
+    <Color x:Key="FourSecondaryDarkColor">#49272f</Color>
+
+    <Color x:Key="FivePrimaryColor">#d8584f</Color>
+    <Color x:Key="FivePrimaryDarkColor">#cd382d</Color>
+
+    <Color x:Key="SixPrimaryColor">#456466</Color>
+    <Color x:Key="SixPrimaryDarkColor">#385052</Color>
+
 
 
 </ResourceDictionary>
