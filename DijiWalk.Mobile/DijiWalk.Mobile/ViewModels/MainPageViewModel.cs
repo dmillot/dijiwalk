@@ -13,6 +13,9 @@ namespace DijiWalk.Mobile.ViewModels
     public class MainPageViewModel : BindableBase, INavigationAware
     {
 
+
+        //ChangeColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFill(Color.Blue) } }; EXEMPLE REPLACESTRINGMAP SVG
+
         #region Properties
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToGamePage { get; set; }

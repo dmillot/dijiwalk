@@ -15,10 +15,16 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class AdministratorRepository : IAdministratorRepository
     {
+
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public AdministratorRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Administrator passed in the parameters to the database
@@ -26,8 +32,8 @@ namespace DijiWalk.Repositories
         /// <param name="administrator">Object Administrator to Add</param>
         public void Add(Administrator administrator)
         {
-            this._smartCityContext.Administrators.Add(administrator);
-            this._smartCityContext.SaveChanges();
+           _context.Administrators.Add(administrator);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="administrator">Object Administrator to Delete</param>
         public void Delete(Administrator administrator)
         {
-            this._smartCityContext.Administrators.Remove(administrator);
-            this._smartCityContext.SaveChanges();
+           _context.Administrators.Remove(administrator);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Administrator with the Id researched</returns>
         public Administrator Find(int id)
         {
-            return this._smartCityContext.Administrators.Find(id);
+            return _context.Administrators.Find(id);
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Administrators</returns>
         public IEnumerable<Administrator> FindAll()
         {
-            return this._smartCityContext.Administrators;
+            return _context.Administrators;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace DijiWalk.Repositories
         /// <param name="administrator">Object Administrator to Update</param>
         public void Update(Administrator administrator)
         {
-            this._smartCityContext.Administrators.Update(administrator);
-            this._smartCityContext.SaveChanges();
+           _context.Administrators.Update(administrator);
+           _context.SaveChanges();
         }
     }
 }

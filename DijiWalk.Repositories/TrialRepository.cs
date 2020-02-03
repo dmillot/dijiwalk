@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TrialRepository : ITrialRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TrialRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Trial passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="trial">Object Trial to Add</param>
         public void Add(Trial trial)
         {
-            this._smartCityContext.Trials.Add(trial);
-            this._smartCityContext.SaveChanges();
+            _context.Trials.Add(trial);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="trial">Object Trial to Delete</param>
         public void Delete(Trial trial)
         {
-            this._smartCityContext.Trials.Remove(trial);
-            this._smartCityContext.SaveChanges();
+            _context.Trials.Remove(trial);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Trial with the Id researched</returns>
         public Trial Find(int id)
         {
-            return this._smartCityContext.Trials.Find(id);
+            return _context.Trials.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Trial</returns>
         public IEnumerable<Trial> FindAll()
         {
-            return this._smartCityContext.Trials;
+            return _context.Trials;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="trial">Object Trial to Update</param>
         public void Update(Trial trial)
         {
-            this._smartCityContext.Trials.Update(trial);
-            this._smartCityContext.SaveChanges();
+            _context.Trials.Update(trial);
+            _context.SaveChanges();
         }
     }
 }

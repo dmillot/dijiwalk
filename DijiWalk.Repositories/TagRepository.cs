@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TagRepository : ITagRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TagRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Tag passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="tag">Object Tag to Add</param>
         public void Add(Tag tag)
         {
-            this._smartCityContext.Tags.Add(tag);
-            this._smartCityContext.SaveChanges();
+            _context.Tags.Add(tag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="tag">Object Tag to Delete</param>
         public void Delete(Tag tag)
         {
-            this._smartCityContext.Tags.Remove(tag);
-            this._smartCityContext.SaveChanges();
+            _context.Tags.Remove(tag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Tag with the Id researched</returns>
         public Tag Find(int id)
         {
-            return this._smartCityContext.Tags.Find(id);
+            return _context.Tags.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Tag</returns>
         public IEnumerable<Tag> FindAll()
         {
-            return this._smartCityContext.Tags;
+            return _context.Tags;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="tag">Object Tag to Update</param>
         public void Update(Tag tag)
         {
-            this._smartCityContext.Tags.Update(tag);
-            this._smartCityContext.SaveChanges();
+            _context.Tags.Update(tag);
+            _context.SaveChanges();
         }
     }
 }

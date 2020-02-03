@@ -69,6 +69,5 @@ namespace DijiWalk.Mobile.Views
             }
         }
 
-      
     }
 }

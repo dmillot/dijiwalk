@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class PlayRepository : IPlayRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public PlayRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the Play passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="play">Object Play to Add</param>
         public void Add(Play play)
         {
-            this._smartCityContext.Plays.Add(play);
-            this._smartCityContext.SaveChanges();
+           _context.Plays.Add(play);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="play">Object Play to Delete</param>
         public void Delete(Play play)
         {
-            this._smartCityContext.Plays.Remove(play);
-            this._smartCityContext.SaveChanges();
+           _context.Plays.Remove(play);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Play with the Id researched</returns>
         public Play Find(int id)
         {
-            return this._smartCityContext.Plays.Find(id);
+            return _context.Plays.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Plays</returns>
         public IEnumerable<Play> FindAll()
         {
-            return this._smartCityContext.Plays;
+            return _context.Plays;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="play">Object Play to Update</param>
         public void Update(Play play)
         {
-            this._smartCityContext.Plays.Update(play);
-            this._smartCityContext.SaveChanges();
+           _context.Plays.Update(play);
+           _context.SaveChanges();
         }
     }
 }

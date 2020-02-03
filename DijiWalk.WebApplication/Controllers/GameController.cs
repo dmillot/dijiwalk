@@ -6,21 +6,32 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
     using DijiWalk.Repositories.Contracts;
+    using DijiWalk.WebApplication.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Controller for the Game
+    /// Controller for the Games
     /// </summary>
-    [Route("api/[controller]")]
+
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class GameController : Controller
     {
         /// <summary>
         /// Object private GameRepository with which we will interact with the database
         /// </summary>
-        private IGameRepository _repository;
+        private readonly IGameRepository _repository;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameController" /> class.
@@ -36,12 +47,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Game</param>
         /// <returns>An Game</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.Find(id), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -53,12 +64,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Game 
         /// </summary>
         /// <returns>A list of Game</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return Ok(this._repository.FindAll());
             }
             catch (Exception e)
             {

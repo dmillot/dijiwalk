@@ -17,6 +17,11 @@ const routes = [
     component: Home
   },
   {
+    path: '/jeuActuel',
+    name: 'jeuActuel',
+    component: () => import('../views/JeuActuel.vue')
+  },
+  {
     path: '/jeu',
     name: 'jeu',
     component: () => import('../views/Jeu.vue')
@@ -30,6 +35,11 @@ const routes = [
     path: '/chat',
     name: 'chat',
     component: () => import('../views/Chat.vue')
+  },
+  {
+    path: '/etape',
+    name: 'etape',
+    component: () => import('../views/Etape.vue')
   }
 ]
 

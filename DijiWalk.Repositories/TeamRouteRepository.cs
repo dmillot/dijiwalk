@@ -15,10 +15,15 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TeamRouteRepository : ITeamRouteRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TeamRouteRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Method to Add the TeamRoute passed in the parameters to the database
@@ -26,8 +31,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamRoute">Object TeamRoute to Add</param>
         public void Add(TeamRoute teamRoute)
         {
-            this._smartCityContext.Teamroutes.Add(teamRoute);
-            this._smartCityContext.SaveChanges();
+           _context.Teamroutes.Add(teamRoute);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamRoute">Object TeamRoute to Delete</param>
         public void Delete(TeamRoute teamRoute)
         {
-            this._smartCityContext.Teamroutes.Remove(teamRoute);
-            this._smartCityContext.SaveChanges();
+           _context.Teamroutes.Remove(teamRoute);
+           _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DijiWalk.Repositories
         /// <returns>The TeamRoute with the Id researched</returns>
         public TeamRoute Find(int id)
         {
-            return this._smartCityContext.Teamroutes.Find(id);
+            return _context.Teamroutes.Find(id);
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all TeamRoutes</returns>
         public IEnumerable<TeamRoute> FindAll()
         {
-            return this._smartCityContext.Teamroutes;
+            return _context.Teamroutes;
         }
 
         /// <summary>
@@ -65,8 +70,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamRoute">Object TeamRoute to Update</param>
         public void Update(TeamRoute teamRoute)
         {
-            this._smartCityContext.Teamroutes.Update(teamRoute);
-            this._smartCityContext.SaveChanges();
+           _context.Teamroutes.Update(teamRoute);
+           _context.SaveChanges();
         }
     }
 }

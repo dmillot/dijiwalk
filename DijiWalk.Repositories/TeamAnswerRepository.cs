@@ -15,10 +15,16 @@ namespace DijiWalk.Repositories
     /// </summary>
     public class TeamAnswerRepository : ITeamAnswerRepository
     {
+        private readonly SmartCityContext _context;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        SmartCityContext _smartCityContext = new SmartCityContext();
+        public TeamAnswerRepository(SmartCityContext context)
+        {
+            _context = context;
+        }
+
 
         /// <summary>
         /// Method to Add the TeamAnswer passed in the parameters to the database
@@ -26,8 +32,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamAnswer">Object TeamAnswer to Add</param>
         public void Add(TeamAnswer teamAnswer)
         {
-            this._smartCityContext.Teamanswers.Add(teamAnswer);
-            this._smartCityContext.SaveChanges();
+            _context.Teamanswers.Add(teamAnswer);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -36,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamAnswer">Object TeamAnswer to Delete</param>
         public void Delete(TeamAnswer teamAnswer)
         {
-            this._smartCityContext.Teamanswers.Remove(teamAnswer);
-            this._smartCityContext.SaveChanges();
+            _context.Teamanswers.Remove(teamAnswer);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace DijiWalk.Repositories
         /// <returns>The TeamAnswer with the Id researched</returns>
         public TeamAnswer Find(int id)
         {
-            return this._smartCityContext.Teamanswers.Find(id);
+            return _context.Teamanswers.Find(id);
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all TeamAnswers</returns>
         public IEnumerable<TeamAnswer> FindAll()
         {
-            return this._smartCityContext.Teamanswers;
+            return _context.Teamanswers;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamAnswer">Object TeamAnswer to Update</param>
         public void Update(TeamAnswer teamAnswer)
         {
-            this._smartCityContext.Teamanswers.Update(teamAnswer);
-            this._smartCityContext.SaveChanges();
+            _context.Teamanswers.Update(teamAnswer);
+            _context.SaveChanges();
         }
     }
 }

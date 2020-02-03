@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <summary>
         /// Object private PlayerRepository with which we will interact with the database
         /// </summary>
-        private IPlayerRepository _repository;
+        private readonly IPlayerRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerController" /> class.
@@ -36,12 +37,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Player</param>
         /// <returns>A Player</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public IActionResult Get(int id)
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.Find(id), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -53,12 +54,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Player 
         /// </summary>
         /// <returns>A list of Player</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAll()
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(this._repository.FindAll());
             }
             catch (Exception e)
             {
