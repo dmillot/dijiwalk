@@ -58,7 +58,7 @@
     </q-header>
     <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
       <div class="col-xs-12 col-md-4 col-grow">
-        <q-card class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
+        <q-card @click="addJeu = true" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
           <q-icon name="fas fa-plus text-white" style="font-size: 4em;" />
         </q-card>
       </div>
@@ -68,6 +68,7 @@
 
           <q-card-section>
             <q-btn
+              @click="confirm = true"
               fab
               color="negative"
               icon="fas fa-trash"
@@ -97,6 +98,43 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="confirm">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" />
+          <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer ce jeu ?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Annuler" color="primary" v-close-popup />
+          <q-btn flat label="Supprimer" color="negative" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="addJeu">
+      <q-card>
+        <q-card-section class="row items-center">
+            <div class="row justify-between">
+                <div class="col-12">
+                    <q-input v-model="text" label="Nom" />
+                </div>
+                <div class="col-12">
+                    <q-input color="primary" v-model="date" type="date" />
+                </div>
+                <div class="col-12">
+                    <q-select v-model="model" :options="parcoursOptions" label="Parcours" />
+                </div>
+            </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Annuler" color="primary" v-close-popup />
+          <q-btn flat label="Ajouter" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -133,13 +171,13 @@ export default {
       equipesOptions: equipes,
       parcoursOptions: parcours,
       participantsOptions: participants,
-      jeux: listeJeux
+      jeux: listeJeux,
+      confirm: false,
+      addJeu: false
+
     }
   },
   methods: {
-    // navigateToJeu () {
-    //   this.$router.push({ name: 'home' })
-    // },
     filterEquipe (val, update) {
       update(() => {
         if (val === '') {
