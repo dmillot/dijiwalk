@@ -14,8 +14,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Message
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class MessageController : Controller
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Message</param>
         /// <returns>An Message</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -54,7 +53,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Message 
         /// </summary>
         /// <returns>A list of Message</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

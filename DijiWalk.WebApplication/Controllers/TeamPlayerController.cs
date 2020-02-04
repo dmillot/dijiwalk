@@ -14,8 +14,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the TeamPlayer
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class TeamPlayerController : Controller
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the TeamPlayer</param>
         /// <returns>A TeamPlayer</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -54,7 +53,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all TeamPlayer 
         /// </summary>
         /// <returns>A list of TeamPlayer</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

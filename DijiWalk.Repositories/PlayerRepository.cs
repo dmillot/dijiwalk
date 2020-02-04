@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Player to the database
@@ -51,18 +53,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Player</param>
         /// <returns>The Player with the Id researched</returns>
-        public Player Find(int id)
+        public async Task<Player> Find(int id)
         {
-            return _context.Players.Find(id);
+            return await _context.Players.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Player from the database
         /// </summary>
         /// <returns>A List with all Players</returns>
-        public IEnumerable<Player> FindAll()
+        public async Task<IEnumerable<Player>> FindAll()
         {
-            return _context.Players;
+            return await _context.Players.ToListAsync();
         }
 
         /// <summary>

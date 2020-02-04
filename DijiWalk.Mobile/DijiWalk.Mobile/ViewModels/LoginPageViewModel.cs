@@ -1,10 +1,15 @@
-﻿using DijiWalk.Entities;
+﻿using DijiWalk.Common.Encryption;
+using DijiWalk.Entities;
 using DijiWalk.Mobile.Services;
+using DijiWalk.Mobile.Services.Interfaces;
+using DijiWalk.Mobile.ViewModels.ViewEntities;
 using DijiWalk.Mobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
+using System.ComponentModel;
+using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -13,18 +18,31 @@ namespace DijiWalk.Mobile.ViewModels
 
         #region Properties
         public INavigationService NavigationService { get; private set; }
-        public DelegateCommand<object> NavigateToMainPage { get; set; }
+        public DelegateCommand<object> NavigateToMainPage => new DelegateCommand<object>(GoToMain);
+
+        #region Authentification
+
+
+
+        private Login _login;
+        public Login Login
+        {
+            get { return _login; }
+            set { SetProperty(ref _login, value); }
+        }
+        #endregion
 
         private readonly GameService _gameService;
+        private readonly AuthentificationService _authentificationService;
 
         #endregion
 
-        public LoginPageViewModel(GameService gameService,INavigationService navigationService)
+        public LoginPageViewModel(GameService gameService, AuthentificationService authentificationService, INavigationService navigationService)
         {
             NavigationService = navigationService;
-            this.NavigateToMainPage = new DelegateCommand<object>(GoToMain);
             _gameService = gameService;
-
+            _authentificationService = authentificationService;
+            Login = new Login();
         }
 
 
@@ -33,12 +51,15 @@ namespace DijiWalk.Mobile.ViewModels
         /// Fonction appelée quand l'utilisateur veut se connecter et que ses informations sont correct.
         /// </summary>
         /// <param name="parameters">Command parameter</param>
-        public void GoToMain(object parameters)
+        public async void GoToMain(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(MainPage), null);
+            if (Login.Validate())
+            {
+                await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
+                this.NavigationService.NavigateAsync(nameof(MainPage), null);
+            }
         }
 
-        
         #endregion
 
 

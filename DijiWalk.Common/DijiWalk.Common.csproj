@@ -11,6 +11,11 @@
 
   <ItemGroup>
     <PackageReference Include="Forms.Controls.FlexButton" Version="0.11.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DijiWalk.Common.Contracts\DijiWalk.Common.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

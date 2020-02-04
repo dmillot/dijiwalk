@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DijiWalk.Entities
 {
@@ -15,11 +17,14 @@ namespace DijiWalk.Entities
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [JsonProperty(PropertyName = "Login")]
         public string Login { get; set; }
+        [JsonProperty(PropertyName = "Password")]
         public string Password { get; set; }
         public string Email { get; set; }
         public string Picture { get; set; }
         public int? IdOrganizer { get; set; }
+
 
         public virtual Organizer Organizer { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
