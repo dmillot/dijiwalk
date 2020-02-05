@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Administrator passed in the parameters
         /// </summary>
         /// <param name="administrator">Object Administrator to Delete</param>
-        void Delete(Administrator administrator);
+        Task<ApiResponse> Delete(int idAdministrator);
 
         /// <summary>
         /// Definition of the method to find an Administrator with his Id

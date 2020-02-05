@@ -1,4 +1,5 @@
 ﻿using DijiWalk.Common.Exceptions;
+using DijiWalk.Common.Response;
 using DijiWalk.Entities;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories.Contracts;
@@ -31,8 +32,8 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
             _authentificationRepository = authenficiationRepository;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Player login)
+        [HttpPost,Route("player")]
+        public async Task<IActionResult> PostPlayer([FromBody] Player login)
         {
 
             try
@@ -64,6 +65,42 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
                 return this.StatusCode(500, e);
             }
         }
+
+        [HttpPost, Route("organizer")]
+        public async Task<IActionResult> PostOrganizer([FromBody] Organizer login)
+        {
+
+            try
+            {
+                var user = await _authentificationRepository.Authentificate(login);
+                if (user != null)
+                {
+                    var claims = new[] {
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                        new Claim("Id", user.Id.ToString()),
+                        new Claim("FirstName", user.FirstName),
+                        new Claim("LastName", user.LastName),
+                        new Claim("UserName", user.Login),
+                        new Claim("Email", user.OrganizerEmail)
+                       };
+
+                    var token = new JwtSecurityToken(claims: claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTSettings:SecretKey"])), SecurityAlgorithms.HmacSha256));
+
+                    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
+                }
+                else
+                {
+                    return Ok(new ApiResponse { Status = ApiStatus.InvalidAuth, Message = "Invalid informations, try again !" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
 
     }
 }

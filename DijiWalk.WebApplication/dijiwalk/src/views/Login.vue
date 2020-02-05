@@ -70,6 +70,7 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         data() {
             return {
@@ -101,11 +102,19 @@
             onSubmit() {
                 if (this.password != null && this.name != null) {
                     var self = this;
-                    axios.post("api/token", {
+                    axios.post("api/token/organizer", {
                         "Login": this.name,
                         "Password": this.password
                     }).then(function (response) {
-                        if ('message' in response.data) {
+                        if ('token' in response.data) {
+                            self.$q.cookies.set('JWTToken', response.data.token, { expries: response.data.expiration });
+                            self.$q.notify({
+                            message: "Connexion réussie !",
+                            color: 'secondary',
+                            icon: 'fas fa-check-square',
+                            position: 'top'
+                        })
+                        } else {
                             self.error = true;
                             self.errorInfo = response.data["message"];
                             setTimeout(self.onResetValidation, 3000);

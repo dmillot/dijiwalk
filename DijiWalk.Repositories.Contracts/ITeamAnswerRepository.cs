@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the TeamAnswer passed in the parameters
         /// </summary>
         /// <param name="teamAnswer">Object TeamAnswer to Delete</param>
-        void Delete(TeamAnswer teamAnswer);
+        Task<ApiResponse> Delete(int idTeamAnswer);
 
         /// <summary>
         /// Definition of the method to find an TeamAnswer with his Id

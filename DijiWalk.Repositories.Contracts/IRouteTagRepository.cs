@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,14 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the RouteTag passed in the parameters
         /// </summary>
         /// <param name="routeTag">Object RouteTag to Delete</param>
-        void Delete(RouteTag routeTag);
+        Task<ApiResponse> Delete(int idRouteTag);
+
+
+        /// <summary>
+        /// Method to Delete all route tag of a route
+        /// </summary>
+        /// <param name="idRoute">id of the route</param>
+        Task<ApiResponse> DeleteAll(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an RouteTag with his Id

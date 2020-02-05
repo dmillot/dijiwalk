@@ -86,7 +86,6 @@ namespace DijiWalk.WebApplication
 
             #region Common
                 services.AddScoped<ICryption, Cryption>();
-                services.AddScoped<IApiResponse, ApiResponse>();
             #endregion
 
             #region JWT Token

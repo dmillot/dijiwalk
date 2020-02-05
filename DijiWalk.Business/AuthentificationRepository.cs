@@ -43,5 +43,14 @@ namespace DijiWalk.Repositories
             return await _context.Players.FirstOrDefaultAsync(p => p.Login == player.Login && p.Password == _cryption.Encrypt(player.Password));
         }
 
+        /// <summary>
+        /// Definition of the function that will authentificate the Organizer passed in the parameters to the database
+        /// </summary>
+        /// <param name="organizer">Object Organizer to authentificate</param>
+        public async Task<Organizer> Authentificate(Organizer organizer)
+        {
+            return await _context.Organizers.FirstOrDefaultAsync(p => p.Login == organizer.Login && p.Password == _cryption.Encrypt(organizer.Password));
+        }
+
     }
 }

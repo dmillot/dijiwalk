@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the TeamRoute passed in the parameters
         /// </summary>
         /// <param name="teamRoute">Object TeamRoute to Delete</param>
-        void Delete(TeamRoute teamRoute);
+        Task<ApiResponse> Delete(int idTeamRoute);
+
+        /// <summary>
+        /// Method to Delete all team route with route id
+        /// </summary>
+        /// <param name="idRoute">id of the route</param>
+        Task<ApiResponse> DeleteAll(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an TeamRoute with his Id

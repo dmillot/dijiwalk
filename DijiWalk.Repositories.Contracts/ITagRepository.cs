@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Tag passed in the parameters
         /// </summary>
         /// <param name="tag">Object Tag to Delete</param>
-        void Delete(Tag tag);
+        Task<ApiResponse> Delete(int idTag);
 
         /// <summary>
         /// Definition of the method to find an Tag with his Id

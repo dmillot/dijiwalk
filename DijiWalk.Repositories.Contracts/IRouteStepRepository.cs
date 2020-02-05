@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the RouteStep passed in the parameters
         /// </summary>
         /// <param name="routeStep">Object RouteStep to Delete</param>
-        void Delete(RouteStep routeStep);
+        Task<ApiResponse> Delete(int idRouteStep);
+
+        /// <summary>
+        /// Method to Delete all route step of a route
+        /// </summary>
+        /// <param name="idRoute">id of the route</param>
+        Task<ApiResponse> DeleteAll(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an RouteStep with his Id
