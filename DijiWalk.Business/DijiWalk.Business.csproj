@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DijiWalk.Business.Contracts\DijiWalk.Business.Contracts.csproj" />
+    <ProjectReference Include="..\DijiWalk.Common\DijiWalk.Common.csproj" />
+    <ProjectReference Include="..\DijiWalk.EntitiesContext\DijiWalk.EntitiesContext.csproj" />
+    <ProjectReference Include="..\DijiWalk.Entities\DijiWalk.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

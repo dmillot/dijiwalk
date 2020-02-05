@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Message to the database
@@ -50,18 +52,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Message</param>
         /// <returns>The Message with the Id researched</returns>
-        public Message Find(int id)
+        public async Task<Message> Find(int id)
         {
-            return _context.Messages.Find(id);
+            return await _context.Messages.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Message from the database
         /// </summary>
         /// <returns>A List with all Messages</returns>
-        public IEnumerable<Message> FindAll()
+        public async Task<IEnumerable<Message>> FindAll()
         {
-            return _context.Messages;
+            return await _context.Messages.ToListAsync();
         }
 
         /// <summary>

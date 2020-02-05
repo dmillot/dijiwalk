@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DijiWalk.Common.Contracts;
+using DijiWalk.Common.Encryption;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
 using DijiWalk.WebApplication.Models;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +54,7 @@ namespace DijiWalk.WebApplication
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(option => option.SerializerSettings.AddCustomSettings());
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
+            services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
 
             #region Repositories
             services.AddScoped<IAdministratorRepository, AdministratorRepository>();
@@ -74,7 +79,13 @@ namespace DijiWalk.WebApplication
             services.AddScoped<ITypeRepository,  TypeRepository>();
             #endregion
 
-            services.AddDbContext<SmartCityContext>(optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+            #region Business Layer
+            services.AddScoped<IAuthentificationRepository, AuthentificationRepository>();
+            #endregion
+
+            #region Common
+            services.AddScoped<ICryption, Cryption>();
+            #endregion
 
             #region JWT Token
             var jwtSection = Configuration.GetSection("JWTSettings");
@@ -87,6 +98,7 @@ namespace DijiWalk.WebApplication
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; 
             })
             .AddJwtBearer(x =>
             {
@@ -102,10 +114,13 @@ namespace DijiWalk.WebApplication
             });
             #endregion
 
+            services.AddDbContext<SmartCityContext>(optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+            services.AddSingleton(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery)
         {
             if (env.IsDevelopment())
             {
@@ -123,6 +138,17 @@ namespace DijiWalk.WebApplication
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.Use(next => context =>
+            {
+                if ( string.Equals(context.Request.Path.Value, "/"))
+                {
+                    var token = antiforgery.GetAndStoreTokens(context).RequestToken;
+                    context.Response.Cookies.Append("XSRF-TOKEN", token, new CookieOptions { HttpOnly = false, Secure = true });
+                }
+
+                return next(context);
+            });
 
             app.UseSpaStaticFiles();
 

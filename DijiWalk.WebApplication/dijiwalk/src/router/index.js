@@ -27,6 +27,16 @@ const routes = [
     component: () => import('../views/Jeu.vue')
   },
   {
+    path: '/equipe',
+    name: 'equipe',
+    component: () => import('../views/Equipe.vue')
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/Chat.vue')
+  },
+  {
     path: '/etape',
     name: 'etape',
     component: () => import('../views/Etape.vue')

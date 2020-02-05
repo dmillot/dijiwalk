@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:effects="clr-namespace:DijiWalk.Mobile.Resources.effects"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:converters="clr-namespace:DijiWalk.Mobile.Resources.converters"
              x:Class="DijiWalk.Mobile.Views.LoginPage"
              Title="Connexion"
              BackgroundColor="#D18D28">
 
-    <Grid RowSpacing="100">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="60*" />
@@ -15,25 +16,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="90" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="60*"/>
-                <ColumnDefinition Width="20*"/>
-            </Grid.ColumnDefinitions>
-
-
-
-            <StackLayout Margin="0,20,0,0" Grid.Column="1">
-                <Image Aspect="AspectFit" Source="logo.png"></Image>
-            </StackLayout>
-        </Grid>
+       
         <StackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-            <Label Padding="35" TextColor="White" Text="DijiWalk est une application qui permet de visiter la ville de Dijon. Découvre-la à l'aide de différents parcours culturels, gastronomiques et touristiques au sein de votre équipe. Le but, avoir le plus de points gagnés lors d'étapes.">
+            <Image Aspect="AspectFit" Source="logo.png" HeightRequest="200" WidthRequest="200"></Image>
+            <Label Padding="10" TextColor="White" Text="DijiWalk est une application qui permet de visiter la ville de Dijon. Découvre-la à l'aide de différents parcours culturels, gastronomiques et touristiques au sein de votre équipe. Le but, avoir le plus de points gagnés lors d'étapes.">
                 <Label.Effects>
                     <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                         <effects:ShadowEffect.Color>
@@ -45,32 +31,44 @@
                     </effects:ShadowEffect>
                 </Label.Effects>
             </Label>
-            <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Pseudo :">
-                <Label.Effects>
-                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                        <effects:ShadowEffect.Color>
-                            <OnPlatform x:TypeArguments="Color">
-                                <On Platform="iOS" Value="Black" />
-                                <On Platform="Android" Value="Black" />
-                            </OnPlatform>
-                        </effects:ShadowEffect.Color>
-                    </effects:ShadowEffect>
-                </Label.Effects>
-            </Label>
-            <Entry TextColor="White"></Entry>
-            <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Mot de passe :">
-                <Label.Effects>
-                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                        <effects:ShadowEffect.Color>
-                            <OnPlatform x:TypeArguments="Color">
-                                <On Platform="iOS" Value="Black" />
-                                <On Platform="Android" Value="Black" />
-                            </OnPlatform>
-                        </effects:ShadowEffect.Color>
-                    </effects:ShadowEffect>
-                </Label.Effects>
-            </Label>
-            <Entry TextColor="White"></Entry>
+            <StackLayout Margin="10,0">
+                <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Pseudo :">
+                    <Label.Effects>
+                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                            <effects:ShadowEffect.Color>
+                                <OnPlatform x:TypeArguments="Color">
+                                    <On Platform="iOS" Value="Black" />
+                                    <On Platform="Android" Value="Black" />
+                                </OnPlatform>
+                            </effects:ShadowEffect.Color>
+                        </effects:ShadowEffect>
+                    </Label.Effects>
+                </Label>
+                <Entry TextColor="White" Text="{Binding Path=Login.Pseudo.Value, Mode=TwoWay}">
+
+                </Entry>
+                <Label Text="{Binding Login.PseudoError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
+
+            </StackLayout>
+            <StackLayout Margin="10,0">
+                <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Mot de passe :">
+                    <Label.Effects>
+                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                            <effects:ShadowEffect.Color>
+                                <OnPlatform x:TypeArguments="Color">
+                                    <On Platform="iOS" Value="Black" />
+                                    <On Platform="Android" Value="Black" />
+                                </OnPlatform>
+                            </effects:ShadowEffect.Color>
+                        </effects:ShadowEffect>
+                    </Label.Effects>
+                </Label>
+                <Entry IsPassword="True" TextColor="White" Text="{Binding Path=Login.Password.Value, Mode=TwoWay}">
+ 
+                </Entry>
+                <Label Text="{Binding Login.PasswordError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
+            </StackLayout>
+
 
             <Grid HeightRequest="65" Margin="75,20,75,0">
                 <Grid.ColumnDefinitions>

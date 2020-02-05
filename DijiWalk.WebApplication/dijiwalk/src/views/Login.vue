@@ -5,7 +5,7 @@
                 <q-card-section class="flex column flex-center">
                     <h4 v-if="login" class="text-bold text-red-14 q-ma-none q-mb-lg">Connexion</h4>
                     <h4 v-else class="text-bold text-red-14 q-ma-none q-mb-lg">Inscription</h4>
-                    <q-form @submit="onSubmit" @reset="onReset" class="row" >
+                    <q-form @submit="onSubmit" @reset="onReset" class="row">
                         <template v-if="!login">
                             <div class="row justify-between">
                                 <div class="col-5">
@@ -32,14 +32,14 @@
                             </div>
                         </template>
                         <div class="col-12">
-                            <q-input color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']">
+                            <q-input ref="pseudoText" color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']" :error-message="errorInfo"  :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-user" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-12">
-                            <q-input color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']">
+                            <q-input ref="passwordText" color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']" :error-message="errorInfo"  :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-lock" />
                                 </template>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-
+    import axios from 'axios'
     export default {
         data() {
             return {
@@ -79,7 +79,9 @@
                 password: null,
                 firstName: null,
                 lastName: null,
-                mail: null
+                mail: null,
+                error: false,
+                errorInfo: null
             }
         },
         methods: {
@@ -89,24 +91,27 @@
                 this.firstName = null
                 this.lastName = null
                 this.mail = null
+                this.error = false
+                this.errorInfo = null;
+            },
+            onResetValidation() {
+                this.error = false
+                this.errorInfo = null;
             },
             onSubmit() {
-                if (this.name != "damien" && this.password != "1234azerty" ) {
-                    this.$q.notify({
-                        color: 'red-5',
-                        textColor: 'white',
-                        icon: 'fas fa-exclamation-triangle',
-                        message: 'Wrong informations, please try again !'
+                if (this.password != null && this.name != null) {
+                    var self = this;
+                    axios.post("api/token", {
+                        "Login": this.name,
+                        "Password": this.password
+                    }).then(function (response) {
+                        if ('message' in response.data) {
+                            self.error = true;
+                            self.errorInfo = response.data["message"];
+                            setTimeout(self.onResetValidation, 3000);
+                        }
                     })
-                }
-                else {
-                    this.$q.notify({
-                        color: 'green-4',
-                        textColor: 'white',
-                        icon: 'fas fa-check',
-                        message: 'Informations validated'
-                    });
-                    this.$router.push("/")
+
                 }
             }
         }

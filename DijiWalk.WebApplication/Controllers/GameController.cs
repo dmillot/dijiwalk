@@ -22,9 +22,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// Controller for the Games
     /// </summary>
 
-    [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class GameController : Controller
     {
         /// <summary>
@@ -47,7 +45,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Game</param>
         /// <returns>An Game</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -64,7 +62,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Game 
         /// </summary>
         /// <returns>A list of Game</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

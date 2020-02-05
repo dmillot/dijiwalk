@@ -14,8 +14,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Mission
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class MissionController : Controller
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Mission</param>
         /// <returns>A Mission</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -54,7 +53,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Mission 
         /// </summary>
         /// <returns>A list of Mission</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

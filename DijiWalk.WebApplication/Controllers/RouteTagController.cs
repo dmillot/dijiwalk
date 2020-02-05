@@ -14,8 +14,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the RouteTag
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class RouteTagController : Controller
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the RouteTag</param>
         /// <returns>A RouteTag</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -54,7 +53,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all RouteTag 
         /// </summary>
         /// <returns>A list of RouteTag</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

@@ -14,8 +14,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Organizer
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class OrganizerController : Controller
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Organizer</param>
         /// <returns>An Organizer</returns>
-        [HttpGet("{id}"), AllowAnonymous]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -54,7 +53,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Organizer 
         /// </summary>
         /// <returns>A list of Organizer</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try

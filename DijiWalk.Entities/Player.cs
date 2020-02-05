@@ -1,8 +1,15 @@
-﻿//-----------------------------------------------------------------------
+﻿
+//-----------------------------------------------------------------------
 // <copyright file="Player.cs" company="DijiWalk">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
+
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 namespace DijiWalk.Entities
 {
     using System.Collections.Generic;
@@ -37,14 +44,17 @@ namespace DijiWalk.Entities
         /// </summary>
         public string LastName { get; set; }
 
+       
         /// <summary>
         /// Obtient ou définit le Pseudo du Joueur
         /// </summary>
+        [JsonProperty(PropertyName = "Login")]
         public string Login { get; set; }
-
+       
         /// <summary>
         /// Obtient ou définit le Mot de Passe du Joueur
         /// </summary>
+         [JsonProperty(PropertyName = "Password")]
         public string Password { get; set; }
 
         /// <summary>
@@ -65,6 +75,7 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit l'Organisateur ayant créé le Joueur
         /// </summary>
+
         public virtual Organizer Organizer { get; set; }
 
         /// <summary>

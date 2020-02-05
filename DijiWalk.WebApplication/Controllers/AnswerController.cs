@@ -6,6 +6,7 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Answer
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class AnswerController : Controller
     {
         /// <summary>
@@ -37,12 +37,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Answer</param>
         /// <returns>An Answer</returns>
-        [HttpGet("{id}"), AllowAnonymous]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,7 +54,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Answer
         /// </summary>
         /// <returns>A list of Answer</returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public IActionResult GetAll()
         {
             try
