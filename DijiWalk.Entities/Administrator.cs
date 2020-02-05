@@ -21,32 +21,32 @@ namespace DijiWalk.Entities
         }
 
         /// <summary>
-        /// Obtient ou définit l'Id d'un Administrateur
+        /// Obtient ou définit l'Id de l'Administrateur
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Obtient ou définit le Prenom d'un Administrateur
+        /// Obtient ou définit le Prenom de l'Administrateur
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Obtient ou définit le Nom d'un Administrateur
+        /// Obtient ou définit le Nom de l'Administrateur
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
-        /// Obtient ou définit le Pseudo d'un Administrateur
+        /// Obtient ou définit le Pseudo de l'Administrateur
         /// </summary>
         public string Login { get; set; }
 
         /// <summary>
-        /// Obtient ou définit le Mot de Passe d'un Administrateur
+        /// Obtient ou définit le Mot de Passe de l'Administrateur
         /// </summary>
         public string Password { get; set; }
 
         /// <summary>
-        /// Obtient ou définit l'Email d'un Administrateur
+        /// Obtient ou définit l'Email de l'Administrateur
         /// </summary>
         public string Email { get; set; }
 
