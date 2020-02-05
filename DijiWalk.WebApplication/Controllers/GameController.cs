@@ -9,6 +9,8 @@ namespace DijiWalk.WebApplication.Controllers
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading.Tasks;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using DijiWalk.WebApplication.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -22,7 +24,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// Controller for the Games
     /// </summary>
 
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class GameController : Controller
     {
         /// <summary>
@@ -56,6 +58,7 @@ namespace DijiWalk.WebApplication.Controllers
             {
                 return this.StatusCode(500, e);
             }
+
         }
 
         /// <summary>
@@ -68,6 +71,41 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 return Ok(this._repository.FindAll());
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public IActionResult Post([FromBody] Game game)
+        {
+            try
+            {
+                this._repository.Add(game);
+                return Ok("ok");
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to delete a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
             }
             catch (Exception e)
             {

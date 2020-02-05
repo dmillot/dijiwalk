@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -44,10 +45,18 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        public void Delete(Game game)
+        public async Task<string> Delete(int id)
         {
-            _context.Games.Remove(game);
-            _context.SaveChanges();
+            try
+            {
+                _context.Games.Remove(await _context.Games.FindAsync(id));
+                _context.SaveChanges();
+                return "success";
+            }
+            catch (Exception e)
+            {
+                return e.Message + " " + e.InnerException;
+            }
         }
 
         /// <summary>

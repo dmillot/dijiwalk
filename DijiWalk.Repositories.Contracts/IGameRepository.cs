@@ -24,7 +24,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        void Delete(Game game);
+        Task<string> Delete(int id);
 
         /// <summary>
         /// Definition of the method to find an Game with his Id

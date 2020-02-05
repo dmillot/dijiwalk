@@ -68,7 +68,7 @@
 
           <q-card-section>
             <q-btn
-              @click="confirm = true"
+              @click="openModalToDelete(jeu)"
               fab
               color="negative"
               icon="fas fa-trash"
@@ -78,12 +78,12 @@
 
             <div class="row no-wrap">
               <div class="col text-left text-bold text-h6 ellipsis">
-                {{ jeu.name }}
+                Jeu n°{{ jeu.id }}
               </div>
             </div>
             <div class="row items-center no-wrap text-grey">
               <q-icon name="fas fa-calendar" />
-              <p class="q-ma-none q-ml-xs">{{ jeu.date }}</p>
+              <p class="q-ma-none q-ml-xs">{{ jeu.creationDate | formatDate }}</p>
             </div>
           </q-card-section>
 
@@ -103,7 +103,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" />
-          <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer ce jeu ?</span>
+          <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer le jeu n°{{ selectedGameId }} ?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -142,6 +142,9 @@
 </template>
 
 <script>
+import moment from 'moment'
+import axios from 'axios';
+
 const equipes = [
   'Équipe 1', 'Équipe 2', 'Équipe 3', 'Équipe 4', 'Équipe 5'
 ]
@@ -168,19 +171,34 @@ export default {
   name: 'jeu',
   data () {
     return {
-      modelEquipe: null,
-      modelParcours: null,
-      modelParticipants: null,
-      equipesOptions: equipes,
-      parcoursOptions: parcours,
-      participantsOptions: participants,
-      jeux: listeJeux,
-      confirm: false,
-      addJeu: false
+        modelEquipe: null,
+        modelParcours: null,
+        modelParticipants: null,
+        equipesOptions: equipes,
+        parcoursOptions: parcours,
+        participantsOptions: participants,
+        selectedGameId: null,
+        jeux: listeJeux,
+        confirm: false,
+        addJeu: false
 
     }
   },
-  methods: {
+        filters: {
+            formatDate: function (value) {
+                if (!value) return ''
+                return moment(String(value)).format('MM/DD/YYYY à hh:mm')
+              }
+        },
+  created() {
+
+        axios.get('api/game').then(response => {
+            this.jeux = response.data.result;
+        }).catch(reason => {
+            console.log(reason);
+        });
+    },
+    methods: {
     filterEquipe (val, update) {
       update(() => {
         if (val === '') {
@@ -193,7 +211,16 @@ export default {
           )
         }
       })
-    },
+        },
+        openModalToDelete (game) {
+            this.confirm = true,
+            this.selectedGameId = game.id,
+            axios.delete("api/game", {params: {id: game.id}}).then(response => {
+                console.log(response);
+            }).catch(reason => {
+                console.log(reason);
+            });
+        },
     filterParcours (val, update) {
       update(() => {
         if (val === '') {
