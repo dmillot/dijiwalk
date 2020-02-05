@@ -55,11 +55,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Administrator</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {

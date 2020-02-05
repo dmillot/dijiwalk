@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Type to the database
@@ -51,18 +53,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Type</param>
         /// <returns>The Type with the Id researched</returns>
-        public Type Find(int id)
+        public async Task<Type> Find(int id)
         {
-            return _context.Types.Find(id);
+            return await _context.Types.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Type from the database
         /// </summary>
         /// <returns>A List with all Type</returns>
-        public IEnumerable<Type> FindAll()
+        public async Task<IEnumerable<Type>> FindAll()
         {
-            return _context.Types;
+            return await _context.Types.ToListAsync();
         }
 
         /// <summary>

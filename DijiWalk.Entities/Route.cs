@@ -51,7 +51,7 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit la Distance de la Route
         /// </summary>
-        public string Distance { get; set; }
+        public int? Distance { get; set; }
 
         /// <summary>
         /// Obtient ou définit l'Id de L'Organisateur de la Route

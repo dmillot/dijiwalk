@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Mission</param>
         /// <returns>The Mission with the Id researched</returns>
-        Mission Find(int id);
+        Task<Mission> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Mission
         /// </summary>
         /// <returns>A List of Missions</returns>
-        IEnumerable<Mission> FindAll();
+        Task<IEnumerable<Mission>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Mission passed in the parameters to the database

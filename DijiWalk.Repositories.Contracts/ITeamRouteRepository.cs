@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the TeamRoute</param>
         /// <returns>The TeamRoute with the Id researched</returns>
-        TeamRoute Find(int id);
+        Task<TeamRoute> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all TeamRoute
         /// </summary>
         /// <returns>A List of TeamRoutes</returns>
-        IEnumerable<TeamRoute> FindAll();
+        Task<IEnumerable<TeamRoute>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the TeamRoute passed in the parameters to the database

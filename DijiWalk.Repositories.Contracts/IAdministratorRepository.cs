@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Administrator</param>
         /// <returns>The Administrator with the Id researched</returns>
-        Administrator Find(int id);
+        Task<Administrator> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Administrator
         /// </summary>
         /// <returns>A List of Administrator</returns>
-        IEnumerable<Administrator> FindAll();
+        Task<IEnumerable<Administrator>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Administrator passed in the parameters to the database

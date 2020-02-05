@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -54,7 +55,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.FindAsync(id);
+            return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).ThenInclude(r => r.Route).FirstOrDefaultAsync();
         }
 
         /// <summary>

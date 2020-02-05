@@ -55,11 +55,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Answer</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {

@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Route</param>
         /// <returns>The Route with the Id researched</returns>
-        Route Find(int id);
+        Task<Route> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Route
         /// </summary>
         /// <returns>A List of Routes</returns>
-        IEnumerable<Route> FindAll();
+        Task<IEnumerable<Route>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Route passed in the parameters to the database

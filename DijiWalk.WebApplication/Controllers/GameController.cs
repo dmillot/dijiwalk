@@ -9,6 +9,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using DijiWalk.WebApplication.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -46,11 +47,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Game</param>
         /// <returns>An Game</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -63,11 +64,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Game</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(this._repository.FindAll());
+                return Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
