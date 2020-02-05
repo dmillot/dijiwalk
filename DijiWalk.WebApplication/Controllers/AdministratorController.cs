@@ -6,6 +6,7 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -37,11 +38,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Administrator</param>
         /// <returns>An Administrator</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.Find(id), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
