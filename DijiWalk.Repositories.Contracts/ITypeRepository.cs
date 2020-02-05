@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Type</param>
         /// <returns>The Type with the Id researched</returns>
-        Type Find(int id);
+        Task<Type> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Type
         /// </summary>
         /// <returns>A List of Types</returns>
-        IEnumerable<Type> FindAll();
+        Task<IEnumerable<Type>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Type passed in the parameters to the database

@@ -6,6 +6,7 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the RouteStep
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class RouteStepController : Controller
     {
         /// <summary>
@@ -37,11 +38,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the RouteStep</param>
         /// <returns>A RouteStep</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,11 +55,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of RouteStep</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(JsonConvert.SerializeObject(this._repository.FindAll(), Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {

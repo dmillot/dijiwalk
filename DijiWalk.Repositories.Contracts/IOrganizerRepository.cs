@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Organizer</param>
         /// <returns>The Organizer with the Id researched</returns>
-        Organizer Find(int id);
+        Task<Organizer> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Organizer
         /// </summary>
         /// <returns>A List of Organizers</returns>
-        IEnumerable<Organizer> FindAll();
+        Task<IEnumerable<Organizer>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Organizer passed in the parameters to the database

@@ -5,10 +5,16 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Transport to the database
@@ -17,12 +23,15 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
+        private readonly IApiResponse _apiResponse;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public TransportRepository(SmartCityContext context)
+        public TransportRepository(SmartCityContext context, IApiResponse apiResponse)
         {
             _context = context;
+            _apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -39,10 +48,19 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Transport passed in the parameters
         /// </summary>
         /// <param name="transport">Object Transport to Delete</param>
-        public void Delete(Transport transport)
+        public async Task<string> Delete(int idTransport)
         {
-            _context.Transports.Remove(transport);
-            _context.SaveChanges();
+            try
+            {
+                _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
+                _context.SaveChanges();
+                return _apiResponse.GetMessageDelete();
+            }
+            catch (Exception e)
+            {
+                return _apiResponse.TranslateError(e);
+            }
+
         }
 
         /// <summary>
@@ -50,18 +68,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Transport</param>
         /// <returns>The Transport with the Id researched</returns>
-        public Transport Find(int id)
+        public async Task<Transport> Find(int id)
         {
-            return _context.Transports.Find(id);
+            return await _context.Transports.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Transport from the database
         /// </summary>
         /// <returns>A List with all Transport</returns>
-        public IEnumerable<Transport> FindAll()
+        public async Task<IEnumerable<Transport>> FindAll()
         {
-            return _context.Transports;
+            return await _context.Transports.ToListAsync();
         }
 
         /// <summary>

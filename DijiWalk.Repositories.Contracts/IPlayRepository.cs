@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Play</param>
         /// <returns>The Play with the Id researched</returns>
-        Play Find(int id);
+        Task<Play> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Play
         /// </summary>
         /// <returns>A List of Plays</returns>
-        IEnumerable<Play> FindAll();
+        Task<IEnumerable<Play>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Play passed in the parameters to the database
