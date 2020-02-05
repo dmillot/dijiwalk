@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -40,11 +41,19 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Method to Delete from the database the Step passed in the parameters
         /// </summary>
-        /// <param name="step">Object Step to Delete</param>
-        public void Delete(Step step)
+        /// <param name="idStep">Object Step to Delete</param>
+        public async Task<string> Delete(int idStep)
         {
-            _context.Steps.Remove(step);
-            _context.SaveChanges();
+            try
+            {
+                _context.Steps.Remove(await _context.Steps.FindAsync(idStep));
+                _context.SaveChanges();
+                return "Ok";
+            }
+            catch (System.Exception e)
+            {
+                return e.Message;
+            }
         }
 
         /// <summary>
@@ -54,7 +63,9 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.FindAsync(id);
+            return _context.Steps.Find(id);
+            //return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
+            // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);
         }
 
         /// <summary>

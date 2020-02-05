@@ -391,6 +391,12 @@ namespace DijiWalk.EntitiesContext
                 entity.Property(e => e.Validation)
                     .HasColumnName("Step_Validation")
                     .HasMaxLength(50);
+
+
+                entity.HasMany(d => d.RouteSteps)
+                .WithOne(p => p.Step)
+                .HasForeignKey(d => d.IdRoute)
+                .HasConstraintName("FK_TEAM_ORGANIZER");
             });
 
             modelBuilder.Entity<Tag>(entity =>
