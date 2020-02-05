@@ -391,6 +391,7 @@ namespace DijiWalk.EntitiesContext
                 entity.Property(e => e.Validation)
                     .HasColumnName("Step_Validation")
                     .HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<Tag>(entity =>

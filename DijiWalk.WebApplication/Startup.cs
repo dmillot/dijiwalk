@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DijiWalk.Common.Contracts;
 using DijiWalk.Common.Encryption;
+using DijiWalk.Common.Response;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
@@ -84,7 +85,8 @@ namespace DijiWalk.WebApplication
             #endregion
 
             #region Common
-            services.AddScoped<ICryption, Cryption>();
+                services.AddScoped<ICryption, Cryption>();
+                services.AddScoped<IApiResponse, ApiResponse>();
             #endregion
 
             #region JWT Token

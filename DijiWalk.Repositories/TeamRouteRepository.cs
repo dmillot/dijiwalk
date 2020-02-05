@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object TeamRoute to the database
@@ -50,18 +52,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the TeamRoute</param>
         /// <returns>The TeamRoute with the Id researched</returns>
-        public TeamRoute Find(int id)
+        public async Task<TeamRoute> Find(int id)
         {
-            return _context.Teamroutes.Find(id);
+            return await _context.Teamroutes.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all TeamRoute from the database
         /// </summary>
         /// <returns>A List with all TeamRoutes</returns>
-        public IEnumerable<TeamRoute> FindAll()
+        public async Task<IEnumerable<TeamRoute>> FindAll()
         {
-            return _context.Teamroutes;
+            return await _context.Teamroutes.ToListAsync();
         }
 
         /// <summary>

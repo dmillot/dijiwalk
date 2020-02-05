@@ -66,7 +66,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            return _context.Games.Find(id);
+            return await _context.Games.FindAsync(id);
         }
 
         /// <summary>

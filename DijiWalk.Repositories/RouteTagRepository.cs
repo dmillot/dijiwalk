@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object RouteTag to the database
@@ -50,18 +52,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the RouteTag</param>
         /// <returns>The RouteTag with the Id researched</returns>
-        public RouteTag Find(int id)
+        public async Task<RouteTag> Find(int id)
         {
-            return _context.Routetags.Find(id);
+            return await _context.Routetags.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all RouteTag from the database
         /// </summary>
         /// <returns>A List with all RouteTags</returns>
-        public IEnumerable<RouteTag> FindAll()
+        public async Task<IEnumerable<RouteTag>> FindAll()
         {
-            return _context.Routetags;
+            return await _context.Routetags.ToListAsync();
         }
 
         /// <summary>

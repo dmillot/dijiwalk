@@ -8,7 +8,7 @@ namespace DijiWalk.Common.Contracts
     using System.Collections.Generic;
 
     /// <summary>
-    /// This is the interface for the Game repository
+    /// This is the interface for the Cryption class
     /// </summary>
     public interface ICryption
     {

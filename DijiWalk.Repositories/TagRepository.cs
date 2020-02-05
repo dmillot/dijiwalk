@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Tag to the database
@@ -50,18 +52,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Tag</param>
         /// <returns>The Tag with the Id researched</returns>
-        public Tag Find(int id)
+        public async Task<Tag> Find(int id)
         {
-            return _context.Tags.Find(id);
+            return await _context.Tags.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Tag from the database
         /// </summary>
         /// <returns>A List with all Tag</returns>
-        public IEnumerable<Tag> FindAll()
+        public async Task<IEnumerable<Tag>> FindAll()
         {
-            return _context.Tags;
+            return await _context.Tags.ToListAsync();
         }
 
         /// <summary>
