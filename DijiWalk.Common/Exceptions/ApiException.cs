@@ -10,13 +10,17 @@ namespace DijiWalk.Common.Exceptions
         public HttpStatusCode StatusCode { get; set; }
         public bool Connection { get; set; }
 
+        public ApiException()
+        {
+        }
+
         public ApiException(Exception inner, HttpStatusCode status, string message = "") : base(message, inner)
         {
             Connection = true;
             StatusCode = status;
         }
 
-        public ApiException( Exception inner, bool connection, string message = "") : base(message, inner)
+        public ApiException(Exception inner, bool connection, string message = "") : base(message, inner)
         {
             Connection = connection;
             StatusCode = HttpStatusCode.ServiceUnavailable;

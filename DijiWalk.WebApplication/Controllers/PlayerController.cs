@@ -6,6 +6,7 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Player
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]"), Authorize, ApiController]
     public class PlayerController : Controller
     {
         /// <summary>
@@ -37,12 +37,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <param name="id">Id of the Player</param>
         /// <returns>A Player</returns>
-        [HttpGet("{id}"), AllowAnonymous]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,12 +54,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Player 
         /// </summary>
         /// <returns>A list of Player</returns>
-        [HttpGet, AllowAnonymous]
-        public IActionResult GetAll()
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {

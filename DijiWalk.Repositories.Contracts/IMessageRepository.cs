@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -30,13 +31,13 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="id">The Id of the Message</param>
         /// <returns>The Message with the Id researched</returns>
-        Message Find(int id);
+        Task<Message> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Message
         /// </summary>
         /// <returns>A List of Messages</returns>
-        IEnumerable<Message> FindAll();
+        Task<IEnumerable<Message>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Message passed in the parameters to the database

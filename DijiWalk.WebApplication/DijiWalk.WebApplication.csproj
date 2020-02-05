@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DijiWalk.Business.Contracts\DijiWalk.Business.Contracts.csproj" />
+    <ProjectReference Include="..\DijiWalk.Business\DijiWalk.Business.csproj" />
+    <ProjectReference Include="..\DijiWalk.Common\DijiWalk.Common.csproj" />
     <ProjectReference Include="..\DijiWalk.EntitiesContext\DijiWalk.EntitiesContext.csproj" />
     <ProjectReference Include="..\DijiWalk.Repositories.Contracts\DijiWalk.Repositories.Contracts.csproj" />
     <ProjectReference Include="..\DijiWalk.Repositories\DijiWalk.Repositories.csproj" />

@@ -6,9 +6,11 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Administrator to the database
@@ -51,18 +53,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Administrator</param>
         /// <returns>The Administrator with the Id researched</returns>
-        public Administrator Find(int id)
+        public async Task<Administrator> Find(int id)
         {
-            return _context.Administrators.Find(id);
+            return await _context.Administrators.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Administrator from the database
         /// </summary>
         /// <returns>A List with all Administrators</returns>
-        public IEnumerable<Administrator> FindAll()
+        public async Task<IEnumerable<Administrator>> FindAll()
         {
-            return _context.Administrators;
+            return await _context.Administrators.ToListAsync();
         }
 
         /// <summary>
