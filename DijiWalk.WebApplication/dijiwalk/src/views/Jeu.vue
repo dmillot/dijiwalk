@@ -123,8 +123,11 @@
                 <div class="col-12">
                     <q-input color="primary" v-model="date" type="date" />
                 </div>
-                <div class="col-12">
+                <div class="col-8">
                     <q-select v-model="model" :options="parcoursOptions" label="Parcours" />
+                </div>
+                <div class="col-4 row justify-center items-center">
+                    <q-btn color="primary" label="Ajouter" />
                 </div>
             </div>
         </q-card-section>
