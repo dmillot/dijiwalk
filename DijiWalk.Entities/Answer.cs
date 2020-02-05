@@ -22,7 +22,7 @@ namespace DijiWalk.Entities
         }
 
         /// <summary>
-        /// Obtient ou définit l'identifiant d'une Réponse
+        /// Obtient ou définit l'Id d'une Réponse
         /// </summary>
         public int Id { get; set; }
 
@@ -42,7 +42,7 @@ namespace DijiWalk.Entities
         public string Picture { get; set; }
 
         /// <summary>
-        /// Obtient ou définit l'Objet Question rataché à la Réponse
+        /// Obtient ou définit la Question rataché à la Réponse
         /// </summary>
         public virtual Trial Trial { get; set; }
 
