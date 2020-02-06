@@ -50,7 +50,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Messages.Remove(await _context.Messages.FindAsync(idMessage));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {

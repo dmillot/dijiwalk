@@ -51,7 +51,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {

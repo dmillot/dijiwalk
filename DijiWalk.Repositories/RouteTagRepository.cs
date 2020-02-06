@@ -51,7 +51,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Routetags.Remove(await _context.Routetags.FindAsync(idRouteTag));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
@@ -69,7 +69,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Routetags.RemoveRange(await _context.Routetags.Where(x => x.IdRoute == idRoute).ToListAsync());
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {

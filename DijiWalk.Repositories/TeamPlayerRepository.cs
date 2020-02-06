@@ -49,7 +49,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Teamplayers.Remove(await _context.Teamplayers.FindAsync(idTeamPlayer));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
