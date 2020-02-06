@@ -93,42 +93,56 @@
         <q-dialog v-model="addParticipant">
             <q-card>
                 <q-card-section class="row items-center">
-                    <div class="row justify-between">
-                        <div class="col-6">
-                            <q-input label="Prénom" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" />
-                        </div>
-                        <div class="col-6">
-                            <q-input label="Nom" color="primary" option-value="id" option-label="name" v-model="nomParticipant" name="nomParticipant" id="nomParticipant" />
-                        </div>
-                        <div class="col-12">
-                            <q-input label="Login" color="primary" option-value="id" option-label="name" v-model="loginParticipant" name="loginParticipant" id="loginParticipant" />
-                        </div>
-                        <div class="col-6">
-                            <q-input label="Mot de passe" v-model="passwordParticipant" filled :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant">
-                                <template v-slot:append>
-                                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'"
-                                            class="cursor-pointer"
-                                            @click="isPwd = !isPwd" />
-                                </template>
-                            </q-input>
-                        </div>
-                        <div class="col-6">
-                            <q-input label="Mot de passe de confirmation" v-model="passwordConfirmParticipant" filled :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant">
-                                <template v-slot:append>
-                                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'"
-                                            class="cursor-pointer"
-                                            @click="isPwd = !isPwd" />
-                                </template>
-                            </q-input>
-                        </div>
-                        <div class="col-12">
-                            <q-input label="Email" color="primary" option-value="id" option-label="name" v-model="emailParticipant" name="emailParticipant" id="emailParticipant" />
-                        </div>
-                    </div>
+                    <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-address-card" />
+                        </template>
+                    </q-input>
+                    <q-input ref="lastname" class="col-6 q-pl-sm q-my-xs" label="Nom *" color="primary" option-value="id" option-label="name" v-model="nomParticipant" name="nomParticipant" id="nomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-address-card" />
+                        </template>
+                    </q-input>
+                    <q-input ref="login" class="col-12 q-my-xs" label="Login *" color="primary" option-value="id" option-label="name" v-model="loginParticipant" name="loginParticipant" id="loginParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un pseudo.']" :error-message="errormessagelogin" :error="errorlogin">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-user" />
+                        </template>
+                    </q-input>
+                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-lock" />
+                        </template>
+                        <template v-slot:append>
+                            <q-icon :name="isPwd ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                                    class="cursor-pointer"
+                                    @click="isPwd = !isPwd" />
+                        </template>
+                    </q-input>
+                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe.']">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-lock" />
+                        </template>
+                        <template v-slot:append>
+                            <q-icon :name="isPwd ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                                    class="cursor-pointer"
+                                    @click="isPwd = !isPwd" />
+                        </template>
+                    </q-input>
+                    <q-input class="col-12 q-my-xs" ref="email" label="Email *" color="primary" option-value="id" option-label="name" v-model="emailParticipant" name="emailParticipant" type="email" id="emailParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un email.']" :error-message="errormessageemail" :error="erroremail">
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-at" />
+                        </template>
+                    </q-input>
+                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable >
+                        <template v-slot:prepend>
+                            <q-icon name="fas fa-image" />
+                        </template>
+                    </q-file>
                 </q-card-section>
                 <q-card-actions align="right">
+                    <q-btn flat label="Réinitialiser" type="reset" color="red-14" class="q-ml-sm" />
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat label="Ajouter" color="primary" @click="addParticipant()" v-close-popup />
+                    <q-btn label="Ajouter" color="secondary" @click="addedParticipant()" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -138,7 +152,7 @@
 
 <script>
 
-    import axios from 'axios'
+    import PlayerDataService from '../services/PlayerDataService';
 
     export default {
         name: 'participant',
@@ -158,62 +172,144 @@
                 loginParticipant: null,
                 passwordParticipant: null,
                 passwordConfirmParticipant: null,
-                emailParticipant: null
+                emailParticipant: null,
+                pictureParticipant: null,
+                errormessagepassword: null,
+                errorpassword: false,
+                errormessageemail: null,
+                erroremail: false,
+                errormessagelogin: null,
+                errorlogin: false,
+                isPwd: true
             }
         },
-         created() {
+        created() {
 
-            axios.get("api/player").then(resp => {
-                this.participants = resp.data
-            });
+            this.getAllParticipants();
 
         },
+
         methods: {
-             openModalToAdd () {
+            openModalToAdd() {
                 this.addParticipant = true
             },
-             openModalToDelete(participant) {
+            getAllParticipants() {
+                if (this.participants === null) {
+                    PlayerDataService.getAll().then(response => {
+                        this.participants = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            },
+            onResetValidation() {
+                this.errorpassword = false
+                this.erroremail = false
+                this.errorlogin = false
+                this.errormessagepassword = null
+                this.errormessageemail = null
+                this.errormessagelogin = null
+            },
+            openModalToDelete(participant) {
                 this.confirm = true;
                 this.messageDeleteParticipant = participant.firstName + " " + participant.lastName;
                 this.deleteParticipant = participant.id;
             },
-             addGame() {
+            addedParticipant() {
+                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate() && this.$refs.picture.validate()) {
+                    if (this.passwordParticipant === this.passwordConfirmParticipant) {
+                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
+                            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                PlayerDataService.create({
+                                    FirstName: this.prenomParticipant,
+                                    LastName: this.nomParticipant,
+                                    Login: this.loginParticipant,
+                                    Password: this.passwordParticipant,
+                                    Email: this.emailParticipant
+                                }).then(response => {
+                                    if (response.data.status == 1) {
+                                        this.participants.push(response.data.response);
+                                        this.addParticipant = false;
+                                        this.onResetValidation();
 
-                GameDataService.create({
-                    IdRoute: this.parcoursGame.id,
-                    CreationDate: this.dateGame
-                }).then(response => {
-                    this.games.push(response.data);
-                    PlayDataService.create({
-                        IdGame: response.data.id,
-                        IdTeam: this.equipeGame.id
-                    }).then(response => {
-                        console.log(response);
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                                        //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
-
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                                        this.$q.notify({
+                                            icon: 'fas fa-check-square',
+                                            color: 'secondary',
+                                            message: response.data.message,
+                                            position: 'top'
+                                        })
+                                    } else {
+                                        var message = response.data.message;
+                                        this.errorlogin = true;
+                                        this.errormessagelogin = message;
+                                        this.erroremail = true;
+                                        this.errormessageemail = message;
+                                        this.$q.notify({
+                                            icon: 'fas fa-exclamation-triangle',
+                                            color: 'negative',
+                                            message: message,
+                                            position: 'top'
+                                        })
+                                        setTimeout(this.onResetValidation, 3000);
+                                    }
+                                }).catch(reason => {
+                                    console.log(reason);
+                                });
+                            } else {
+                                this.erroremail = true;
+                                this.errormessageemail = "Veuillez entrer un email valide.";
+                                setTimeout(this.onResetValidation, 3000);
+                            }
+                        } else {
+                            this.errorpassword = true;
+                            this.errormessagepassword = "Il faut au moins 8 caractères, une majuscule, une minuscule, un nombre et un caractère spéciale.";
+                            setTimeout(this.onResetValidation, 3000);
+                        }
+                    } else {
+                        this.errorpassword = true;
+                        this.errormessagepassword = "Les mots de passes ne correspondent pas !";
+                        setTimeout(this.onResetValidation, 3000);
+                    }
+                }
+            },
+            onReset() {
+                this.prenomParticipant = null
+                this.nomParticipant = null
+                this.loginParticipant = null
+                this.passwordParticipant = null
+                this.passwordConfirmParticipant = null
+                this.emailParticipant = null
             },
             deletedParticipant() {
-                axios.delete("api/player/" + this.deleteParticipant).then(resp => {
-                    if (resp.data.status == 1) {
-                        var self = this;
-                        this.participants = this.participants.filter(function (obj) {
+                var self = this;
+                var id = self.deleteParticipant;
+                PlayerDataService.delete(id).then(response => {
+                    console.log(response.data.status)
+                    if (response.data.status == 1) {
+                        self.$q.notify({
+                            icon: 'fas fa-check-square',
+                            color: 'secondary',
+                            message: "Suppression d'un participant réussi !",
+                            position: 'top'
+                        })
+                        self.participants = self.participants.filter(function (obj) {
                             return obj.id !== self.deleteParticipant;
+
                         });
                     } else {
-                        this.$q.notify({
-                            message: resp.data.message,
+                        self.$q.notify({
+                            message: response.data.message,
                             color: 'negative',
                             icon: 'fas fa-exclamation-triangle',
                             position: 'top'
                         })
                     }
-                })
+
+                }).catch(reason => {
+                    console.log(reason);
+                });
             },
             filterEquipe(val, update) {
                 update(() => {

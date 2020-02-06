@@ -11,6 +11,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System.Text;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using DijiWalk.WebApplication.Models;
@@ -33,17 +34,14 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         private readonly IGameRepository _repository;
 
-        private readonly IApiResponse _apiResponse;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public GameController(IGameRepository repository, IApiResponse apiResponse)
+        public GameController(IGameRepository repository)
         {
             this._repository = repository;
-            this._apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, _apiResponse.TranslateError(e));
+                return this.StatusCode(500, e);
             }
 
         }
@@ -95,7 +93,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, _apiResponse.TranslateError(e));
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 
@@ -112,7 +110,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, _apiResponse.TranslateError(e));
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

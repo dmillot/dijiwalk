@@ -10,6 +10,7 @@ namespace DijiWalk.Repositories
     using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -23,32 +24,30 @@ namespace DijiWalk.Repositories
 
 
         private readonly SmartCityContext _context;
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public GameRepository(SmartCityContext context, IApiResponse apiResponse)
+        public GameRepository(SmartCityContext context)
         {
             this._context = context;
-            this._apiResponse = apiResponse;
         }
 
         /// <summary>
         /// Method to Add the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Add</param>
-        public async Task<Game> Add(Game game)
+        public async Task<ApiResponse> Add(Game game)
         {
             try
             {
-                _context.Games.Add(game);
+                await _context.Games.AddAsync(game);
                 _context.SaveChanges();
-                return game;
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = game };
             }
             catch (Exception e)
             {
-                return new Game();
+                return TranslateError.Convert(e);
             }
         }
 
@@ -56,17 +55,17 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        public async Task<string> Delete(int id)
+        public async Task<ApiResponse> Delete(int id)
         {
             try
             {
                 _context.Games.Remove(await _context.Games.FindAsync(id));
                 _context.SaveChanges();
-                return _apiResponse.GetMessageDelete();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
-                return _apiResponse.TranslateError(e);
+                return TranslateError.Convert(e);
             }
         }
 

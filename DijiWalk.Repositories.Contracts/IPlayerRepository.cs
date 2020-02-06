@@ -19,8 +19,8 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to Add</param>
-        void Add(Player player);
-
+        Task<ApiResponse> Add(Player player);
+        
         /// <summary>
         /// Definition of the function that will Delete from the database the Player passed in the parameters
         /// </summary>
