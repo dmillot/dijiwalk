@@ -7,12 +7,9 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
-    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Controller for the Transport

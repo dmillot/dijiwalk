@@ -9,7 +9,6 @@ namespace DijiWalk.Repositories
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using DijiWalk.Common.Contracts;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -23,15 +22,13 @@ namespace DijiWalk.Repositories
 
 
         private readonly SmartCityContext _context;
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public GameRepository(SmartCityContext context, IApiResponse apiResponse)
+        public GameRepository(SmartCityContext context)
         {
             this._context = context;
-            this._apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -62,11 +59,11 @@ namespace DijiWalk.Repositories
             {
                 _context.Games.Remove(await _context.Games.FindAsync(id));
                 _context.SaveChanges();
-                return _apiResponse.GetMessageDelete();
+                return "Ok";
             }
             catch (Exception e)
             {
-                return _apiResponse.TranslateError(e);
+                return "Pas Ok " + e;
             }
         }
 

@@ -177,27 +177,27 @@
                 this.messageDeleteParticipant = participant.firstName + " " + participant.lastName;
                 this.deleteParticipant = participant.id;
             },
-             addGame() {
+            // addGame() {
 
-                GameDataService.create({
-                    IdRoute: this.parcoursGame.id,
-                    CreationDate: this.dateGame
-                }).then(response => {
-                    this.games.push(response.data);
-                    PlayDataService.create({
-                        IdGame: response.data.id,
-                        IdTeam: this.equipeGame.id
-                    }).then(response => {
-                        console.log(response);
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+            //    GameDataService.create({
+            //        IdRoute: this.parcoursGame.id,
+            //        CreationDate: this.dateGame
+            //    }).then(response => {
+            //        this.games.push(response.data);
+            //        PlayDataService.create({
+            //            IdGame: response.data.id,
+            //            IdTeam: this.equipeGame.id
+            //        }).then(response => {
+            //            console.log(response);
+            //        }).catch(reason => {
+            //            console.log(reason);
+            //        });
 
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
-            },
+            //    }).catch(reason => {
+            //        console.log(reason);
+            //    });
+            //},
             deletedParticipant() {
                 axios.delete("api/player/" + this.deleteParticipant).then(resp => {
                     if (resp.data.status == 1) {

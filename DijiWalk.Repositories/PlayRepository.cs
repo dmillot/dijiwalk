@@ -8,7 +8,6 @@ namespace DijiWalk.Repositories
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -21,15 +20,13 @@ namespace DijiWalk.Repositories
     public class PlayRepository : IPlayRepository
     {
         private readonly SmartCityContext _context;
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public PlayRepository(SmartCityContext context, IApiResponse apiResponse)
+        public PlayRepository(SmartCityContext context)
         {
             _context = context;
-            _apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -42,11 +39,11 @@ namespace DijiWalk.Repositories
             {
                 _context.Plays.Add(play);
                 _context.SaveChanges();
-                return _apiResponse.GetMessageAdd();
+                return "Ok";
             }
             catch (Exception e)
             {
-                return _apiResponse.TranslateError(e);
+                return "Pas Ok " + e;
             }
         }
 
