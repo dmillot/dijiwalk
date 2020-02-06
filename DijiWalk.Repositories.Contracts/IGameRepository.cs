@@ -18,13 +18,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Add</param>
-        void Add(Game game);
+        Task<Game> Add(Game game);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        void Delete(Game game);
+        Task<string> Delete(int id);
 
         /// <summary>
         /// Definition of the method to find an Game with his Id

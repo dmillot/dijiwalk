@@ -10,6 +10,8 @@ namespace DijiWalk.WebApplication.Controllers
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using DijiWalk.WebApplication.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -23,7 +25,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// Controller for the Games
     /// </summary>
 
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class GameController : Controller
     {
         /// <summary>
@@ -31,14 +33,17 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         private readonly IGameRepository _repository;
 
+        private readonly IApiResponse _apiResponse;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public GameController(IGameRepository repository)
+        public GameController(IGameRepository repository, IApiResponse apiResponse)
         {
             this._repository = repository;
+            this._apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -55,8 +60,9 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, e);
+                return this.StatusCode(500, _apiResponse.TranslateError(e));
             }
+
         }
 
         /// <summary>
@@ -73,6 +79,40 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Game game)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Add(game));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, _apiResponse.TranslateError(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to delete a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, _apiResponse.TranslateError(e));
             }
         }
     }
