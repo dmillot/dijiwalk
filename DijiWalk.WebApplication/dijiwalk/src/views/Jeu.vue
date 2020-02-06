@@ -6,43 +6,35 @@
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
                 <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search" />
+                    <q-icon name="fas fa-search"/>
                     <q-menu>
                         <q-list bordered separator style="min-width: 100px">
                             <q-item>
                                 <q-select filled
-                                          v-model="modelEquipe"
                                           use-input
                                           use-chips
+                                          v-model="teamsFilterModel"
+                                          option-id="id"
+                                          option-label="name"
                                           multiple
                                           input-debounce="0"
                                           label="Filtrer par équipe"
-                                          :options="equipesOptions"
+                                          :options="teamsFiltered"
                                           @filter="filterEquipe"
                                           style="width: 250px" />
                             </q-item>
                             <q-item>
                                 <q-select filled
-                                          v-model="modelParcours"
                                           use-input
                                           use-chips
+                                          v-model="routesFilterModel"
+                                          option-id="id"
+                                          option-label="name"
                                           multiple
                                           input-debounce="0"
                                           label="Filtrer par parcours"
-                                          :options="parcoursOptions"
+                                          :options="routesFiltered"
                                           @filter="filterParcours"
-                                          style="width: 250px" />
-                            </q-item>
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelParticipants"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par participants"
-                                          :options="participantsOptions"
-                                          @filter="filterParticipants"
                                           style="width: 250px" />
                             </q-item>
                         </q-list>
@@ -56,12 +48,12 @@
                     <q-icon name="fas fa-plus text-white" style="font-size: 4em;" />
                 </q-card>
             </div>
-            <div v-for="jeu in jeux" v-bind:key="jeu.id" class="col-xs-12 col-md-4 col-grow">
+            <div v-for="game in games" v-bind:key="game.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
                     <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
 
                     <q-card-section>
-                        <q-btn @click="openModalToDelete(jeu)"
+                        <q-btn @click="openModalToDelete(game)"
                                fab
                                color="negative"
                                icon="fas fa-trash"
@@ -70,12 +62,12 @@
 
                         <div class="row no-wrap">
                             <div class="col text-left text-bold text-h6 ellipsis">
-                                Jeu n°{{ jeu.id }}
+                                Jeu n°{{ game.id }}
                             </div>
                         </div>
                         <div class="row items-center no-wrap text-grey">
                             <q-icon name="fas fa-calendar" />
-                            <p class="q-ma-none q-ml-xs">{{ jeu.creationDate | formatDate }}</p>
+                            <p class="q-ma-none q-ml-xs">{{ game.creationDate | formatDate }}</p>
                         </div>
                     </q-card-section>
 
@@ -113,10 +105,10 @@
                             <q-input color="primary" v-model="dateGame" type="date" name="dateGame" id="dateGame" />
                         </div>
                         <div class="col-8">
-                            <q-select v-model="parcoursGame" option-value="id" option-label="name" :options="parcours" label="Parcours" id="parcoursGame" name="parcoursGame" />
+                            <q-select v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" />
                         </div>
                         <div class="col-8">
-                            <q-select v-model="equipeGame" option-value="id" option-label="name" :options="equipesOptions" label="Equipes" id="equipeGame" name="equipeGame" />
+                            <q-select v-model="equipeGame" option-value="id" option-label="name" :options="teams" label="Equipes" id="equipeGame" name="equipeGame" />
                         </div>
                         <div class="col-4 row justify-center items-center">
                             <q-btn color="primary" label="Ajouter" />
@@ -134,38 +126,26 @@
 </template>
 
 <script>
+
     import moment from 'moment'
-    import axios from 'axios';
-
-    const equipes = [
-        { "id": 1, "name": "Équipe 1" },
-        { "id": 2, "name": "Équipe 2" },
-        { "id": 3, "name": "Équipe 3" }
-    ]
-
-    const parcours = [
-        { "id": 1, "name": "parcours 1" },
-        { "id": 2, "name": "parcours 2" },
-        { "id": 3, "name": "parcours 3" }
-    ]
-
-    const participants = [
-        'Damien', 'Nathan', 'Clément', 'Mathis', 'Eric'
-    ]
+    import GameDataService from "@/services/GameDataService";
+    import RouteDataService from "@/services/RouteDataService";
+    import TeamDataService from "@/services/TeamDataService";
+    import PlayDataService from "@/services/PlayDataService";
 
     export default {
         name: 'jeu',
+
         data() {
             return {
-                modelEquipe: null,
-                modelParcours: null,
-                modelParticipants: null,
-                equipesOptions: equipes,
-                parcoursOptions: parcours,
-                participantsOptions: participants,
+                games: null,
+                routes: null,
+                teams: null,
+                teamsFiltered: null,
+                routesFiltered: null,
+                teamsFilterModel: null,
+                routesFilterModel: null,
                 selectedGameId: null,
-                jeux: null,
-                parcours: null,
                 confirm: false,
                 dateGame: null,
                 parcoursGame: null,
@@ -173,51 +153,61 @@
                 addJeu: false
             }
         },
-        filters: {
-            formatDate: function (value) {
-                if (!value) return ''
-                return moment(String(value)).format('DD/MM/YYYY à hh:mm')
-            }
-        },
+
         created () {
-            axios.get('api/game').then(response => {
-                this.jeux = response.data;
-            }).catch(reason => {
-                console.log(reason);
-            });
+            this.getAllGames();
+            this.getAllRoutes();
+            this.getAllTeams();
         },
+
         methods: {
-            filterEquipe(val, update) {
-                update(() => {
-                    if (val === '') {
-                        this.equipesOptions = equipes
-                    }
-                    else {
-                        const needle = val.toLowerCase()
-                        this.equipesOptions = equipes.filter(
-                            v => v.toLowerCase().indexOf(needle) > -1
-                        )
-                    }
-                })
+
+            getAllRoutes () {
+                if (this.routes === null) {
+                    RouteDataService.getAll().then(response => {
+                        this.routes = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
             },
+
+            getAllTeams () {
+                if (this.teams === null) {
+                    TeamDataService.getAll().then(response => {
+                        this.teams = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            },
+
+            getAllGames () {
+                if (this.games === null) {
+                    GameDataService.getAll().then(response => {
+                        this.games = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            },
+
             openModalToAdd () {
-                this.addJeu = true,
-                axios.get('api/route').then(response => {
-                    console.log(response);
-                    this.parcours = response.data;
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                this.getAllRoutes(),
+                this.getAllTeams(),
+                this.addJeu = true
             },
+
             openModalToDelete (game) {
                 this.confirm = true,
                 this.selectedGameId = game.id
             },
+
             deleteGame () {
                 var id = this.selectedGameId;
-                axios.delete("api/game/" + this.selectedGameId).then(response => {
+                GameDataService.delete(this.selectedGameId).then(response => {
 
-                    this.jeux = this.jeux.filter(function( obj ) {
+                    this.games = this.games.filter(function( obj ) {
                         return obj.id !== id;
                     });
 
@@ -226,41 +216,64 @@
                     console.log(reason);
                 });
             },
-            addGame () {
-                axios.post("api/game", {
+
+            addGame() {
+
+                GameDataService.create({
                     IdRoute: this.parcoursGame.id,
                     CreationDate: this.dateGame
                 }).then(response => {
-                    this.jeux.push(response.data);
+                    this.games.push(response.data);
+                    PlayDataService.create({
+                        IdGame: response.data.id,
+                        IdTeam: this.equipeGame.id
+                    }).then(response => {
+                        console.log(response);
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+
+
                 }).catch(reason => {
                     console.log(reason);
                 });
             },
+
             filterParcours (val, update) {
+
+                if (val === '') {
+                    update(() => {
+                        this.routesFiltered = this.routes
+                    })
+                    return
+                }
+
                 update(() => {
-                    if (val === '') {
-                        this.parcoursOptions = parcours
-                    }
-                    else {
-                        const needle = val.toLowerCase()
-                        this.parcoursOptions = parcours.filter(
-                            v => v.toLowerCase().indexOf(needle) > -1
-                        )
-                    }
+                    const needle = val.toLowerCase()
+                    this.routesFiltered = this.routes.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
                 })
             },
-            filterParticipants (val, update) {
+
+            filterEquipe(val, update) {
+
+                if (val === '') {
+                    update(() => {
+                        this.teamsFiltered = this.teams
+                    })
+                    return
+                }
+
                 update(() => {
-                    if (val === '') {
-                        this.participantsOptions = participants
-                    }
-                    else {
-                        const needle = val.toLowerCase()
-                        this.participantsOptions = participants.filter(
-                            v => v.toLowerCase().indexOf(needle) > -1
-                        )
-                    }
+                    const needle = val.toLowerCase()
+                    this.teamsFiltered = this.teams.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
                 })
+            }
+        },
+
+        filters: {
+            formatDate: function (value) {
+                if (!value) return ''
+                return moment(String(value)).format('DD/MM/YYYY à hh:mm')
             }
         }
     }
