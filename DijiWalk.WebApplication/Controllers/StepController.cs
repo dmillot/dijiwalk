@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,60 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Add a Step 
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add(Step step)
+        {
+            try
+            {
+                this._repository.Add(step);
+                return this.Ok("Ok");
+            }
+            catch (Exception e)
+            {
+                return this.Ok("Pas Ok, exception: " + e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Update a Step 
+        /// </summary>
+        /// <returns>A Step</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Step step)
+        {
+            try
+            {
+                step.Id = id;
+                this._repository.Update(step);
+                return this.Ok("Ok");
+            }
+            catch (Exception e)
+            {
+                return this.Ok("Pas Ok, exception :" + e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Delete a Step 
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok("Pas Ok, exception :" + e);
             }
         }
     }
