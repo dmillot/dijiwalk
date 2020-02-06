@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -19,12 +22,21 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
+        private readonly IRouteStepRepository _routeStepRepository;
+
+        private readonly IRouteTagRepository _routeTagRepository;
+
+        private readonly ITeamRouteRepository _teamRouteRepository;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public RouteRepository(SmartCityContext context)
+        public RouteRepository(SmartCityContext context, IRouteStepRepository routeStepRepository, IRouteTagRepository routeTagRepository, ITeamRouteRepository teamRouteRepository)
         {
             _context = context;
+            _routeStepRepository = routeStepRepository;
+            _routeTagRepository = routeTagRepository;
+            _teamRouteRepository = teamRouteRepository;
         }
         /// <summary>
         /// Method to Add the Route passed in the parameters to the database
@@ -40,10 +52,22 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Route passed in the parameters
         /// </summary>
         /// <param name="route">Object Route to Delete</param>
-        public void Delete(Route route)
+        public async Task<ApiResponse> Delete(int idRoute)
         {
-           _context.Routes.Remove(route);
-           _context.SaveChanges();
+            try
+            {
+                //await _routeStepRepository.DeleteAll(idRoute);
+                //await _routeTagRepository.DeleteAll(idRoute);
+                //await _teamRouteRepository.DeleteAll(idRoute);
+                _context.Routes.Remove(await _context.Routes.FindAsync(idRoute));
+                _context.SaveChanges();
+                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>

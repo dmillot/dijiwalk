@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -42,10 +45,19 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the TeamAnswer passed in the parameters
         /// </summary>
         /// <param name="teamAnswer">Object TeamAnswer to Delete</param>
-        public void Delete(TeamAnswer teamAnswer)
+        public async Task<ApiResponse> Delete(int idTeamAnswer)
         {
-            _context.Teamanswers.Remove(teamAnswer);
-            _context.SaveChanges();
+            try
+            {
+                _context.Teamanswers.Remove(await _context.Teamanswers.FindAsync(idTeamAnswer));
+                _context.SaveChanges();
+                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>

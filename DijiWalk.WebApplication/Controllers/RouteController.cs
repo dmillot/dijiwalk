@@ -66,5 +66,22 @@ namespace DijiWalk.WebApplication.Controllers
                 return this.StatusCode(500, e);
             }
         }
+
+        /// <summary>
+        /// Method to delete specific route
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
     }
 }
