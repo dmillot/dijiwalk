@@ -82,7 +82,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok");
+                return this.Ok("Pas Ok, exception: " + e);
             }
         }
 
@@ -90,17 +90,18 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to Update a Step 
         /// </summary>
         /// <returns>A Step</returns>
-        [HttpPut]
-        public async Task<IActionResult> Update(Step step)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Step step)
         {
             try
             {
+                step.Id = id;
                 this._repository.Update(step);
                 return this.Ok("Ok");
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok");
+                return this.Ok("Pas Ok, exception :" + e);
             }
         }
 
@@ -117,7 +118,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok");
+                return this.Ok("Pas Ok, exception :" + e);
             }
         }
     }

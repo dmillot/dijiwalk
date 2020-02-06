@@ -6,6 +6,7 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Mission
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class MissionController : Controller
     {
         /// <summary>
@@ -54,11 +55,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Mission</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {

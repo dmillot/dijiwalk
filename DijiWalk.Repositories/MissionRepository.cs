@@ -6,6 +6,7 @@
 namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -50,7 +51,7 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Mission</param>
         /// <returns>The Mission with the Id researched</returns>
-        public Mission Find(int id)
+        public async Task<Mission> Find(int id)
         {
             return _context.Missions.Find(id);
         }
@@ -59,7 +60,7 @@ namespace DijiWalk.Repositories
         /// Method to find all Mission from the database
         /// </summary>
         /// <returns>A List with all Mission</returns>
-        public IEnumerable<Mission> FindAll()
+        public async Task<IEnumerable<Mission>> FindAll()
         {
             return _context.Missions;
         }
