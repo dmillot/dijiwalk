@@ -7,6 +7,8 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Entities;
     using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
@@ -16,21 +18,23 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Administrator
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class PlayController : Controller
     {
         /// <summary>
         /// Object private PlayRepository with which we will interact with the database
         /// </summary>
         private IPlayRepository _repository;
+        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public PlayController(IPlayRepository repository)
+        public PlayController(IPlayRepository repository, IApiResponse apiResponse)
         {
             this._repository = repository;
+            this._apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -65,6 +69,23 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add a play 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Play play)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Add(play));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, _apiResponse.TranslateError(e));
             }
         }
 

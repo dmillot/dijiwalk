@@ -21,23 +21,33 @@ namespace DijiWalk.Repositories
     public class PlayRepository : IPlayRepository
     {
         private readonly SmartCityContext _context;
+        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public PlayRepository(SmartCityContext context)
+        public PlayRepository(SmartCityContext context, IApiResponse apiResponse)
         {
             _context = context;
+            _apiResponse = apiResponse;
         }
 
         /// <summary>
         /// Method to Add the Play passed in the parameters to the database
         /// </summary>
         /// <param name="play">Object Play to Add</param>
-        public void Add(Play play)
+        public async Task<string> Add(Play play)
         {
-           _context.Plays.Add(play);
-           _context.SaveChanges();
+            try
+            {
+                _context.Plays.Add(play);
+                _context.SaveChanges();
+                return _apiResponse.GetMessageAdd();
+            }
+            catch (Exception e)
+            {
+                return _apiResponse.TranslateError(e);
+            }
         }
 
         /// <summary>
