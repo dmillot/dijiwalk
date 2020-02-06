@@ -23,15 +23,12 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
-        private readonly IApiResponse _apiResponse;
-
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public TransportRepository(SmartCityContext context, IApiResponse apiResponse)
+        public TransportRepository(SmartCityContext context)
         {
             _context = context;
-            _apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -48,17 +45,17 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Transport passed in the parameters
         /// </summary>
         /// <param name="transport">Object Transport to Delete</param>
-        public async Task<string> Delete(int idTransport)
+        public async Task<ApiResponse> Delete(int idTransport)
         {
             try
             {
                 _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
                 _context.SaveChanges();
-                return _apiResponse.GetMessageDelete();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
-                return _apiResponse.TranslateError(e);
+                return TranslateError.Convert(e);
             }
 
         }

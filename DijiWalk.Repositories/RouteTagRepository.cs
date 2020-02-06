@@ -7,10 +7,14 @@ namespace DijiWalk.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using DijiWalk.Common.Response;
 
     /// <summary>
     /// Class that connect the Object RouteTag to the database
@@ -41,10 +45,36 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the RouteTag passed in the parameters
         /// </summary>
         /// <param name="routeTag">Object RouteTag to Delete</param>
-        public void Delete(RouteTag routeTag)
+        public async Task<ApiResponse> Delete(int idRouteTag)
         {
-            _context.Routetags.Remove(routeTag);
-            _context.SaveChanges();
+            try
+            {
+                _context.Routetags.Remove(await _context.Routetags.FindAsync(idRouteTag));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Delete all route tag of a route
+        /// </summary>
+        /// <param name="idRoute">id of the route</param>
+        public async Task<ApiResponse> DeleteAllFromRoute(int idRoute)
+        {
+            try
+            {
+                _context.Routetags.RemoveRange(await _context.Routetags.Where(x => x.IdRoute == idRoute).ToListAsync());
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>

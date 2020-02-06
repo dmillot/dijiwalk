@@ -9,6 +9,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Entities;
+    using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -85,6 +86,23 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, _apiResponse.TranslateError(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to delete specific play
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

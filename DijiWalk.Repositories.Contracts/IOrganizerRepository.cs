@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Organizer passed in the parameters
         /// </summary>
         /// <param name="organizer">Object Organizer to Delete</param>
-        void Delete(Organizer organizer);
+        Task<ApiResponse> Delete(int idOrganizer);
 
         /// <summary>
         /// Definition of the method to find an Organizer with his Id

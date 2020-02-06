@@ -27,6 +27,12 @@ namespace DijiWalk.Repositories.Contracts
         Task<string> Delete(int id);
 
         /// <summary>
+        /// Method to check if route is in a game
+        /// </summary>
+        /// <param name="idRoute">id of a team</param>
+        Task<bool> ContainsRoute(int idRoute);
+
+        /// <summary>
         /// Definition of the method to find an Game with his Id
         /// </summary>
         /// <param name="id">The Id of the Game</param>
@@ -38,6 +44,7 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <returns>A List of Games</returns>
         Task<IEnumerable<Game>> FindAll();
+
 
         /// <summary>
         /// Definition of the function that will Update the Game passed in the parameters to the database

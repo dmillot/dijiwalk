@@ -5,8 +5,12 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -41,10 +45,38 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the RouteStep passed in the parameters
         /// </summary>
         /// <param name="routeStep">Object RouteStep to Delete</param>
-        public void Delete(RouteStep routeStep)
+        public async Task<ApiResponse> Delete(int idRouteStep)
         {
-            _context.Routesteps.Remove(routeStep);
-            _context.SaveChanges();
+            try
+            {
+                _context.Routesteps.Remove(await _context.Routesteps.FindAsync(idRouteStep));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
+        }
+
+        /// <summary>
+        /// Method to Delete all route step of a route
+        /// </summary>
+        /// <param name="idRoute">id of the route</param>
+        public async Task<ApiResponse> DeleteAllFromRoute(int idRoute)
+        {
+            try
+            {
+                _context.Routesteps.RemoveRange(await _context.Routesteps.Where(x => x.IdRoute == idRoute).ToListAsync());
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>

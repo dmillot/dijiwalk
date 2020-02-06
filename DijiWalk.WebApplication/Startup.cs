@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DijiWalk.Business;
+using DijiWalk.Business.Contracts;
 using DijiWalk.Common.Contracts;
 using DijiWalk.Common.Encryption;
 using DijiWalk.Common.Response;
@@ -81,12 +83,13 @@ namespace DijiWalk.WebApplication
             #endregion
 
             #region Business Layer
-            services.AddScoped<IAuthentificationRepository, AuthentificationRepository>();
+            services.AddScoped<IAuthentificationBusiness, AuthentificationBusiness>();
+            services.AddScoped<ITeamBusiness, TeamBusiness>();
+            services.AddScoped<ICapitaineBusiness, CapitaineBusiness>();
             #endregion
 
             #region Common
-                services.AddScoped<ICryption, Cryption>();
-                services.AddScoped<IApiResponse, ApiResponse>();
+            services.AddScoped<ICryption, Cryption>();
             #endregion
 
             #region JWT Token

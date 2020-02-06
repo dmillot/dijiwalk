@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Message passed in the parameters
         /// </summary>
         /// <param name="message">Object Message to Delete</param>
-        void Delete(Message message);
+        Task<ApiResponse> Delete(int idMessage);
+
+        /// <summary>
+        /// Method to Delete all message of a player
+        /// </summary>
+        /// <param name="idPlayer">Id of a player</param>
+        Task<ApiResponse> DeleteAllFromPlayer(int idPlayer);
 
         /// <summary>
         /// Definition of the method to find an Message with his Id

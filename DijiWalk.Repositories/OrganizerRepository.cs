@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -41,10 +44,19 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Organizer passed in the parameters
         /// </summary>
         /// <param name="organizer">Object Organizer to Delete</param>
-        public void Delete(Organizer organizer)
+        public async Task<ApiResponse> Delete(int idOrganizer)
         {
-           _context.Organizers.Remove(organizer);
-           _context.SaveChanges();
+            try
+            {
+                _context.Organizers.Remove(await _context.Organizers.FindAsync(idOrganizer));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>

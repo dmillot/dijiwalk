@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Transport passed in the parameters
         /// </summary>
         /// <param name="idTransport">Id Transport to Delete</param>
-        Task<string> Delete(int idTransport);
+        Task<ApiResponse> Delete(int idTransport);
 
         /// <summary>
         /// Definition of the method to find an Transport with his Id

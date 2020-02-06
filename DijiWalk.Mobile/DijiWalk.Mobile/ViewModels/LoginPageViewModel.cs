@@ -55,7 +55,7 @@ namespace DijiWalk.Mobile.ViewModels
         {
             if (Login.Validate())
             {
-                await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
+                var test = (JWTTokens)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
                 this.NavigationService.NavigateAsync(nameof(MainPage), null);
             }
         }

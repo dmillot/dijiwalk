@@ -9,6 +9,7 @@ namespace DijiWalk.Repositories
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -53,10 +54,19 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Play passed in the parameters
         /// </summary>
         /// <param name="play">Object Play to Delete</param>
-        public void Delete(Play play)
+        public async Task<ApiResponse> Delete(int idPlay)
         {
-           _context.Plays.Remove(play);
-           _context.SaveChanges();
+            try
+            {
+                _context.Plays.Remove(await _context.Plays.FindAsync(idPlay));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>
