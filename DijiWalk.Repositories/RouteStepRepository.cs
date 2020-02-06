@@ -51,7 +51,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Routesteps.Remove(await _context.Routesteps.FindAsync(idRouteStep));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Routesteps.RemoveRange(await _context.Routesteps.Where(x => x.IdRoute == idRoute).ToListAsync());
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {

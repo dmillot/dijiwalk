@@ -51,7 +51,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Teamroutes.Remove(await _context.Teamroutes.FindAsync(idTeamRoute));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Teamroutes.RemoveRange(await _context.Teamroutes.Where(x => x.IdRoute == idRoute).ToListAsync());
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {

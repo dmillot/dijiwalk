@@ -61,7 +61,7 @@ namespace DijiWalk.Repositories
                 //await _teamRouteRepository.DeleteAll(idRoute);
                 _context.Routes.Remove(await _context.Routes.FindAsync(idRoute));
                 _context.SaveChanges();
-                return new ApiResponse { Status = 1, Message = ApiAction.Delete };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
