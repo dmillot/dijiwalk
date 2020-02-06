@@ -18,7 +18,7 @@ namespace DijiWalk.Repositories
     /// <summary>
     /// Class authentification player
     /// </summary>
-    public class AuthentificationRepository : IAuthentificationRepository
+    public class AuthentificationBusiness : IAuthentificationBusiness
     {
         private readonly SmartCityContext _context;
 
@@ -27,7 +27,7 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public AuthentificationRepository(SmartCityContext context, ICryption cryption)
+        public AuthentificationBusiness(SmartCityContext context, ICryption cryption)
         {
             _context = context;
             _cryption = cryption;

@@ -37,8 +37,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamRoute">Object TeamRoute to Add</param>
         public void Add(TeamRoute teamRoute)
         {
-           _context.Teamroutes.Add(teamRoute);
-           _context.SaveChanges();
+            _context.Teamroutes.Add(teamRoute);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -50,26 +50,6 @@ namespace DijiWalk.Repositories
             try
             {
                 _context.Teamroutes.Remove(await _context.Teamroutes.FindAsync(idTeamRoute));
-                _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
-            }
-            catch (Exception e)
-            {
-                return TranslateError.Convert(e);
-            }
-
-        }
-
-
-        /// <summary>
-        /// Method to Delete all team route with route id
-        /// </summary>
-        /// <param name="idRoute">id of the route</param>
-        public async Task<ApiResponse> DeleteAll(int idRoute)
-        {
-            try
-            {
-                _context.Teamroutes.RemoveRange(await _context.Teamroutes.Where(x => x.IdRoute == idRoute).ToListAsync());
                 _context.SaveChanges();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
@@ -105,8 +85,8 @@ namespace DijiWalk.Repositories
         /// <param name="teamRoute">Object TeamRoute to Update</param>
         public void Update(TeamRoute teamRoute)
         {
-           _context.Teamroutes.Update(teamRoute);
-           _context.SaveChanges();
+            _context.Teamroutes.Update(teamRoute);
+            _context.SaveChanges();
         }
     }
 }

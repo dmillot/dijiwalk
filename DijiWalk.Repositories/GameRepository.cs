@@ -51,6 +51,15 @@ namespace DijiWalk.Repositories
         }
 
         /// <summary>
+        /// Method to check if route is in a game
+        /// </summary>
+        /// <param name="idRoute">id of a team</param>
+        public async Task<bool> ContainsRoute(int idRoute)
+        {
+            return await _context.Games.AnyAsync(t => t.IdRoute == idRoute);
+        }
+
+        /// <summary>
         /// Method to find an Game with his Id in the database
         /// </summary>
         /// <param name="id">The Id of the Game</param>

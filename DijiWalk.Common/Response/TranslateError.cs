@@ -35,7 +35,7 @@ namespace DijiWalk.Common.Response
             {"TEAMPLAYER_TEAM", "L'équipe du participant est liée à une équipe !"},
             {"TEAMROUTE_GAME", "L'équipe du parcours est liée à un jeu !"},
             {"TEAMROUTE_ROUTESTEP", "L'équipe du parcours est liée à une étape d'un parcours !"},
-            {"TEAMROUTE_TEAM", "L'équipe du parcours est liée à une équipe !"},
+            {"TEAMROUTE_TEAM", "L'équipe est liée à un jeu !"},
             {"TRIAL_ANSWER", "La question est liée à une réponse !"},
             {"TRIAL_MISSION", "La question est liée à une mission !"},
             {"TRIAL_TYPE", "La question est liée à un type d'un question !"}

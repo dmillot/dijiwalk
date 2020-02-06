@@ -2,6 +2,11 @@ body {
     background-color: #D18D28;
 }
 
+.q-img {
+    height: 300px;
+}
+
+
 @media screen and (min-width: 720px) {
     body {
         padding-left: 100px;

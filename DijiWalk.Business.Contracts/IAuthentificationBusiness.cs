@@ -12,7 +12,7 @@ namespace DijiWalk.Repositories.Contracts
     /// <summary>
     /// This is the interface for the authentification repository
     /// </summary>
-    public interface IAuthentificationRepository
+    public interface IAuthentificationBusiness
     {
         /// <summary>
         /// Definition of the function that will authentificate the Player passed in the parameters to the database

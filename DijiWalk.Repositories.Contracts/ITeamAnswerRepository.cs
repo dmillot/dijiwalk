@@ -24,7 +24,7 @@ namespace DijiWalk.Repositories.Contracts
         /// <summary>
         /// Definition of the function that will Delete from the database the TeamAnswer passed in the parameters
         /// </summary>
-        /// <param name="teamAnswer">Object TeamAnswer to Delete</param>
+        /// <param name="idTeamAnswer">Object TeamAnswer to Delete</param>
         Task<ApiResponse> Delete(int idTeamAnswer);
 
         /// <summary>

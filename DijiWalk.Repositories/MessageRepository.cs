@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
@@ -49,6 +50,25 @@ namespace DijiWalk.Repositories
             try
             {
                 _context.Messages.Remove(await _context.Messages.FindAsync(idMessage));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
+        }
+
+        /// <summary>
+        /// Method to Delete all message of a player
+        /// </summary>
+        /// <param name="idPlayer">Id of a player</param>
+        public async Task<ApiResponse> DeleteAllFromPlayer(int idPlayer)
+        {
+            try
+            {
+                _context.Messages.RemoveRange(await _context.Messages.Where(m => m.IdPlayer == idPlayer).ToListAsync());
                 _context.SaveChanges();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }

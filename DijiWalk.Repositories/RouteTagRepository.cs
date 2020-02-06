@@ -63,7 +63,7 @@ namespace DijiWalk.Repositories
         /// Method to Delete all route tag of a route
         /// </summary>
         /// <param name="idRoute">id of the route</param>
-        public async Task<ApiResponse> DeleteAll(int idRoute)
+        public async Task<ApiResponse> DeleteAllFromRoute(int idRoute)
         {
             try
             {

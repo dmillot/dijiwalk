@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;

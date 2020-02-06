@@ -8,6 +8,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -24,16 +25,14 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         private readonly ITransportRepository _repository;
 
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransportController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public TransportController(ITransportRepository repository, IApiResponse apiResponse)
+        public TransportController(ITransportRepository repository)
         {
             this._repository = repository;
-            _apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, _apiResponse.TranslateError(e));
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

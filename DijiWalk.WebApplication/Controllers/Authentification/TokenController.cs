@@ -24,12 +24,12 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
         /// <summary>
         /// Object private StepRepository with which we will interact with the database
         /// </summary>
-        private readonly IAuthentificationRepository _authentificationRepository;
+        private readonly IAuthentificationBusiness _authentificationBusiness;
 
-        public TokenController(IConfiguration configuration, IAuthentificationRepository authenficiationRepository)
+        public TokenController(IConfiguration configuration, IAuthentificationBusiness authenficiationBusiness)
         {
             _configuration = configuration;
-            _authentificationRepository = authenficiationRepository;
+            _authentificationBusiness = authenficiationBusiness;
         }
 
         [HttpPost,Route("player")]
@@ -38,7 +38,7 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
 
             try
             {
-                var user =  await _authentificationRepository.Authentificate(login);
+                var user =  await _authentificationBusiness.Authentificate(login);
                 if (user != null)
                 {
                     var claims = new[] {
@@ -72,7 +72,7 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
 
             try
             {
-                var user = await _authentificationRepository.Authentificate(login);
+                var user = await _authentificationBusiness.Authentificate(login);
                 if (user != null)
                 {
                     var claims = new[] {

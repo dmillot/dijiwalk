@@ -63,6 +63,17 @@ namespace DijiWalk.Common.Response
         }
 
         /// <summary>
+        /// Impossible de delete, dépend d'un élément (manuel)
+        /// </summary>
+        public static int CantDelete
+        {
+            get
+            {
+                return 6;
+            }
+        }
+
+        /// <summary>
         /// Erreur inconnu (pas encore)
         /// </summary>
         public static int UnknownError

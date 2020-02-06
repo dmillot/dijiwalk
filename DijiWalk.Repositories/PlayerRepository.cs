@@ -8,6 +8,8 @@ namespace DijiWalk.Repositories
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Business;
+    using DijiWalk.Business.Contracts;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
@@ -22,12 +24,15 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
+        private readonly ITeamBusiness _teamBusiness;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public PlayerRepository(SmartCityContext context)
+        public PlayerRepository(SmartCityContext context, ITeamBusiness teamBusiness, IMessageRepository messageRepository, ITeamRouteRepository teamRouteRepository, ITeamRepository teamRepository)
         {
             _context = context;
+            _teamBusiness = teamBusiness;
         }
 
 
@@ -37,8 +42,8 @@ namespace DijiWalk.Repositories
         /// <param name="player">Object Player to Add</param>
         public void Add(Player player)
         {
-           _context.Players.Add(player);
-           _context.SaveChanges();
+            _context.Players.Add(player);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -49,9 +54,25 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                _context.Players.Remove(await _context.Players.FindAsync(idPlayer));
-                _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+                if (!await _teamBusiness.OnlyThisPlayer(idPlayer))
+                {
+                    if (!await _teamBusiness.ContainsTeamsWithPlayer(idPlayer))
+                    {
+                        await _teamBusiness.DeleteAllFromPlayer(idPlayer);
+                        _context.Players.Remove(await _context.Players.FindAsync(idPlayer));
+                        _context.SaveChanges();
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+                    }
+                    else
+                    {
+                        return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce participant participe ou a déjà participé à un jeu !" };
+                    }
+
+                }
+                else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Impossible de supprimer ce participant, il est dans une équipe seul !" };
+                }
             }
             catch (Exception e)
             {
@@ -85,8 +106,8 @@ namespace DijiWalk.Repositories
         /// <param name="player">Object Player to Update</param>
         public void Update(Player player)
         {
-           _context.Players.Update(player);
-           _context.SaveChanges();
+            _context.Players.Update(player);
+            _context.SaveChanges();
         }
     }
 }

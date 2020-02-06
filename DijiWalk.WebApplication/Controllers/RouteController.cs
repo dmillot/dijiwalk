@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -80,7 +81,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, e);
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

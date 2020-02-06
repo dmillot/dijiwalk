@@ -28,12 +28,6 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Delete(int idTeamRoute);
 
         /// <summary>
-        /// Method to Delete all team route with route id
-        /// </summary>
-        /// <param name="idRoute">id of the route</param>
-        Task<ApiResponse> DeleteAll(int idRoute);
-
-        /// <summary>
         /// Definition of the method to find an TeamRoute with his Id
         /// </summary>
         /// <param name="id">The Id of the TeamRoute</param>

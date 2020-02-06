@@ -32,7 +32,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Method to Delete all route tag of a route
         /// </summary>
         /// <param name="idRoute">id of the route</param>
-        Task<ApiResponse> DeleteAll(int idRoute);
+        Task<ApiResponse> DeleteAllFromRoute(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an RouteTag with his Id

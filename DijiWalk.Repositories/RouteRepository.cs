@@ -8,6 +8,7 @@ namespace DijiWalk.Repositories
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Business.Contracts;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
@@ -26,17 +27,20 @@ namespace DijiWalk.Repositories
 
         private readonly IRouteTagRepository _routeTagRepository;
 
-        private readonly ITeamRouteRepository _teamRouteRepository;
+        private readonly ITeamBusiness _teamBusiness;
+
+        private readonly IGameRepository _gameRepository;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public RouteRepository(SmartCityContext context, IRouteStepRepository routeStepRepository, IRouteTagRepository routeTagRepository, ITeamRouteRepository teamRouteRepository)
+        public RouteRepository(SmartCityContext context, IGameRepository gameRepository, IRouteStepRepository routeStepRepository, IRouteTagRepository routeTagRepository, ITeamBusiness teamBusiness)
         {
             _context = context;
             _routeStepRepository = routeStepRepository;
             _routeTagRepository = routeTagRepository;
-            _teamRouteRepository = teamRouteRepository;
+            _teamBusiness = teamBusiness;
+            _gameRepository = gameRepository;
         }
         /// <summary>
         /// Method to Add the Route passed in the parameters to the database
@@ -56,9 +60,12 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                //await _routeStepRepository.DeleteAll(idRoute);
-                //await _routeTagRepository.DeleteAll(idRoute);
-                //await _teamRouteRepository.DeleteAll(idRoute);
+                if (!await _gameRepository.ContainsRoute(idRoute))
+                {
+                    await _routeStepRepository.DeleteAllFromRoute(idRoute);
+                    await _routeTagRepository.DeleteAllFromRoute(idRoute);
+                    await _teamBusiness.DeleteAllFromRoute(idRoute);
+                }
                 _context.Routes.Remove(await _context.Routes.FindAsync(idRoute));
                 _context.SaveChanges();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };

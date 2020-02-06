@@ -28,6 +28,12 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Delete(int idMessage);
 
         /// <summary>
+        /// Method to Delete all message of a player
+        /// </summary>
+        /// <param name="idPlayer">Id of a player</param>
+        Task<ApiResponse> DeleteAllFromPlayer(int idPlayer);
+
+        /// <summary>
         /// Definition of the method to find an Message with his Id
         /// </summary>
         /// <param name="id">The Id of the Message</param>

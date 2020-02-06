@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
@@ -57,8 +58,8 @@ namespace DijiWalk.Repositories
             {
                 return TranslateError.Convert(e);
             }
-
         }
+
 
         /// <summary>
         /// Method to find an TeamAnswer with his Id in the database
