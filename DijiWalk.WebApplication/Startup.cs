@@ -86,6 +86,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IAuthentificationBusiness, AuthentificationBusiness>();
             services.AddScoped<ITeamBusiness, TeamBusiness>();
             services.AddScoped<ICapitaineBusiness, CapitaineBusiness>();
+            services.AddScoped<IPlayerBusiness, PlayerBusiness>();
             #endregion
 
             #region Common

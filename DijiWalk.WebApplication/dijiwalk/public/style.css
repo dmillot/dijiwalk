@@ -6,6 +6,9 @@ body {
     height: 300px;
 }
 
+.q-field__messages{
+    font-weight: bolder;
+}
 
 @media screen and (min-width: 720px) {
     body {

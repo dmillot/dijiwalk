@@ -38,7 +38,7 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                _context.Plays.Add(play);
+                await _context.Plays.AddAsync(play);
                 _context.SaveChanges();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add };
             }

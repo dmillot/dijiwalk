@@ -23,8 +23,8 @@ namespace DijiWalk.Repositories.Contracts
         /// <summary>
         /// Definition of the function that will Delete from the database the Step passed in the parameters
         /// </summary>
-        /// <param name="step">Object Step to Delete</param>
-        void Delete(Step step);
+        /// <param name="id">Id of the object Step to Delete</param>
+        Task<string> Delete(int id);
 
         /// <summary>
         /// Definition of the method to find an Step with his Id

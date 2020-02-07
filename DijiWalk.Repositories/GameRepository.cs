@@ -30,23 +30,23 @@ namespace DijiWalk.Repositories
         /// </summary>
         public GameRepository(SmartCityContext context)
         {
-            this._context = context;        }
-
+            this._context = context;
+        }
         /// <summary>
         /// Method to Add the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Add</param>
-        public async Task<Game> Add(Game game)
+        public async Task<ApiResponse> Add(Game game)
         {
             try
             {
-                _context.Games.Add(game);
+                await _context.Games.AddAsync(game);
                 _context.SaveChanges();
-                return game;
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = game };
             }
             catch (Exception e)
             {
-                return new Game();
+                return TranslateError.Convert(e);
             }
         }
 

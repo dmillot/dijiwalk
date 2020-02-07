@@ -17,7 +17,12 @@ namespace DijiWalk.Common.Response
         /// Propriété status qui contient le status (VOIR ApiStatus.cs pour la liste)
         /// </summary>
         public int Status { get; set; }
-        
+
+        /// <summary>
+        /// Reponse renvoyé par la requête.
+        /// </summary>
+        public object Response { get; set; }
+
     }
 }
 

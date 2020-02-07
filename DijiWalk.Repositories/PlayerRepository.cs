@@ -11,6 +11,7 @@ namespace DijiWalk.Repositories
     using DijiWalk.Business;
     using DijiWalk.Business.Contracts;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Encryption;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -26,24 +27,45 @@ namespace DijiWalk.Repositories
 
         private readonly ITeamBusiness _teamBusiness;
 
+        private readonly ICryption _cryption;
+
+        private readonly IPlayerBusiness _playerBusiness;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public PlayerRepository(SmartCityContext context, ITeamBusiness teamBusiness, IMessageRepository messageRepository, ITeamRouteRepository teamRouteRepository, ITeamRepository teamRepository)
+        public PlayerRepository(SmartCityContext context, ITeamBusiness teamBusiness, ICryption cryption, IPlayerBusiness playerBusiness)
         {
             _context = context;
             _teamBusiness = teamBusiness;
+            _cryption = cryption;
+            _playerBusiness = playerBusiness;
         }
 
 
         /// <summary>
         /// Method to Add the Player passed in the parameters to the database
         /// </summary>
-        /// <param name="player">Object Player to Add</param>
-        public void Add(Player player)
+        /// <param name="game">Object Player to Add</param>
+        public async Task<ApiResponse> Add(Player player)
         {
-            _context.Players.Add(player);
-            _context.SaveChanges();
+            try
+            {
+                if (!await _playerBusiness.Check(player))
+                {
+                    player.Password = _cryption.Encrypt(player.Password);
+                    await _context.Players.AddAsync(player);
+                    _context.SaveChanges();
+                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = player };
+                } else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Le pseudo et l'e-mail doivent être uniques."};
+                }
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>
