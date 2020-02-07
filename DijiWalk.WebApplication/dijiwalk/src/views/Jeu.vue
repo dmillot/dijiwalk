@@ -6,7 +6,7 @@
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
                 <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search"/>
+                    <q-icon name="fas fa-search" />
                     <q-menu>
                         <q-list bordered separator style="min-width: 100px">
                             <q-item>
@@ -75,7 +75,7 @@
 
                     <q-card-actions>
                         <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat color="primary text-bold">
+                        <q-btn @click="openModalToEdit(game)" flat color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -93,6 +93,32 @@
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat label="Supprimer" color="negative" @click="deleteGame()" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="editJeu">
+            <q-card>
+                <q-card-section class="row items-center">
+                    <div class="row justify-between">
+                        <div class="col-12">
+                            <q-input color="primary" v-model="dateGame" type="date" name="dateGame" id="dateGame" />
+                        </div>
+                        <div class="col-8">
+                            <q-select v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" />
+                        </div>
+                        <div class="col-8">
+                            <q-select v-model="equipeGame" option-value="id" option-label="name" :options="teams" label="Equipes" id="equipeGame" name="equipeGame" />
+                        </div>
+                        <div class="col-4 row justify-center items-center">
+                            <q-btn color="primary" label="Ajouter" />
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
+                    <q-btn flat label="Ajouter" color="primary" @click="addGame()" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -150,7 +176,8 @@
                 dateGame: null,
                 parcoursGame: null,
                 equipeGame: null,
-                addJeu: false
+                addJeu: false,
+                editJeu: false
             }
         },
 
@@ -200,6 +227,11 @@
 
             openModalToDelete (game) {
                 this.confirm = true,
+                this.selectedGameId = game.id
+            },
+
+            openModalToEdit (game) {
+                this.editJeu = true,
                 this.selectedGameId = game.id
             },
 

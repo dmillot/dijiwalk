@@ -25,16 +25,14 @@ namespace DijiWalk.WebApplication.Controllers
         /// Object private PlayRepository with which we will interact with the database
         /// </summary>
         private IPlayRepository _repository;
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public PlayController(IPlayRepository repository, IApiResponse apiResponse)
+        public PlayController(IPlayRepository repository)
         {
             this._repository = repository;
-            this._apiResponse = apiResponse;
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, _apiResponse.TranslateError(e));
+                return this.StatusCode(500, TranslateError.Convert(e));
             }
         }
 

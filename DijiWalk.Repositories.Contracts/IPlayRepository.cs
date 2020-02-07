@@ -19,7 +19,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Play passed in the parameters to the database
         /// </summary>
         /// <param name="play">Object Play to Add</param>
-        Task<string> Add(Play play);
+        Task<ApiResponse> Add(Play play);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Play passed in the parameters

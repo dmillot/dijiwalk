@@ -10,6 +10,7 @@ namespace DijiWalk.Repositories
     using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -23,16 +24,13 @@ namespace DijiWalk.Repositories
 
 
         private readonly SmartCityContext _context;
-        private readonly IApiResponse _apiResponse;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public GameRepository(SmartCityContext context, IApiResponse apiResponse)
+        public GameRepository(SmartCityContext context)
         {
-            this._context = context;
-            this._apiResponse = apiResponse;
-        }
+            this._context = context;        }
 
         /// <summary>
         /// Method to Add the Game passed in the parameters to the database
@@ -56,17 +54,17 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        public async Task<string> Delete(int id)
+        public async Task<ApiResponse> Delete(int id)
         {
             try
             {
                 _context.Games.Remove(await _context.Games.FindAsync(id));
                 _context.SaveChanges();
-                return _apiResponse.GetMessageDelete();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
             {
-                return _apiResponse.TranslateError(e);
+                return TranslateError.Convert(e);
             }
         }
 
@@ -86,7 +84,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            return await _context.Games.FindAsync(id);
+            return await _context.Games.Where(g => g.Id == id).Include(r => r.Route).Include(p => p.Plays).ThenInclude(t => t.Team).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -95,7 +93,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Games</returns>
         public async Task<IEnumerable<Game>> FindAll()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.Games.Include(r => r.Route).Include(p => p.Plays).ThenInclude(t => t.Team).ToListAsync();
         }
 
         /// <summary>
