@@ -59,25 +59,7 @@ namespace DijiWalk.Repositories
             }
 
         }
-
-        /// <summary>
-        /// Method to Delete all route step of a route
-        /// </summary>
-        /// <param name="idRoute">id of the route</param>
-        public async Task<ApiResponse> DeleteAllFromRoute(int idRoute)
-        {
-            try
-            {
-                _context.Routesteps.RemoveRange(await _context.Routesteps.Where(x => x.IdRoute == idRoute).ToListAsync());
-                _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
-            }
-            catch (Exception e)
-            {
-                return TranslateError.Convert(e);
-            }
-
-        }
+ 
 
         /// <summary>
         /// Method to find an RouteStep with his Id in the database

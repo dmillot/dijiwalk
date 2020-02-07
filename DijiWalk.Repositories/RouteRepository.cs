@@ -23,9 +23,7 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
-        private readonly IRouteStepRepository _routeStepRepository;
-
-        private readonly IRouteTagRepository _routeTagRepository;
+        private readonly IRouteBusiness _routeBusiness;
 
         private readonly ITeamBusiness _teamBusiness;
 
@@ -34,11 +32,10 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public RouteRepository(SmartCityContext context, IGameRepository gameRepository, IRouteStepRepository routeStepRepository, IRouteTagRepository routeTagRepository, ITeamBusiness teamBusiness)
+        public RouteRepository(SmartCityContext context, IGameRepository gameRepository, IRouteBusiness routeBusiness, ITeamBusiness teamBusiness)
         {
             _context = context;
-            _routeStepRepository = routeStepRepository;
-            _routeTagRepository = routeTagRepository;
+            _routeBusiness = routeBusiness;
             _teamBusiness = teamBusiness;
             _gameRepository = gameRepository;
         }
@@ -62,8 +59,7 @@ namespace DijiWalk.Repositories
             {
                 if (!await _gameRepository.ContainsRoute(idRoute))
                 {
-                    await _routeStepRepository.DeleteAllFromRoute(idRoute);
-                    await _routeTagRepository.DeleteAllFromRoute(idRoute);
+                    await _routeBusiness.DeleteAllFromRoute(idRoute);
                     await _teamBusiness.DeleteAllFromRoute(idRoute);
                 }
                 _context.Routes.Remove(await _context.Routes.FindAsync(idRoute));

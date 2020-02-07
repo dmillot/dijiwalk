@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Class definissant une Etape
@@ -18,6 +21,7 @@ namespace DijiWalk.Entities
         /// </summary>
         public Step()
         {
+            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
         }
@@ -66,5 +70,17 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder
         /// </summary>
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
+
+        [JsonExtensionData]
+        private IDictionary<string, JToken> _additionalData;
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Lat = Convert.ToDouble(_additionalData["Latitude"]);
+            Lng = Convert.ToDouble(_additionalData["Longitude"]);
+
+
+        }
     }
 }

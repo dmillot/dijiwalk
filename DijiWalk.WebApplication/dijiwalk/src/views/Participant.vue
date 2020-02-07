@@ -286,12 +286,11 @@
                 var self = this;
                 var id = self.deleteParticipant;
                 PlayerDataService.delete(id).then(response => {
-                    console.log(response.data.status)
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',
                             color: 'secondary',
-                            message: "Suppression d'un participant réussi !",
+                            message: response.data.message,
                             position: 'top'
                         })
                         self.participants = self.participants.filter(function (obj) {

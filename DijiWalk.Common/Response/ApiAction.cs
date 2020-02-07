@@ -4,6 +4,7 @@ using System.Text;
 
 namespace DijiWalk.Common.Response
 {
+
     public static class ApiAction
     {
 
@@ -12,7 +13,8 @@ namespace DijiWalk.Common.Response
         /// </summary>
         public static string Add
         {
-            get{
+            get
+            {
                 return "Création effectuée avec succés !";
             }
         }

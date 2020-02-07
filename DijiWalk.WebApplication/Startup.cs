@@ -39,6 +39,7 @@ namespace DijiWalk.WebApplication
         public static void AddCustomSettings(this JsonSerializerSettings settings)
         {
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            settings.FloatParseHandling = FloatParseHandling.Double;
         }
     }
 
@@ -87,6 +88,11 @@ namespace DijiWalk.WebApplication
             services.AddScoped<ITeamBusiness, TeamBusiness>();
             services.AddScoped<ICapitaineBusiness, CapitaineBusiness>();
             services.AddScoped<IPlayerBusiness, PlayerBusiness>();
+            services.AddScoped<IStepBusiness, StepBusiness>();
+            services.AddScoped<IRouteBusiness, RouteBusiness>();
+            services.AddScoped<IMissionBusiness, MissionBusiness>();
+            services.AddScoped<IAnswerBusiness, AnswerBusiness>();
+            services.AddScoped<ITrialBusiness, TrialBusiness>();
             #endregion
 
             #region Common
