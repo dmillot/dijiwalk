@@ -42,6 +42,11 @@ const routes = [
         component: () => import('../views/Etape.vue')
     },
     {
+        path: '/transport',
+        name: 'transport',
+        component: () => import('../views/Transport.vue')
+    },
+    {
         path: '/parcours',
         name: 'parcours',
         component: () => import('../views/Parcours.vue')

@@ -7,12 +7,10 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
-    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Controller for the Transport
@@ -67,6 +65,43 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Add a Transport 
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Transport transport)
+        {
+            try
+            {
+                //this._repository.Add(transport);
+                return this.Ok(await this._repository.Add(transport));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to Update a Transport 
+        /// </summary>
+        /// <returns>A Step</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Transport transport)
+        {
+            try
+            {
+                transport.Id = id;
+                
+                return this.Ok(await this._repository.Update(transport));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 

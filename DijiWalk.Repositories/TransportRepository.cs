@@ -35,10 +35,18 @@ namespace DijiWalk.Repositories
         /// Method to Add the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Add</param>
-        public void Add(Transport transport)
+        public async Task<Transport> Add(Transport transport)
         {
-            _context.Transports.Add(transport);
-            _context.SaveChanges();
+            try
+            {
+                _context.Transports.Add(transport);
+                _context.SaveChanges();
+                return transport;
+            }
+            catch (Exception e)
+            {
+                return new Transport();
+            }
         }
 
         /// <summary>
@@ -83,10 +91,19 @@ namespace DijiWalk.Repositories
         /// Method that will Update the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Update</param>
-        public void Update(Transport transport)
+        public async Task<ApiResponse> Update(Transport transport)
         {
-            _context.Transports.Update(transport);
-            _context.SaveChanges();
+
+            try
+            {
+                _context.Transports.Update(transport);
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
     }
 }
