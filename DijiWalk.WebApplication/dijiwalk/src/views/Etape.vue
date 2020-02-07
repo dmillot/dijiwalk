@@ -117,23 +117,6 @@
                             <q-select v-model="modelMission" option-value="id" option-label="name" :options="missionsOptions" label="Missions" id="missionEtape" name="missionsEtape" />
                         </div>
 
-
-                        <!--<q-list class="col-12" bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelMission"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Selectionner la ou les missions"
-                                          @filter="filterMission"
-                                          :options="missionsOptions" />
-                            </q-item>
-                        </q-list>-->
-
-
-
                     </div>
                 </q-card-section>
 
