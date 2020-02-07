@@ -85,7 +85,8 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            return await _context.Games.FindAsync(id);
+            //return await _context.Games.FindAsync(id);
+            return await _context.Games.Where(g => g.Id == id).Include(g => g.Organizer).Include(g => g.Route).Include(g => g.Transport).Include(g => g.TeamAnswers).Include(g => g.TeamRoutes).Include(g => g.Plays).FirstAsync();
         }
 
         /// <summary>
