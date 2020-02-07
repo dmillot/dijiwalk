@@ -13,13 +13,15 @@
                         <q-list bordered separator style="min-width: 100px">
                             <q-item>
                                 <q-select filled
-                                          v-model="modelParcours"
                                           use-input
                                           use-chips
+                                          v-model="routesFilterModel"
+                                          option-id="id"
+                                          option-label="name"
                                           multiple
                                           input-debounce="0"
                                           label="Filtrer par parcours"
-                                          :options="parcoursOptions"
+                                          :options="routesFiltered"
                                           @filter="filterParcours"
                                           style="width: 250px" />
                             </q-item>
@@ -30,31 +32,31 @@
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="addTransport = true; show=false" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+                <q-card @click="openModalToAdd" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
                     <q-icon name="fas fa-plus text-white" style="font-size: 3vw;" />
                 </q-card>
             </div>
 
             <div v-for="transport in transports" v-bind:key="transport.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <q-img> {{image[transport.id + 1]}} </q-img>
-
+                    <!--<q-img><i class={{image[transport.id - 1]}}></i></q-img>-->
+                    
                     <q-card-section>
-                        <q-btn @click="onDeleteTransport(transport)"
+                        <q-btn @click="openModalToDelete(transport)"
                                fab
                                color="negative"
                                icon="fas fa-trash"
                                class="absolute"
-                               style="top: 0; right: 12px;" />
+                               style="top: 0; right: 12px; transform: translateY(+50%);" />
 
                         <div class="row no-wrap">
                             <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ transport.Libelle }}
+                                {{ transport.libelle }}
                             </div>
                         </div>
                         <div class="row items-center no-wrap text-grey">
                             <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ transport.Description }}
+                                {{ transport.description }}
                             </div>
                         </div>
                     </q-card-section>
@@ -63,7 +65,7 @@
 
                     <q-card-actions>
                         <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat @click="addTransport = true; show=true; fillForm(etape)" color="primary text-bold">
+                        <q-btn flat @click="addTransport = true; show=true; fillForm(transport)" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -99,7 +101,7 @@
                             <q-input v-model="description" label="Description" />
                         </div>
                         <div class="col-12">
-                            <q-input v-model.number="libelle" type="number" label="Libelle" />
+                            <q-input v-model="libelle" label="Libelle" />
                         </div>
                     </div>
                 </q-card-section>
@@ -129,19 +131,24 @@
     ]
     
     const icons = [
-        '<i class="fas fa-car"></i>', '<i class="fas fa-bus"></i>', '<i class="fas fa-train"></i>', '<i class="fas fa-subway"></i>', '<i class="fas fa-biking"></i>'
+        "fas fa-walking", "fas fa-subway", "fas fa-biking", "fas fa-bus", "fas fa-transporter" , "fas fa-skating", "fas fa-dolly-flatbed-empty", "fas fa-taxi", "fas fa-dolly-empty" 
     ]
     
 
-    import axios from 'axios'
+    //import axios from 'axios'
+    import TransportDataService from "@/services/TransportDataService";
+    import RouteDataService from "@/services/RouteDataService";
+
+
     export default {
         name: 'transport',
         data() {
             return {
-                modelParcours: null,
-                parcoursOptions: parcours,
                 addTransport: false,
-                messageDeleteStep: null,
+                messageDeleteTransport: null,
+                routesFiltered: null,
+                routes: null,
+                routesFilterModel: null,
                 confirm: false,
                 transport: null,
                 deleteTransport: null,
@@ -153,12 +160,31 @@
             }
         },
         created: function () {
-            axios.get('api/transport').then(resp => {
-                this.transports = resp.data;
-            });
+            this.getAllRoutes();
+            this.getAllTransport();
         },
 
         methods: {
+            
+            getAllTransport () {
+                if (this.transports === null) {
+                    TransportDataService.getAll().then(response => {
+                        this.transports = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            },
+            
+            getAllRoutes () {
+                if (this.routes === null) {
+                    RouteDataService.getAll().then(response => {
+                        this.routes = response.data;
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+                }
+            },
 
             fillForm(transport) {
                 this.description = transport.description;
@@ -166,52 +192,84 @@
                 this.id = transport.id;
             },
 
+            
+
+            openModalToAdd() {
+                this.show = false;
+                this.addTransport = true;
+            },
+            
+            openModalToUpdate() {
+                this.show = false;
+                this.addTransport = true;
+                
+                this.transport = {
+                    Description: this.description,
+                    Libelle: this.libelle,
+                };
+            },
+
+            openModalToDelete(transport) {
+                this.confirm = true;
+                this.messageDeleteTransport = transport.libelle;
+                this.deleteTransport = transport.id;
+            },
+
             async updateTransport() {
 
                 this.transport = {
                     Description: this.description,
-                    Libelle: this.libelle,
+                    Libelle: this.libelle
                 };
 
-                await axios.put('api/transport/' + this.id + '/', this.transport);
-
-                axios.get('api/transport').then(resp => {
-                    this.transports = resp.data;
+                await TransportDataService.update(this.id, this.transport).then(response => {
+                    this.transports.update(response.data);
+                }).catch(reason => {
+                    console.log(reason);
                 });
             },
                             
-            addedTransport() {
+            async addedTransport() {
+                
                 this.transport = {
                     Description: this.description,
                     Libelle: this.libelle,
                 };
 
-                axios.post('api/transport/', this.transport).then(response => {
+                await TransportDataService.create(this.transport
+                ).then(response => {
                     this.transports.push(response.data);
                 }).catch(reason => {
                     console.log(reason);
                 });
 
-                axios.get('api/transport').then(resp => {
-                    this.transports = resp.data;
-                });
-            },
 
-            onDeleteTransport(transport) {
-                this.confirm = true;
-                this.messageDeleteStep = transport.libelle;
-                this.deleteTransport = transport.id;
+                //this.getAllTransport();
             },
 
             deletedTransport() {
-                axios.delete('api/transport/' + this.deleteTransport).then(resp => {
-                    if (resp.status == 200) {
-                        var self = this;
-                        this.transports = this.transports.filter(function (obj) {
-                            return obj.id !== self.deleteTransport;
-                        });
-                    }
+
+                
+                var id = this.deleteTransport;
+                TransportDataService.delete(this.deleteTransport).then(response => {
+
+                    this.transports = this.transports.filter(function (obj) {
+                        return obj.id !== id;
+                    });
+
+                    console.log(response);
+                }).catch(reason => {
+                    console.log(reason);
                 });
+                                             
+                //axios.delete('api/transport/' + this.deleteTransport).then(resp => {
+                //    if (resp.status == 200) {
+                //        var self = this;
+                //        this.transports = this.transports.filter(function (obj) {
+                //            return obj.id !== self.deleteTransport;
+                //        });
+                //    }
+                //});
             },
 
             filterParcours(val, update) {

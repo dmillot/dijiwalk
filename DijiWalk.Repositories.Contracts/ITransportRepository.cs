@@ -19,7 +19,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Add</param>
-        void Add(Transport transport);
+        Task<Transport> Add(Transport transport);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Transport passed in the parameters
@@ -44,6 +44,6 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Update the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Update</param>
-        void Update(Transport transport);
+        Task<ApiResponse> Update(Transport transport);
     }
 }
