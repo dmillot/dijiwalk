@@ -40,6 +40,8 @@ namespace DijiWalk.Repositories
            _context.SaveChanges();
         }
 
+       
+
         /// <summary>
         /// Method to Delete from the database the Mission passed in the parameters
         /// </summary>
@@ -49,7 +51,7 @@ namespace DijiWalk.Repositories
             try
             {
                 _context.Missions.Remove(await _context.Missions.FindAsync(idMission));
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)

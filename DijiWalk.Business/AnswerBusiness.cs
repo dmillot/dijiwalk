@@ -1,5 +1,6 @@
 ﻿using DijiWalk.Business.Contracts;
 using DijiWalk.Common.Response;
+using DijiWalk.Entities;
 using DijiWalk.EntitiesContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,8 +32,26 @@ namespace DijiWalk.Business
             try
             {
                 _context.Answers.RemoveRange(await _context.Answers.Where(x => x.IdTrial == idTrial).ToListAsync());
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add answer of trial of duplicate mission
+        /// </summary>
+        /// <param name="answers">List of new answers</param>
+        public async Task<ApiResponse> AddFromNewTrialFromMissionFromStep(List<Answer> answers)
+        {
+            try
+            {
+                await _context.Answers.AddRangeAsync(answers);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add };
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 ﻿using DijiWalk.Common.Response;
+using DijiWalk.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,11 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="idStep">id of a step</param>
         Task<bool> ContainsStep(int idStep);
+
+        /// <summary>
+        /// Method to separate step and mission 
+        /// </summary>
+        /// <param name="step">Object step</param>
+        Step SeparateStep(Step step);
     }
 }

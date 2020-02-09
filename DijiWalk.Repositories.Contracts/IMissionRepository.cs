@@ -21,6 +21,7 @@ namespace DijiWalk.Repositories.Contracts
         /// <param name="mission">Object Mission to Add</param>
         void Add(Mission mission);
 
+
         /// <summary>
         /// Definition of the function that will Delete from the database the Mission passed in the parameters
         /// </summary>

@@ -15,6 +15,7 @@ namespace DijiWalk.Repositories
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using Xamarin.Forms.Internals;
 
     /// <summary>
     /// Class that connect the Object Step to the database
@@ -27,14 +28,17 @@ namespace DijiWalk.Repositories
 
         private readonly IMissionBusiness _missionBusiness;
 
+        private readonly IMissionRepository _missionRepository;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IStepBusiness stepBusiness, IMissionBusiness missionBusiness)
+        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness)
         {
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
+            _missionRepository = missionRepository;
         }
 
         /// <summary>
@@ -45,9 +49,19 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                await _context.Steps.AddAsync(step);
-                _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = step }; 
+                Step newStep = _stepBusiness.SeparateStep(step);
+                var oldIdMissions = step.Missions.Select(m => { return m.Id; }).ToList();
+                var missions = await _context.Missions.AsNoTracking().Where(m => oldIdMissions.Contains((int)m.IdStep)).Include(m => m.Trials).ThenInclude(t => t.Answers).ToListAsync();
+                await _context.Steps.AddAsync(newStep);
+                await _context.SaveChangesAsync();
+
+                var response = await _missionBusiness.SetUp(missions, newStep.Id);
+
+                if (response.Status == ApiStatus.Ok)
+                {
+                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Steps.Where(s => s.Id == newStep.Id).Include(s => s.Missions).FirstOrDefaultAsync() };
+                } else
+                    return response;
             }
             catch (Exception e)
             {
@@ -65,9 +79,9 @@ namespace DijiWalk.Repositories
             {
                 if(!await _stepBusiness.ContainsStep(idStep))
                 {
-                    await _missionBusiness.DeleteAllFromStep(idStep);
-                    _context.Steps.Remove(await _context.Steps.FindAsync(idStep));
-                    _context.SaveChanges();
+                    Step step = await _context.Steps.Where(s => s.Id == idStep).Include(s => s.Missions).ThenInclude(m => m.Trials).ThenInclude(t => t.Answers).FirstOrDefaultAsync();
+                    _context.Steps.Remove(step);
+                    await _context.SaveChangesAsync();
                     return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
                 } else
                 {
@@ -110,10 +124,23 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                _context.Steps.Update(step);
-                await _context.SaveChangesAsync();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = step };
-            }
+                var oldIdMissions = _context.Missions.Where(m => m.IdStep == step.Id).Select(m => m.Id).ToList();
+                var idMissions = step.Missions.Select(m => m.Id).ToList();
+                var newIdMissions = idMissions.Where(m => !oldIdMissions.Contains(m)).ToList();
+
+                var responseDelete = await _missionBusiness.DeleteNotFromStep(await _context.Missions.Where(m => m.IdStep == step.Id && !idMissions.Contains(m.Id)).Include(m => m.Trials).ThenInclude(t => t.Answers).ToListAsync());
+                if (responseDelete.Status == ApiStatus.Ok)
+                {
+                    var missions = await _context.Missions.AsNoTracking().Where(m => newIdMissions.Contains((int)m.IdStep)).Include(m => m.Trials).ThenInclude(t => t.Answers).ToListAsync();
+                    var responseAdd = await _missionBusiness.SetUp(missions, step.Id);
+                    if (responseAdd.Status == ApiStatus.Ok)
+                    {
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Steps.Where(s => s.Id == step.Id).Include(s => s.Missions).FirstOrDefaultAsync() };
+                    } else
+                        return responseAdd;
+                } else
+                    return responseDelete;
+             }
             catch (Exception e)
             {
                 return TranslateError.Convert(e);

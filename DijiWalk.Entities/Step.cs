@@ -26,6 +26,20 @@ namespace DijiWalk.Entities
             RouteSteps = new HashSet<RouteStep>();
         }
 
+        public Step(Step s)
+        {
+            Id = s.Id;
+            Description = s.Description;
+            Validation = s.Validation;
+            CreationDate = s.CreationDate;
+            Name = s.Name;
+            Lat = s.Lat;
+            Lng = s.Lng;
+            _additionalData = new Dictionary<string, JToken>();
+            Missions = new HashSet<Mission>();
+            RouteSteps = new HashSet<RouteStep>();
+        }
+
         /// <summary>
         /// Obtient ou définit l'Id de l'Etape
         /// </summary>

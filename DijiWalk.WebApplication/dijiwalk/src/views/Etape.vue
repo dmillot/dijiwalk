@@ -242,6 +242,7 @@
                 this.latitudeStep = step.lat;
                 this.longitudeStep = step.lng;
                 this.creationDateStep = step.creationDate;
+                this.missionSelected = step.missions;
             },
 
             updateStep() {
@@ -253,11 +254,13 @@
                             CreationDate: this.creationDateStep,
                             Validation: this.stepSelected.validation,
                             Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                            Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep)
+                            Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                            Missions: this.missionSelected
                         }).then(response => {
                             if (response.data.status == 1) {
                                 this.manageStep = false;
                                 this.onResetValidation();
+                                this.getAllMissions();
                                 this.steps[this.steps.map(e => e.id).indexOf(this.stepSelected.id)] = response.data.response
 
                                 //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
@@ -298,20 +301,22 @@
                 this.errormessagelongitude = null
             },
             addedStep() {
-                if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.latitude.validate() && this.$refs.longitude.validate()) {
+                if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.latitude.validate() && this.$refs.longitude.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
                         StepDataService.create({
                             Name: this.nameStep,
                             Description: this.descriptionStep,
-                            Longitude: parseFloat(this.longitudeStep),
-                            Latitude: parseFloat(this.latitudeStep),
-                            CreationDate: moment().format("YYYY-MM-DD hh:mm:ss")
+                            Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                            Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                            CreationDate: moment().format("YYYY-MM-DD hh:mm:ss"),
+                            Missions: this.missionSelected
                         }).then(response => {
                             if (response.data.status == 1) {
-                                this.steps.push(response.data.response);
                                 this.manageStep = false;
                                 this.onResetValidation();
-
+                                this.getAllMissions();
+                                this.steps.push(response.data.response);
+                               
                                 //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
                                 this.$q.notify({

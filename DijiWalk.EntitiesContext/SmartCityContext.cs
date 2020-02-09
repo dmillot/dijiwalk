@@ -84,6 +84,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Trial)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.IdTrial)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ANSWER_TRIAL");
             });
 
@@ -179,6 +180,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Step)
                     .WithMany(p => p.Missions)
                     .HasForeignKey(d => d.IdStep)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_MISSION_STEP");
             });
 
@@ -592,6 +594,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Mission)
                     .WithMany(p => p.Trials)
                     .HasForeignKey(d => d.IdMission)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TRIAL_MISSION");
 
                 entity.HasOne(d => d.Type)
