@@ -93,6 +93,8 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IMissionBusiness, MissionBusiness>();
             services.AddScoped<IAnswerBusiness, AnswerBusiness>();
             services.AddScoped<ITrialBusiness, TrialBusiness>();
+            services.AddScoped<IRouteStepBusiness, RouteStepBusiness>();
+            services.AddScoped<IRouteTagBusiness, RouteTagBusiness>();
             #endregion
 
             #region Common

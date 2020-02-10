@@ -136,8 +136,8 @@
 
 
 <script>
-    import StepDataService from '../services/StepDataService';
-    import MissionDataService from '../services/MissionDataService';
+    import StepDataService from '@/services/StepDataService';
+    import MissionDataService from '@/services/MissionDataService';
     import moment from 'moment';
 
     export default {
@@ -152,8 +152,6 @@
                 deleteStep: null,
                 confirm: false,
                 show: true,
-
-
 
                 steps: null,
                 stepSelected: null,
@@ -195,6 +193,7 @@
                 this.longitudeStep = null
                 this.missionSelected = null
             },
+
             filterMission (val, update) {
               if (val === '') {
                   update(() => {

@@ -1,5 +1,6 @@
 ﻿using DijiWalk.Business.Contracts;
 using DijiWalk.Common.Response;
+using DijiWalk.Entities;
 using DijiWalk.EntitiesContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,10 +16,16 @@ namespace DijiWalk.Business
 
         private readonly SmartCityContext _context;
 
+        private readonly IRouteStepBusiness _routeStepBusiness;
 
-        public RouteBusiness(SmartCityContext context)
+        private readonly IRouteTagBusiness _routeTagBusiness;
+
+
+        public RouteBusiness(SmartCityContext context, IRouteStepBusiness routeStepBusiness, IRouteTagBusiness routeTagBusiness)
         {
             _context = context;
+            _routeStepBusiness = routeStepBusiness;
+            _routeTagBusiness = routeTagBusiness;
         }
 
 
@@ -30,9 +37,9 @@ namespace DijiWalk.Business
         {
             try
             {
-                _context.Routesteps.RemoveRange(await _context.Routesteps.Where(x => x.IdRoute == idRoute).ToListAsync());
-                _context.Routetags.RemoveRange(await _context.Routetags.Where(x => x.IdRoute == idRoute).ToListAsync());
-                _context.SaveChanges();
+                await _routeStepBusiness.DeleteFromRoute(await _context.Routesteps.Where(x => x.IdRoute == idRoute).ToListAsync());
+                await _routeTagBusiness.DeleteFromRoute(await _context.Routetags.Where(x => x.IdRoute == idRoute).ToListAsync());
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
@@ -40,6 +47,15 @@ namespace DijiWalk.Business
                 return TranslateError.Convert(e);
             }
 
+        }
+
+        /// <summary>
+        /// Method to separate step and route 
+        /// </summary>
+        /// <param name="route">Object route</param>
+        public Route SeparateStep(Route route)
+        {
+            return new Route(route);
         }
     }
 }

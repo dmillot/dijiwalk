@@ -74,7 +74,7 @@ namespace DijiWalk.Business
         /// Method to Delete all team route with route id
         /// </summary>
         /// <param name="idRoute">id of the route</param>
-        public async Task<ApiResponse> DeleteAllFromRoute(int idRoute)
+        public async Task<ApiResponse> DeleteTeamRoutesFromRoute(int idRoute)
         {
             try
             {
