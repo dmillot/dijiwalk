@@ -25,7 +25,6 @@ namespace DijiWalk.Business.Contracts
         /// Method to Add a list of Mission passed in the parameters to the database
         /// </summary>
         /// <param name="mission">List of object Mission to Add</param>
-        /// <param name="oldIdMissions">List of old id mission</param>
         Task<ApiResponse> AddRange(List<Mission> missions);
 
         /// <summary>

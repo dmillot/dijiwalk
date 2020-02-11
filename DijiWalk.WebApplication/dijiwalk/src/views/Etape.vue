@@ -42,7 +42,7 @@
                                color="negative"
                                icon="fas fa-trash"
                                class="absolute"
-                               style="top: 0; right: 12px;" />
+                               style="top: 0; right: 12px; transform: translateY(-50%);" />
                         <div class="row no-wrap">
                             <div class="col text-left text-bold text-h6 ellipsis">
                                 {{ step.name }}
@@ -136,8 +136,8 @@
 
 
 <script>
-    import StepDataService from '../services/StepDataService';
-    import MissionDataService from '../services/MissionDataService';
+    import StepDataService from '@/services/StepDataService';
+    import MissionDataService from '@/services/MissionDataService';
     import moment from 'moment';
 
     export default {
@@ -152,8 +152,6 @@
                 deleteStep: null,
                 confirm: false,
                 show: true,
-
-
 
                 steps: null,
                 stepSelected: null,
@@ -195,6 +193,7 @@
                 this.longitudeStep = null
                 this.missionSelected = null
             },
+
             filterMission (val, update) {
               if (val === '') {
                   update(() => {

@@ -42,7 +42,7 @@
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+                <q-card @click="openModalToManage(false)" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
                     <q-icon name="fas fa-plus text-white" style="font-size: 3vw;" />
                 </q-card>
             </div>
@@ -63,13 +63,17 @@
                                 {{ participant.firstName }} {{ participant.lastName }} / {{ participant.Login }}
                             </div>
                         </div>
+                        <div class="row items-center no-wrap text-grey">
+                            <q-icon name="fas fa-users" />
+                            <p class="q-ma-none q-ml-sm">{{ participant.email }}</p>
+                        </div>
                     </q-card-section>
 
                     <q-separator />
 
                     <q-card-actions>
                         <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat color="primary text-bold">
+                        <q-btn flat @click="openModalToManage(true); fillForm(participant)" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -80,8 +84,13 @@
         <q-dialog v-model="confirm">
             <q-card>
                 <q-card-section class="row items-center">
-                    <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" />
-                    <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer ce {{ messageDeleteParticipant }} ?</span>
+                    <div class="col-2">
+                        <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" size="70px" />
+                    </div>
+                    <div class="row col-10">
+                        <span>Êtes-vous sûr de vouloir supprimer le participant {{ messageDeleteParticipant }}</span>
+                        <span class="text-caption text-negative q-mt-sm" color="negative" style="font-size: 10px;">{{ messageBonus }}</span>
+                    </div>
                 </q-card-section>
 
                 <q-card-actions align="right">
@@ -90,9 +99,10 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-dialog v-model="addParticipant">
+        <q-dialog v-model="manageParticipant">
             <q-card>
                 <q-card-section class="row items-center">
+                    <q-input v-model="idParticipant" type="hidden" />
                     <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-address-card" />
@@ -133,16 +143,16 @@
                             <q-icon name="fas fa-at" />
                         </template>
                     </q-input>
-                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable >
+                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable>
                         <template v-slot:prepend>
                             <q-icon name="fas fa-image" />
                         </template>
                     </q-file>
                 </q-card-section>
                 <q-card-actions align="right">
-                    <q-btn flat label="Réinitialiser" type="reset" color="red-14" class="q-ml-sm" />
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn label="Ajouter" color="secondary" @click="addedParticipant()" />
+                    <q-btn flat v-if="show" label="Modifier" @click="updateParticipant" color="secondary" />
+                    <q-btn v-else label="Ajouter" @click="addedParticipant" color="secondary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -162,11 +172,18 @@
                 modelJeu: null,
                 equipesOptions: null,
                 jeuxOptions: null,
+
                 participants: null,
                 confirm: false,
-                addParticipant: false,
+
+                show: true,
+
+                manageParticipant: false,
                 messageDeleteParticipant: null,
+                messageBonus: "Si vous supprimer un participant, cela supprimer ses liens avec les équipes !",
                 deleteParticipant: null,
+
+                participantSelected: null,
                 prenomParticipant: null,
                 nomParticipant: null,
                 loginParticipant: null,
@@ -174,13 +191,16 @@
                 passwordConfirmParticipant: null,
                 emailParticipant: null,
                 pictureParticipant: null,
+
                 errormessagepassword: null,
                 errorpassword: false,
                 errormessageemail: null,
                 erroremail: false,
                 errormessagelogin: null,
                 errorlogin: false,
-                isPwd: true
+
+                isPwd: true,
+                idParticipant: null,
             }
         },
         created() {
@@ -190,8 +210,31 @@
         },
 
         methods: {
-            openModalToAdd() {
-                this.addParticipant = true
+            resetInput() {
+                this.idParticipant = null
+                this.prenomParticipant = null
+                this.nomParticipant = null
+                this.loginParticipant = null
+                this.passwordParticipant = null
+                this.passwordConfirmParticipant = null
+                this.emailParticipant = null
+                this.pictureParticipant = null
+            },
+            openModalToManage(action) {
+                this.resetInput();
+                this.manageParticipant = true
+                this.show = action;
+            },
+            fillForm(participant) {
+                this.participantSelected = participant
+                this.idParticipant = participant.id
+                this.prenomParticipant = participant.firstName
+                this.nomParticipant = participant.lastName
+                this.loginParticipant = participant.Login
+                this.passwordParticipant = null
+                this.passwordConfirmParticipant = null
+                this.emailParticipant = participant.email
+                this.pictureParticipant = participant.picture
             },
             getAllParticipants() {
                 if (this.participants === null) {
@@ -228,9 +271,69 @@
                                     Email: this.emailParticipant
                                 }).then(response => {
                                     if (response.data.status == 1) {
-                                        this.participants.push(response.data.response);
-                                        this.addParticipant = false;
+                                        this.manageParticipant = false;
                                         this.onResetValidation();
+                                        this.participants.push(response.data.response);
+
+
+                                        //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+
+                                        this.$q.notify({
+                                            icon: 'fas fa-check-square',
+                                            color: 'secondary',
+                                            message: response.data.message,
+                                            position: 'top'
+                                        })
+                                    } else {
+                                        var message = response.data.message;
+                                        this.errorlogin = true;
+                                        this.errormessagelogin = message;
+                                        this.erroremail = true;
+                                        this.errormessageemail = message;
+                                        this.$q.notify({
+                                            icon: 'fas fa-exclamation-triangle',
+                                            color: 'negative',
+                                            message: message,
+                                            position: 'top'
+                                        })
+                                        setTimeout(this.onResetValidation, 3000);
+                                    }
+                                }).catch(reason => {
+                                    console.log(reason);
+                                });
+                            } else {
+                                this.erroremail = true;
+                                this.errormessageemail = "Veuillez entrer un email valide.";
+                                setTimeout(this.onResetValidation, 3000);
+                            }
+                        } else {
+                            this.errorpassword = true;
+                            this.errormessagepassword = "Il faut au moins 8 caractères, une majuscule, une minuscule, un nombre et un caractère spéciale.";
+                            setTimeout(this.onResetValidation, 3000);
+                        }
+                    } else {
+                        this.errorpassword = true;
+                        this.errormessagepassword = "Les mots de passes ne correspondent pas !";
+                        setTimeout(this.onResetValidation, 3000);
+                    }
+                }
+            },
+            updateParticipant() {
+                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate() && this.$refs.picture.validate()) {
+                    if (this.passwordParticipant === this.passwordConfirmParticipant) {
+                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
+                            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                PlayerDataService.update(this.idParticipant, {
+                                    FirstName: this.prenomParticipant,
+                                    LastName: this.nomParticipant,
+                                    Login: this.loginParticipant,
+                                    Password: this.passwordParticipant,
+                                    Email: this.emailParticipant
+                                }).then(response => {
+                                    if (response.data.status == 1) {
+                                        this.manageParticipant = false;
+                                        this.onResetValidation();
+                                        this.participants[this.participants.map(e => e.id).indexOf(this.participantSelected.id)] = response.data.response
 
                                         //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 

@@ -103,5 +103,23 @@ namespace DijiWalk.WebApplication.Controllers
                 return this.Ok(TranslateError.Convert(e));
             }
         }
+
+        /// <summary>
+        /// Method to Update a Player 
+        /// </summary>
+        /// <returns>A Player</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Player player)
+        {
+            try
+            {
+                player.Id = id;
+                return this.Ok(await _repository.Update(player));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
     }
 }

@@ -10,6 +10,10 @@ body {
     font-weight: bolder;
 }
 
+.q-toggle__label{
+    color: rgba(0,0,0,0.6);
+}
+
 @media screen and (min-width: 720px) {
     body {
         padding-left: 100px;

@@ -124,6 +124,11 @@ namespace DijiWalk.Repositories
         {
             try
             {
+
+                Step newStep = _stepBusiness.SeparateStep(step);
+                _context.Steps.Update(step);
+                await _context.SaveChangesAsync();
+
                 var oldIdMissions = _context.Missions.Where(m => m.IdStep == step.Id).Select(m => m.Id).ToList();
                 var idMissions = step.Missions.Select(m => m.Id).ToList();
                 var newIdMissions = idMissions.Where(m => !oldIdMissions.Contains(m)).ToList();
@@ -135,7 +140,7 @@ namespace DijiWalk.Repositories
                     var responseAdd = await _missionBusiness.SetUp(missions, step.Id);
                     if (responseAdd.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Steps.Where(s => s.Id == step.Id).Include(s => s.Missions).FirstOrDefaultAsync() };
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(step.Id) };
                     } else
                         return responseAdd;
                 } else

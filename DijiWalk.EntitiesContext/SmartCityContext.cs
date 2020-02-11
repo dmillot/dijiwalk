@@ -550,6 +550,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.RouteStep)
                     .WithMany(p => p.TeamRoutes)
                     .HasForeignKey(d => new { d.IdRoute, d.IdStep })
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TEAMROUTE_ROUTESTEP");
             });
 

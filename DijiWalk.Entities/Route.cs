@@ -23,6 +23,21 @@ namespace DijiWalk.Entities
             RouteTags = new HashSet<RouteTag>();
         }
 
+        public Route(Route r)
+        {
+            Id = r.Id;
+            Name = r.Name;
+            Description = r.Description;
+            Handicap = r.Handicap;
+            Time = r.Time;
+            Distance = r.Distance;
+            IdOrganizer = r.IdOrganizer;
+            Organizer = r.Organizer;
+            Games = new HashSet<Game>();
+            RouteSteps = new HashSet<RouteStep>();
+            RouteTags = new HashSet<RouteTag>();
+        }
+
         /// <summary>
         /// Obtient ou définit l'Id de la Route
         /// </summary>

@@ -23,6 +23,8 @@ namespace DijiWalk.Entities
             TeamRoutes = new HashSet<TeamRoute>();
         }
 
+       
+
         /// <summary>
         /// Obtient ou définit l'Id du Jeu
         /// </summary>
