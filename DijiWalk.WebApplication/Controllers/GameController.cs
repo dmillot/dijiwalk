@@ -58,9 +58,27 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, TranslateError.Convert(e));
+                return this.Ok(TranslateError.Convert(e));
             }
 
+        }
+
+        /// <summary>
+        /// Method to Update a game 
+        /// </summary>
+        /// <returns>A game</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Game game)
+        {
+            try
+            {
+                game.Id = id;
+                return this.Ok(await _repository.Update(game));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
         }
 
         /// <summary>
@@ -85,7 +103,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>Success or error message</returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Game game)
+        public async Task<IActionResult> Add([FromBody] Game game)
         {
             try
             {
@@ -93,7 +111,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, TranslateError.Convert(e));
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 
@@ -110,7 +128,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, TranslateError.Convert(e));
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

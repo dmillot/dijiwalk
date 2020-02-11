@@ -29,7 +29,5 @@ namespace DijiWalk.Business
         {
             return await _context.Players.AnyAsync(x => x.Email == player.Email || x.Login == player.Login);
         }
-
-
     }
 }

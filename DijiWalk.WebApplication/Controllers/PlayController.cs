@@ -92,11 +92,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>Message action</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int idGame, int idEquipe)
         {
             try
             {
-                return this.Ok(await this._repository.Delete(id));
+                return this.Ok(await this._repository.Delete(idGame, idEquipe));
             }
             catch (Exception e)
             {
