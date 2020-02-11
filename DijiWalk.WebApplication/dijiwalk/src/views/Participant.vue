@@ -191,6 +191,7 @@
                 passwordConfirmParticipant: null,
                 emailParticipant: null,
                 pictureParticipant: null,
+                pictureUrl: null,
 
                 errormessagepassword: null,
                 errorpassword: false,
@@ -210,6 +211,14 @@
         },
 
         methods: {
+            fileConvert() {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(this.pictureParticipant);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                })
+            },
             resetInput() {
                 this.idParticipant = null
                 this.prenomParticipant = null
@@ -234,7 +243,7 @@
                 this.passwordParticipant = null
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = participant.email
-                this.pictureParticipant = participant.picture
+                this.pictureUrl = participant.picture
             },
             getAllParticipants() {
                 if (this.participants === null) {
@@ -263,44 +272,49 @@
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
-                                PlayerDataService.create({
-                                    FirstName: this.prenomParticipant,
-                                    LastName: this.nomParticipant,
-                                    Login: this.loginParticipant,
-                                    Password: this.passwordParticipant,
-                                    Email: this.emailParticipant
-                                }).then(response => {
-                                    if (response.data.status == 1) {
-                                        this.manageParticipant = false;
-                                        this.onResetValidation();
-                                        this.participants.push(response.data.response);
+                                this.fileConvert().then(response => {
+                                    PlayerDataService.create({
+                                        FirstName: this.prenomParticipant,
+                                        LastName: this.nomParticipant,
+                                        Login: this.loginParticipant,
+                                        Password: this.passwordParticipant,
+                                        Email: this.emailParticipant,
+                                        ImageBase64: response,
+                                        ImageChanged: true
+                                    }).then(response => {
+                                        if (response.data.status == 1) {
+                                            this.manageParticipant = false;
+                                            this.onResetValidation();
+                                            this.participants.push(response.data.response);
 
 
-                                        //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
-                                        this.$q.notify({
-                                            icon: 'fas fa-check-square',
-                                            color: 'secondary',
-                                            message: response.data.message,
-                                            position: 'top'
-                                        })
-                                    } else {
-                                        var message = response.data.message;
-                                        this.errorlogin = true;
-                                        this.errormessagelogin = message;
-                                        this.erroremail = true;
-                                        this.errormessageemail = message;
-                                        this.$q.notify({
-                                            icon: 'fas fa-exclamation-triangle',
-                                            color: 'negative',
-                                            message: message,
-                                            position: 'top'
-                                        })
-                                        setTimeout(this.onResetValidation, 3000);
-                                    }
-                                }).catch(reason => {
-                                    console.log(reason);
-                                });
+                                            this.$q.notify({
+                                                icon: 'fas fa-check-square',
+                                                color: 'secondary',
+                                                message: response.data.message,
+                                                position: 'top'
+                                            })
+                                        } else {
+                                            var message = response.data.message;
+                                            this.errorlogin = true;
+                                            this.errormessagelogin = message;
+                                            this.erroremail = true;
+                                            this.errormessageemail = message;
+                                            this.$q.notify({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                color: 'negative',
+                                                message: message,
+                                                position: 'top'
+                                            })
+                                            setTimeout(this.onResetValidation, 3000);
+                                        }
+                                    }).catch(reason => {
+                                        console.log(reason);
+                                    });
+                                })
+
                             } else {
                                 this.erroremail = true;
                                 this.errormessageemail = "Veuillez entrer un email valide.";
@@ -319,47 +333,53 @@
                 }
             },
             updateParticipant() {
-                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate() && this.$refs.picture.validate()) {
+                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate()) {
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
-                                PlayerDataService.update(this.idParticipant, {
-                                    FirstName: this.prenomParticipant,
-                                    LastName: this.nomParticipant,
-                                    Login: this.loginParticipant,
-                                    Password: this.passwordParticipant,
-                                    Email: this.emailParticipant
-                                }).then(response => {
-                                    if (response.data.status == 1) {
-                                        this.manageParticipant = false;
-                                        this.onResetValidation();
-                                        this.participants[this.participants.map(e => e.id).indexOf(this.participantSelected.id)] = response.data.response
+                                this.fileConvert().then(response => {
+                                    PlayerDataService.update(this.idParticipant, {
+                                        FirstName: this.prenomParticipant,
+                                        LastName: this.nomParticipant,
+                                        Login: this.loginParticipant,
+                                        Password: this.passwordParticipant,
+                                        Email: this.emailParticipant,
+                                        ImageBase64: this.$refs.picture.validate() ? response : this.pictureUrl,
+                                        ImageChanged: this.$refs.picture.validate(),
+                                        Picture: this.pictureUrl
+                                    }).then(response => {
+                                        if (response.data.status == 1) {
+                                            this.manageParticipant = false;
+                                            this.onResetValidation();
+                                            this.participants[this.participants.map(e => e.id).indexOf(this.participantSelected.id)] = response.data.response
 
-                                        //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
-                                        this.$q.notify({
-                                            icon: 'fas fa-check-square',
-                                            color: 'secondary',
-                                            message: response.data.message,
-                                            position: 'top'
-                                        })
-                                    } else {
-                                        var message = response.data.message;
-                                        this.errorlogin = true;
-                                        this.errormessagelogin = message;
-                                        this.erroremail = true;
-                                        this.errormessageemail = message;
-                                        this.$q.notify({
-                                            icon: 'fas fa-exclamation-triangle',
-                                            color: 'negative',
-                                            message: message,
-                                            position: 'top'
-                                        })
-                                        setTimeout(this.onResetValidation, 3000);
-                                    }
-                                }).catch(reason => {
-                                    console.log(reason);
-                                });
+                                            this.$q.notify({
+                                                icon: 'fas fa-check-square',
+                                                color: 'secondary',
+                                                message: response.data.message,
+                                                position: 'top'
+                                            })
+                                        } else {
+                                            var message = response.data.message;
+                                            this.errorlogin = true;
+                                            this.errormessagelogin = message;
+                                            this.erroremail = true;
+                                            this.errormessageemail = message;
+                                            this.$q.notify({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                color: 'negative',
+                                                message: message,
+                                                position: 'top'
+                                            })
+                                            setTimeout(this.onResetValidation, 3000);
+                                        }
+                                    }).catch(reason => {
+                                        console.log(reason);
+                                    });
+                                })
+
                             } else {
                                 this.erroremail = true;
                                 this.errormessageemail = "Veuillez entrer un email valide.";

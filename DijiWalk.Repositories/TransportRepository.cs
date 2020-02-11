@@ -35,17 +35,17 @@ namespace DijiWalk.Repositories
         /// Method to Add the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Add</param>
-        public async Task<Transport> Add(Transport transport)
+        public async Task<ApiResponse> Add(Transport transport)
         {
             try
             {
-                _context.Transports.Add(transport);
-                _context.SaveChanges();
-                return transport;
+                await _context.Transports.AddAsync(transport);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = transport };
             }
             catch (Exception e)
             {
-                return new Transport();
+                return TranslateError.Convert(e);
             }
         }
 
@@ -58,7 +58,7 @@ namespace DijiWalk.Repositories
             try
             {
                 _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)
@@ -97,7 +97,7 @@ namespace DijiWalk.Repositories
             try
             {
                 _context.Transports.Update(transport);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update };
             }
             catch (Exception e)

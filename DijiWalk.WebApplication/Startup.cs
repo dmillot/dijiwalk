@@ -7,10 +7,12 @@ using DijiWalk.Business;
 using DijiWalk.Business.Contracts;
 using DijiWalk.Common.Contracts;
 using DijiWalk.Common.Encryption;
+using DijiWalk.Common.FileExtension;
 using DijiWalk.Common.Response;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
+using DijiWalk.Services;
 using DijiWalk.WebApplication.Models;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -70,6 +72,10 @@ namespace DijiWalk.WebApplication
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
 
+            #region Services
+            
+            #endregion
+
             #region Repositories
             services.AddScoped<IAdministratorRepository, AdministratorRepository>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
@@ -105,10 +111,13 @@ namespace DijiWalk.WebApplication
             services.AddScoped<ITrialBusiness, TrialBusiness>();
             services.AddScoped<IRouteStepBusiness, RouteStepBusiness>();
             services.AddScoped<IRouteTagBusiness, RouteTagBusiness>();
+            services.AddScoped<IImageBusiness, ImageBusiness>();
             #endregion
 
             #region Common
             services.AddScoped<ICryption, Cryption>();
+            services.AddSingleton<ICloudStorage, CloudStorage>();
+            services.AddSingleton<IFileExtension, FileExtension>();
             #endregion
 
             #region JWT Token
