@@ -39,6 +39,21 @@
                                           style="min-width: 250px; max-width: 300px">
                                 </q-select>
                             </q-item>
+                            <q-item>
+                                <q-select multiple
+                                          use-input
+                                          ref="transportFilter"
+                                          label="Filtrer par transport"
+                                          v-model="transportsFilterModel"
+                                          :options="transportsFiltered"
+                                          :option-value="opt => opt.id"
+                                          :option-label="opt => opt.libelle"
+                                          emit-value
+                                          map-options
+                                          @filter="filterTransport"
+                                          style="min-width: 250px; max-width: 300px">
+                                </q-select>
+                            </q-item>
                         </q-list>
                     </q-menu>
                 </div>
@@ -183,8 +198,10 @@
                 transports: null,
                 teamsFiltered: null,
                 routesFiltered: null,
+                transportsFiltered: null,
                 teamsFilterModel: null,
                 routesFilterModel: null,
+                transportsFilterModel: null,
                 selectedGameId: null,
                 gameSelected: null,
                 confirm: false,
@@ -289,13 +306,7 @@
             },
 
             getAllGames () {
-                if (this.games === null) {
-                    GameDataService.getAll().then(response => {
-                        this.games = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
-                }
+                GameDataService.getAll().then(response => { this.games = response.data }).catch(error => { console.log(error) });
             },
 
             openModalToDelete (game) {
@@ -443,6 +454,21 @@
                 update(() => {
                     const needle = val.toLowerCase()
                     this.teamsFiltered = this.teams.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+                })
+            },
+
+            filterTransport(val, update) {
+
+                if (val === '') {
+                    update(() => {
+                        this.transportsFiltered = this.transports
+                    })
+                    return
+                }
+
+                update(() => {
+                    const needle = val.toLowerCase()
+                    this.transportsFiltered = this.transports.filter(v => v.libelle.toLowerCase().indexOf(needle) > -1)
                 })
             }
         },
