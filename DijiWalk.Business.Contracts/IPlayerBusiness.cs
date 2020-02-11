@@ -16,5 +16,11 @@ namespace DijiWalk.Business.Contracts
         /// <param name="player">Object player</param>
         Task<bool> Check(Player player);
 
+        /// <summary>
+        /// Method to change check if login and email are unique but not check for the player updated
+        /// </summary>
+        /// <param name="player">Object player</param>
+        Task<bool> CheckUpdate(Player player);
+
     }
 }

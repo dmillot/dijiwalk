@@ -140,7 +140,7 @@ namespace DijiWalk.Repositories
                     var responseAdd = await _missionBusiness.SetUp(missions, step.Id);
                     if (responseAdd.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await _context.Steps.Where(s => s.Id == step.Id).Include(s => s.Missions).FirstOrDefaultAsync() };
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(step.Id) };
                     } else
                         return responseAdd;
                 } else

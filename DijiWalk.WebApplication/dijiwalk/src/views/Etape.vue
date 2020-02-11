@@ -42,7 +42,7 @@
                                color="negative"
                                icon="fas fa-trash"
                                class="absolute"
-                               style="top: 0; right: 12px;" />
+                               style="top: 0; right: 12px; transform: translateY(-50%);" />
                         <div class="row no-wrap">
                             <div class="col text-left text-bold text-h6 ellipsis">
                                 {{ step.name }}

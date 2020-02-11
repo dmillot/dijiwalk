@@ -30,7 +30,8 @@ using VueCliMiddleware;
 
 namespace DijiWalk.WebApplication
 {
-    public static class CustomSetting{
+    public static class CustomSetting
+    {
 
         /// <summary>
         /// Disable circular dependency
@@ -52,35 +53,44 @@ namespace DijiWalk.WebApplication
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
+                });
+            });
             services.AddControllers().AddNewtonsoftJson(option => option.SerializerSettings.AddCustomSettings());
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
 
             #region Repositories
             services.AddScoped<IAdministratorRepository, AdministratorRepository>();
-            services.AddScoped<IAnswerRepository,  AnswerRepository>();
-            services.AddScoped<IGameRepository,  GameRepository>();
-            services.AddScoped<IMessageRepository,  MessageRepository>();
-            services.AddScoped<IMissionRepository,  MissionRepository>();
-            services.AddScoped<IOrganizerRepository,  OrganizerRepository>();
-            services.AddScoped<IPlayerRepository,  PlayerRepository>();
-            services.AddScoped<IPlayRepository,  PlayRepository>();
-            services.AddScoped<IRouteRepository,  RouteRepository>();
-            services.AddScoped<IRouteStepRepository,  RouteStepRepository>();
-            services.AddScoped<IRouteTagRepository,  RouteTagRepository>();
-            services.AddScoped<IStepRepository,  StepRepository>();
-            services.AddScoped<ITagRepository,  TagRepository>();
-            services.AddScoped<ITeamAnswerRepository,  TeamAnswerRepository>();
-            services.AddScoped<ITeamPlayerRepository,  TeamPlayerRepository>();
-            services.AddScoped<ITeamRepository,  TeamRepository>();
-            services.AddScoped<ITeamRouteRepository,  TeamRouteRepository>();
-            services.AddScoped<ITransportRepository,  TransportRepository>();
-            services.AddScoped<ITrialRepository,  TrialRepository>();
-            services.AddScoped<ITypeRepository,  TypeRepository>();
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMissionRepository, MissionRepository>();
+            services.AddScoped<IOrganizerRepository, OrganizerRepository>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+            services.AddScoped<IPlayRepository, PlayRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<IRouteStepRepository, RouteStepRepository>();
+            services.AddScoped<IRouteTagRepository, RouteTagRepository>();
+            services.AddScoped<IStepRepository, StepRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ITeamAnswerRepository, TeamAnswerRepository>();
+            services.AddScoped<ITeamPlayerRepository, TeamPlayerRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<ITeamRouteRepository, TeamRouteRepository>();
+            services.AddScoped<ITransportRepository, TransportRepository>();
+            services.AddScoped<ITrialRepository, TrialRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
             #endregion
 
             #region Business Layer
@@ -112,7 +122,7 @@ namespace DijiWalk.WebApplication
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; 
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(x =>
             {
@@ -141,10 +151,7 @@ namespace DijiWalk.WebApplication
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
 
@@ -155,7 +162,7 @@ namespace DijiWalk.WebApplication
 
             app.Use(next => context =>
             {
-                if ( string.Equals(context.Request.Path.Value, "/"))
+                if (string.Equals(context.Request.Path.Value, "/"))
                 {
                     var token = antiforgery.GetAndStoreTokens(context).RequestToken;
                     context.Response.Cookies.Append("XSRF-TOKEN", token, new CookieOptions { HttpOnly = false, Secure = true });

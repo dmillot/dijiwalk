@@ -156,7 +156,7 @@ namespace DijiWalk.Repositories
                             var responseRouteTagAdd = await _routeTagBusiness.SetUp(route.RouteTags.Where(m => !currentIdRouteTag.Contains(m.IdTag)).ToList(), route.Id);
                             if (responseRouteTagAdd.Status == ApiStatus.Ok)
                             {
-                                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await _context.Routes.Where(r => r.Id == route.Id).Include(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.RouteTags).ThenInclude(rt => rt.Tag).FirstOrDefaultAsync() };
+                                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(route.Id) };
                             }
                             else
                                 return responseRouteTagAdd;

@@ -126,10 +126,26 @@ namespace DijiWalk.Repositories
         /// Method that will Update the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to Update</param>
-        public void Update(Player player)
+        public async Task<ApiResponse> Update(Player player)
         {
-            _context.Players.Update(player);
-            _context.SaveChanges();
+            try
+            {
+                if (!await _playerBusiness.CheckUpdate(player))
+                {
+                    player.Password = _cryption.Encrypt(player.Password);
+                    _context.Players.Update(player);
+                    await _context.SaveChangesAsync();
+                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = player };
+                }
+                else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Le pseudo et l'e-mail doivent être uniques." };
+                }
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
     }
 }

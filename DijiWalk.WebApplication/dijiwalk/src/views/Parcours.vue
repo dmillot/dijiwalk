@@ -64,7 +64,7 @@
                         <div class="row items-center no-wrap text-grey">
                             <q-icon name="fas fa-clock" />
                             <p class="q-ma-none q-ml-xs">{{ parcour.time | formatTime }}</p>
-                            <q-icon class="q-ml-md" name="fas fa-wheelchair" color="negative" /> <!--DEMANDER A DAMIEN pour switch de color si true ou false-->
+                            <q-icon v-if="parcour.handicap" class="q-ml-md" name="fas fa-wheelchair" color="negative"/>
                         </div>
                     </q-card-section>
 

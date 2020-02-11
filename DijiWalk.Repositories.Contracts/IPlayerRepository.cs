@@ -41,9 +41,9 @@ namespace DijiWalk.Repositories.Contracts
         Task<IEnumerable<Player>> FindAll();
 
         /// <summary>
-        /// Definition of the function that will Update the Player passed in the parameters to the database
+        /// Method that will Update the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to Update</param>
-        void Update(Player player);
+        Task<ApiResponse> Update(Player player);
     }
 }
