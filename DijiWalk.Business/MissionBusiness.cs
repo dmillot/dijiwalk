@@ -74,10 +74,10 @@ namespace DijiWalk.Business
         {
             try
             {
-                //var listAnswer = step.Missions.Select(m => { return m.Trials; }).Select(t => { return t.Answers; });
                 var listMission = await _context.Missions.Where(x => x.IdStep == step.Id).ToListAsync();
                 listMission.ForEach(async l => await _trialBusiness.DeleteAllFromMission(l.Id));
                 _context.Missions.RemoveRange(listMission);
+                await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
             catch (Exception e)

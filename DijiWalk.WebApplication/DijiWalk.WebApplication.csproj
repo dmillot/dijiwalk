@@ -47,5 +47,8 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="set" />
+  </Target>
 
 </Project>
