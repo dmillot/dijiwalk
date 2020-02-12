@@ -18,12 +18,14 @@ namespace DijiWalk.Business
 
         private readonly IFileExtension _fileExtension;
 
+        private readonly IStringExtension _stringExtension;
 
-        public ImageBusiness(SmartCityContext context, ICloudStorage cloudStorage, IFileExtension fileExtension)
+        public ImageBusiness(SmartCityContext context, ICloudStorage cloudStorage, IFileExtension fileExtension, IStringExtension stringExtension)
         {
             _context = context;
             _cloudStorage = cloudStorage;
             _fileExtension = fileExtension;
+            _stringExtension = stringExtension;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace DijiWalk.Business
         public async Task<string> UploadImage(string image64, string fileName)
         {
             var extension = _fileExtension.GetExtension(image64.Substring(0, 50));
-            return await _cloudStorage.UploadFileAsync(image64, $"{fileName}.{extension}", extension);
+            return await _cloudStorage.UploadFileAsync(image64, $"{_stringExtension.RemoveDiacriticsAndWhiteSpace(fileName)}.{extension}", extension);
         }
 
         /// <summary>

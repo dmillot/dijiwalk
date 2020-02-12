@@ -94,7 +94,11 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Games</returns>
         public async Task<IEnumerable<Game>> FindAll()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.Games
+                .Include(r => r.Route)
+                .Include(t => t.Transport)
+                .Include(o => o.Organizer)
+                .ToListAsync();
         }
 
         /// <summary>

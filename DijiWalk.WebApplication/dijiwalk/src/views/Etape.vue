@@ -70,7 +70,7 @@
             <q-card>
                 <q-card-section class="row items-center">
                     <div class="col-2">
-                        <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" size="70px"/>
+                        <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" size="70px" />
                     </div>
                     <div class="row col-10">
                         <span>Êtes-vous sûr de vouloir supprimer l'étape {{ messageDeleteStep }} ?</span>
@@ -87,6 +87,10 @@
 
         <q-dialog v-model="manageStep">
             <q-card>
+                <transition name="fade">
+                    <div id="modalManage" v-show="loading"></div>
+                </transition>
+                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-model="idStep" type="hidden" />
@@ -101,7 +105,7 @@
                             </template>
                         </q-input>
 
-                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable>
+                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoireque si nouvelle étape !']" clearable>
                             <template v-slot:prepend>
                                 <q-icon name="fas fa-image" />
                             </template>
@@ -119,11 +123,11 @@
                             </template>
                         </q-input>
 
-                        <q-select class="col-12 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']"  @filter="filterMission"/>
+                        <q-select class="col-12 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" />
                     </div>
                 </q-card-section>
 
-                <q-card-actions align="right">
+                <q-card-actions v-show="!loading" align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="show" label="Modifier" @click="updateStep" color="secondary" />
                     <q-btn v-else label="Ajouter" @click="addedStep" color="secondary" />
@@ -161,6 +165,7 @@
                 latitudeStep: null,
                 longitudeStep: null,
                 creationDateStep: null,
+                validationUrl: null,
 
                 missions: null,
                 missionSelected: null,
@@ -171,6 +176,8 @@
                 errormessagelongitude: null,
                 errorlongitude: false,
                 idStep: null,
+
+                loading: false,
             }
         },
         created() {
@@ -184,6 +191,18 @@
             }
         },
         methods: {
+            fileConvert() {
+                return new Promise((resolve, reject) => {
+                    if (this.pictureStep != null) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(this.pictureStep);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    } else {
+                        resolve(this.pictureStep);
+                    }
+                })
+            },
             resetInput() {
                 this.idStep = null
                 this.nameStep = null
@@ -194,10 +213,10 @@
                 this.missionSelected = null
             },
 
-            filterMission (val, update) {
-              if (val === '') {
-                  update(() => {
-                      this.missionsOptions = this.missions
+            filterMission(val, update) {
+                if (val === '') {
+                    update(() => {
+                        this.missionsOptions = this.missions
                     })
                     return
                 }
@@ -242,43 +261,50 @@
                 this.longitudeStep = step.lng;
                 this.creationDateStep = step.creationDate;
                 this.missionSelected = step.missions;
+                this.validationUrl = step.validation;
             },
 
             updateStep() {
-                if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.mission.validate()) {
+                if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        StepDataService.update(this.idStep, {
-                            Name: this.nameStep,
-                            Description: this.descriptionStep,
-                            CreationDate: this.creationDateStep,
-                            Validation: this.stepSelected.validation,
-                            Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                            Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
-                            Missions: this.missionSelected
-                        }).then(response => {
-                            if (response.data.status == 1) {
-                                this.manageStep = false;
-                                this.onResetValidation();
-                                this.getAllMissions();
-                                this.steps[this.steps.map(e => e.id).indexOf(this.stepSelected.id)] = response.data.response
+                        this.loading = true;
+                        this.fileConvert().then(response => {
+                            StepDataService.update(this.idStep, {
+                                Name: this.nameStep,
+                                Description: this.descriptionStep,
+                                CreationDate: this.creationDateStep,
+                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                Missions: this.missionSelected,
+                                ImageBase64: this.$refs.picture.validate() ? response : this.validationUrl,
+                                ImageChanged: this.$refs.picture.validate(),
+                                Validation: this.validationUrl,
+                            }).then(response => {
+                                this.loading = false;
+                                if (response.data.status == 1) {
+                                    this.manageStep = false;
+                                    this.onResetValidation();
+                                    this.getAllMissions();
+                                    this.steps[this.steps.map(e => e.id).indexOf(this.stepSelected.id)] = response.data.response
 
-                                //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+                                    //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
-                                this.$q.notify({
-                                    icon: 'fas fa-check-square',
-                                    color: 'secondary',
-                                    message: response.data.message,
-                                    position: 'top'
-                                })
-                            } else {
-                                this.$q.notify({
-                                    icon: 'fas fa-exclamation-triangle',
-                                    color: 'negative',
-                                    message: response.data.message,
-                                    position: 'top'
-                                })
-                                setTimeout(this.onResetValidation, 3000);
-                            }
+                                    this.$q.notify({
+                                        icon: 'fas fa-check-square',
+                                        color: 'secondary',
+                                        message: response.data.message,
+                                        position: 'top'
+                                    })
+                                } else {
+                                    this.$q.notify({
+                                        icon: 'fas fa-exclamation-triangle',
+                                        color: 'negative',
+                                        message: response.data.message,
+                                        position: 'top'
+                                    })
+                                    setTimeout(this.onResetValidation, 3000);
+                                }
+                            })
                         })
                     } else {
                         if (!new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.$refs.latitude)) {
@@ -302,41 +328,46 @@
             addedStep() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.latitude.validate() && this.$refs.longitude.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        StepDataService.create({
-                            Name: this.nameStep,
-                            Description: this.descriptionStep,
-                            Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                            Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
-                            CreationDate: moment().format("YYYY-MM-DD hh:mm:ss"),
-                            Missions: this.missionSelected
-                        }).then(response => {
-                            if (response.data.status == 1) {
-                                this.manageStep = false;
-                                this.onResetValidation();
-                                this.getAllMissions();
-                                this.steps.push(response.data.response);
-                               
-                                //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+                        this.loading = true;
+                        this.fileConvert().then(response => {
+                            StepDataService.create({
+                                Name: this.nameStep,
+                                Description: this.descriptionStep,
+                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                CreationDate: moment().format("YYYY-MM-DD hh:mm:ss"),
+                                Missions: this.missionSelected,
+                                ImageBase64: response,
+                                ImageChanged: true
+                            }).then(response => {
+                                this.loading = false;
+                                if (response.data.status == 1) {
+                                    this.manageStep = false;
+                                    this.onResetValidation();
+                                    this.getAllMissions();
+                                    this.steps.push(response.data.response);
 
-                                this.$q.notify({
-                                    icon: 'fas fa-check-square',
-                                    color: 'secondary',
-                                    message: response.data.message,
-                                    position: 'top'
-                                })
-                            } else {
-                                this.$q.notify({
-                                    icon: 'fas fa-exclamation-triangle',
-                                    color: 'negative',
-                                    message: response.data.message,
-                                    position: 'top'
-                                })
-                                setTimeout(this.onResetValidation, 3000);
-                            }
-                        }).catch(reason => {
-                            console.log(reason);
+                                    //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
+
+                                    this.$q.notify({
+                                        icon: 'fas fa-check-square',
+                                        color: 'secondary',
+                                        message: response.data.message,
+                                        position: 'top'
+                                    })
+                                } else {
+                                    this.$q.notify({
+                                        icon: 'fas fa-exclamation-triangle',
+                                        color: 'negative',
+                                        message: response.data.message,
+                                        position: 'top'
+                                    })
+                                    setTimeout(this.onResetValidation, 3000);
+                                }
+                            }).catch(reason => {
+                                console.log(reason);
+                            });
                         });
-
                     } else {
                         if (!new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
                             this.errorlatitude = true;
@@ -382,7 +413,7 @@
                 })
             },
 
-           
+
             //filterParcours(val, update) {
             //    update(() => {
             //        if (val === '') {

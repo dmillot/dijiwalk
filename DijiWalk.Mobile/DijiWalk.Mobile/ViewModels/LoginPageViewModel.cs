@@ -22,8 +22,6 @@ namespace DijiWalk.Mobile.ViewModels
 
         #region Authentification
 
-
-
         private Login _login;
         public Login Login
         {
@@ -56,7 +54,7 @@ namespace DijiWalk.Mobile.ViewModels
             if (Login.Validate())
             {
                 var test = (JWTTokens)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
-                this.NavigationService.NavigateAsync(nameof(MainPage), null);
+                await this.NavigationService.NavigateAsync(nameof(MainPage), null);
             }
         }
 

@@ -88,7 +88,10 @@ namespace DijiWalk.Repositories
                        
                         await _teamBusiness.DeleteAllFromPlayer(idPlayer);
                         var player = await _context.Players.FindAsync(idPlayer);
-                        _imageBusiness.DeleteImage(player.Picture);
+                        if (player.Picture != null)
+                        {
+                            _imageBusiness.DeleteImage(player.Picture);
+                        }
                         _context.Players.Remove(player);
                         await _context.SaveChangesAsync();
                         return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
@@ -142,10 +145,16 @@ namespace DijiWalk.Repositories
                 {
                     if (player.ImageChanged)
                     {
-                        _imageBusiness.DeleteImage(player.Picture);
+                        if (player.Picture != null)
+                        {
+                            _imageBusiness.DeleteImage(player.Picture);
+                        }
                         player.Picture = await _imageBusiness.UploadImage(player.ImageBase64, $"{player.FirstName}-{player.LastName}-{player.Login}-{DateTime.Now.ToString("yyyyMMddHHmmss")}");
                     }
-                    player.Password = _cryption.Encrypt(player.Password);
+                    if (player.PasswordChanged)
+                    {
+                        player.Password = _cryption.Encrypt(player.Password);
+                    }   
                     _context.Players.Update(player);
                     await _context.SaveChangesAsync();
                     return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = player };
