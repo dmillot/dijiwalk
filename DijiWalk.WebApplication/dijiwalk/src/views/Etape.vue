@@ -27,38 +27,40 @@
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card v-ripple:red-14 @click="openModalToManage(false)" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+                <q-card v-ripple:red-14 @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
                     <q-icon name="fas fa-plus text-white" style="font-size: 3vw;" />
                 </q-card>
             </div>
 
             <div v-for="step in steps" v-bind:key="step.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <q-img :src="step.validation" />
+                    <div @click="openModalToEdit(step)" class="game-card">
+                        <q-img :src="step.validation" />
 
-                    <q-card-section>
-                        <q-btn @click="openModalToDelete(step)"
-                               fab
-                               color="negative"
-                               icon="fas fa-trash"
-                               class="absolute"
-                               style="top: 0; right: 12px; transform: translateY(-50%);" />
-                        <div class="row no-wrap">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ step.name }}
+                        <q-card-section>
+                            <q-btn @click="openModalToDelete(step)"
+                                   fab
+                                   color="negative"
+                                   icon="fas fa-trash"
+                                   class="absolute"
+                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                            <div class="row no-wrap">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ step.name }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row items-center no-wrap text-grey">
-                            <q-icon name="fas fa-calendar" />
-                            <p class="q-ma-none q-ml-xs">{{ step.creationDate | formatDate }}</p>
-                        </div>
-                    </q-card-section>
+                            <div class="row items-center no-wrap text-grey">
+                                <q-icon name="fas fa-calendar" />
+                                <p class="q-ma-none q-ml-xs">{{ step.creationDate | formatDate }}</p>
+                            </div>
+                        </q-card-section>
 
-                    <q-separator />
+                        <q-separator />
+                    </div>
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat @click="openModalToManage(true); fillForm(step)" color="primary text-bold">
+                        <q-btn flat round @click="openModalToGetInformations(step)" class="dijiwalk-secondary" icon="fas fa-info-circle" />
+                        <q-btn flat @click="openModalToGetInformations(step)" class="dijiwalk-secondary" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -93,7 +95,7 @@
                 <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
-                        <q-input v-model="idStep" type="hidden" />
+                        <q-input v-if="isEditing" v-model="idStep" type="hidden" />
                         <q-input ref="name" class="col-12 q-pr-sm q-my-xs" label="Intitulé *" color="primary" option-value="id" option-label="name" v-model="nameStep" name="nameStep" id="nameStep" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un intitulé.']">
                             <template v-slot:prepend>
                                 <q-icon name="fas fa-address-card" />
@@ -123,14 +125,65 @@
                             </template>
                         </q-input>
 
-                        <q-select class="col-12 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" />
+                        <div class="row items-center justify-center col-12">
+                            <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" />
+                            <div v-show="!loading" class="col-1 q-ml-md">
+                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
+                            </div>
+                        </div>
                     </div>
                 </q-card-section>
 
                 <q-card-actions v-show="!loading" align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat v-if="show" label="Modifier" @click="updateStep" color="secondary" />
-                    <q-btn v-else label="Ajouter" @click="addedStep" color="secondary" />
+                    <q-btn flat v-if="isEditing" label="Modifier" @click="updateStep" color="secondary" />
+                    <q-btn v-if="isAdding" label="Ajouter" @click="addedStep" color="secondary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-if="stepSelected !== null" v-model="informations">
+            <q-card class="modal-informations">
+                <q-card-section class="row items-center">
+                    <q-img :src="stepSelected.validation" />
+                    <h5 class="q-my-sm">{{ stepSelected.name }}</h5>
+                    <p>{{ stepSelected.description }}</p>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-calendar" />
+                            </q-item-section>
+                            <q-item-section>{{ stepSelected.creationDate | formatDate }}</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-map-pin" />
+                            </q-item-section>
+                            <q-item-section>
+                                Latitude: {{ stepSelected.lat }}° / Longitude: {{ stepSelected.lng }}°
+                            </q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-clipboard-list" label="Missions">
+                                <q-expansion-item icon="fas fa-list-ol" v-for="mission in stepSelected.missions" v-bind:key="mission.id" v-bind:label="mission.name" :header-inset-level="1" :content-inset-level="2" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                                    <q-card>
+                                        <q-card-section v-for="trial in mission.trials" v-bind:key="trial.id" class="row items-center">
+                                            <q-icon name="fas fa-question-circle" class="q-mr-md" style="color: #C10015 !important; font-size: 1.5em;" />
+                                            Trial n°{{ trial.id }}
+                                        </q-card-section>
+                                    </q-card>
+                                </q-expansion-item>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -155,7 +208,9 @@
 
                 deleteStep: null,
                 confirm: false,
-                show: true,
+                isEditing: false,
+                isAdding: false,
+                informations: false,
 
                 steps: null,
                 stepSelected: null,
@@ -227,15 +282,31 @@
                 })
             },
 
-            openModalToManage(action) {
-                this.resetInput();
-                this.manageStep = true
-                this.show = action;
+            openModalToGetInformations(step) {
+                this.isAdding = false;
+                this.isEditing = false;
+                this.stepSelected = step;
+                this.informations = true;
             },
 
+            openModalToAdd() {
+                this.isEditing = false;
+                this.isAdding = true;
+                this.resetInput();
+                this.manageStep = true;
+            },
+
+            openModalToEdit(step) {
+                this.isEditing = true;
+                this.isAdding = false;
+                this.resetInput();
+                this.fillForm(step);
+                this.manageStep = true
+            },
             getAllSteps() {
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
+                        console.log(response.data)
                         this.steps = response.data;
                     }).catch(reason => {
                         console.log(reason);
@@ -253,6 +324,7 @@
                 }
             },
             fillForm(step) {
+                console.log(step)
                 this.stepSelected = step;
                 this.idStep = step.id
                 this.nameStep = step.name;

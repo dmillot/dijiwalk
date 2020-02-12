@@ -112,7 +112,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).FirstOrDefaultAsync();
+            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).FirstOrDefaultAsync();
             // return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
             // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);
         }
@@ -123,7 +123,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Steps</returns>
         public async Task<IEnumerable<Step>> FindAll()
         {
-            return await _context.Steps.Include(s => s.Missions).ToListAsync();
+            return await _context.Steps.Include(s => s.Missions).ThenInclude(m => m.Trials).ToListAsync();
         }
 
         /// <summary>

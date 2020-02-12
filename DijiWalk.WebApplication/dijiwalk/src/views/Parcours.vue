@@ -40,39 +40,40 @@
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="openModalToManage(false)" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
+                <q-card @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
                     <q-icon name="fas fa-plus text-white" style="font-size: 4em;" />
                 </q-card>
             </div>
             <div v-for="parcour in parcours" v-bind:key="parcour.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                    <div @click="openModalToEdit(parcour)" class="game-card">
+                        <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
 
-                    <q-card-section>
-                        <q-btn @click="openModalToDelete(parcour)"
-                               fab
-                               color="negative"
-                               icon="fas fa-trash"
-                               class="absolute"
-                               style="top: 0; right: 12px; transform: translateY(-50%);" />
+                        <q-card-section>
+                            <q-btn @click="openModalToDelete(parcour)"
+                                   fab
+                                   color="negative"
+                                   icon="fas fa-trash"
+                                   class="absolute"
+                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
 
-                        <div class="row no-wrap">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ parcour.name }}
+                            <div class="row no-wrap">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ parcour.name }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row items-center no-wrap text-grey">
-                            <q-icon name="fas fa-clock" />
-                            <p class="q-ma-none q-ml-xs">{{ parcour.time | formatTime }}</p>
-                            <q-icon v-if="parcour.handicap" class="q-ml-md" name="fas fa-wheelchair" color="negative"/>
-                        </div>
-                    </q-card-section>
-
+                            <div class="row items-center no-wrap text-grey">
+                                <q-icon name="fas fa-clock" />
+                                <p class="q-ma-none q-ml-xs">{{ parcour.time | formatTime }}</p>
+                                <q-icon v-if="parcour.handicap" class="q-ml-md" name="fas fa-wheelchair" color="negative" />
+                            </div>
+                        </q-card-section>
+                    </div>
                     <q-separator />
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn @click="openModalToManage(true); fillForm(parcour)" flat color="primary text-bold">
+                        <q-btn flat @click="openModalToGetInformations(parcour)" class="dijiwalk-secondary" round icon="fas fa-info-circle" />
+                        <q-btn @click="openModalToGetInformations(parcour)" class="dijiwalk-secondary" flat color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -101,9 +102,14 @@
 
         <q-dialog v-model="manageParcours">
             <q-card>
+                <transition name="fade">
+                    <div id="modalManage" v-show="loading"></div>
+                </transition>
+                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
+
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
-                        <q-input v-model="idParcours" type="hidden" />
+                        <q-input v-if="isEditing" v-model="idParcours" type="hidden" />
 
                         <q-input ref="name" class="col-12 q-pr-sm q-my-xs" label="Intitulé *" color="primary" option-value="id" option-label="name" v-model="nameParcours" name="nameParcours" id="nameParcours" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un intitulé.']">
                             <template v-slot:prepend>
@@ -128,9 +134,14 @@
                             </template>
                         </q-input>
 
-                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
+                        <q-toggle class="col-5 q-my-xs on-left" v-show="!loading" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
-                        <q-select class="col-12 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" />
+                        <div class="row items-center justify-center col-12">
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" />
+                            <div v-show="!loading" class="col-1 q-ml-md">
+                                <q-btn color="primary" @click="navigateTo('/etape')" rounded icon="fas fa-plus" />
+                            </div>
+                        </div>
 
                         <div class="row justify-start">
                             <div v-for="tag in tagsParcours" v-bind:key="tag.idTag">
@@ -140,15 +151,59 @@
                             </div>
                         </div>
 
-                        <q-select class="col-12 q-my-xs" ref="tags" v-model="tagSelected" :options="tagsAvailable" label="Tags" option-value="id" option-label="name" />
+                        <div class="row items-center justify-center col-12">
+                            <q-select class="col-10 q-my-xs" ref="tags" v-model="tagSelected" :options="tagsAvailable" label="Tags" option-value="id" option-label="name" />
+                            <div v-show="!loading" class="col-1 q-ml-md">
+                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
+                            </div>
+                        </div>
+                    </div>
+                </q-card-section>
 
+                <q-card-actions v-show="!loading" align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
+                    <q-btn flat v-if="isEditing" label="Modifier" @click="updateParcours" color="secondary" />
+                    <q-btn v-if="isAdding" label="Ajouter" @click="addedParcours" color="secondary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-if="parcoursSelected !== null" v-model="informations">
+            <q-card class="modal-informations">
+                <q-card-section class="items-center">
+                    <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                    <h5 class="q-my-sm">{{ parcoursSelected.name }}</h5>
+                    <p>{{ parcoursSelected.description }}</p>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-clock" />
+                            </q-item-section>
+                            <q-item-section>{{ parcoursSelected.time | formatTime }}</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12" v-if="parcoursSelected.handicap" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-icon size="md" class="q-mt-sm" name="fas fa-wheelchair" color="negative" />
+                            <q-item-section class="q-ml-sm">Le parcours a des accés pour les handicapés.</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-shoe-prints" label="Étapes">
+                                <q-card class="card-expansion">
+                                    <q-card-section v-for="step in parcoursSelected.routeSteps" v-bind:key="step.id" class="row items-center">
+                                        <q-icon size="sm" name="fas fa-map-marker q-mr-sm" color="negative" />
+                                        {{ step.step.name }}
+                                    </q-card-section>
+                                </q-card>
+                            </q-expansion-item>
+                        </q-list>
                     </div>
                 </q-card-section>
 
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat v-if="show" label="Modifier" @click="updateParcours" color="secondary" />
-                    <q-btn v-else label="Ajouter" @click="addedParcours" color="secondary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -170,7 +225,10 @@
                 messageBonus: "Si vous supprimer un parcours, cela supprimera uniquement ses informations !",
 
                 confirm: false,
-                show: true,
+                isEditing: false,
+                isAdding: false,
+                informations: false,
+
 
                 parcours: null,
                 parcoursSelected: null,
@@ -192,7 +250,8 @@
                 tagSelected: null,
                 tagsAvailable: null,
 
-                idParcours: null
+                idParcours: null,
+                loading: false
 
             }
         },
@@ -220,6 +279,9 @@
             }
         },
         methods: {
+            navigateTo(page) {
+                this.$router.push(page)
+            },
             removeTags(tag) {
                 this.tagsParcours = this.tagsParcours.filter(function (el) {
                     if (el.id != tag.id) return el;
@@ -237,11 +299,26 @@
                 this.tags = null
                 this.stepSelected = null
             },
-            openModalToManage(action) {
+            openModalToGetInformations(parcour) {
+                this.isAdding = false;
+                this.isEditing = false;
+                this.parcoursSelected = parcour;
+                this.informations = true;
+            },
+
+            openModalToAdd() {
+                this.isEditing = false;
+                this.isAdding = true;
                 this.resetInput();
                 this.manageParcours = true;
-                this.handicapParcours = false;
-                this.show = action;
+            },
+
+            openModalToEdit(parcour) {
+                this.isEditing = true;
+                this.isAdding = false;
+                this.resetInput();
+                this.fillForm(parcour);
+                this.manageParcours = true
             },
             getAllSteps() {
                 if (this.steps === null) {
@@ -282,6 +359,7 @@
                 })
             },
             async fillForm(parcour) {
+                console.log(parcour)
                 this.parcoursSelected = parcour;
                 this.idParcours = parcour.id
                 this.nameParcours = parcour.name;
@@ -310,6 +388,7 @@
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
+                        this.loading = true;
                         var self = this;
                         var listeRouteTag = [];
                         this.tagsParcours.forEach(element => {
@@ -333,6 +412,7 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
+                            this.loading = false;
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();
@@ -368,6 +448,7 @@
             },
             addedParcours() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
+                    this.loading = true;
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
                         var listeRouteTag = [];
@@ -392,6 +473,7 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
+                            this.loading = false;
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();
@@ -453,10 +535,10 @@
                     }
                 })
             },
-            filterStep (val, update) {
-              if (val === '') {
-                  update(() => {
-                      this.stepsOptions = this.steps
+            filterStep(val, update) {
+                if (val === '') {
+                    update(() => {
+                        this.stepsOptions = this.steps
                     })
                     return
                 }
