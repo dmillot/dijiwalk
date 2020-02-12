@@ -42,38 +42,41 @@
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="openModalToManage(false)" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+                <q-card @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
                     <q-icon name="fas fa-plus text-white" style="font-size: 3vw;" />
                 </q-card>
             </div>
             <div v-for="participant in participants" v-bind:key="participant.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <q-img :src="participant.picture" />
 
-                    <q-card-section>
-                        <q-btn @click="openModalToDelete(participant)"
-                               fab
-                               color="negative"
-                               icon="fas fa-trash"
-                               class="absolute"
-                               style="top: 0; right: 12px; transform: translateY(-50%);" />
+                    <div @click="openModalToEdit(participant)" class="game-card">
+                        <q-img :src="participant.picture" />
 
-                        <div class="row no-wrap">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ participant.firstName }} {{ participant.lastName }} / {{ participant.Login }}
+                        <q-card-section>
+                            <q-btn @click="openModalToDelete(participant)"
+                                   fab
+                                   color="negative"
+                                   icon="fas fa-trash"
+                                   class="absolute"
+                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+
+                            <div class="row no-wrap">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ participant.firstName }} {{ participant.lastName }} / {{ participant.Login }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row items-center no-wrap text-grey">
-                            <q-icon name="fas fa-users" />
-                            <p class="q-ma-none q-ml-sm">{{ participant.email }}</p>
-                        </div>
-                    </q-card-section>
+                            <div class="row items-center no-wrap text-grey">
+                                <q-icon name="fas fa-users" />
+                                <p class="q-ma-none q-ml-sm">{{ participant.email }}</p>
+                            </div>
+                        </q-card-section>
+                    </div>
 
                     <q-separator />
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat @click="openModalToManage(true); fillForm(participant)" color="primary text-bold">
+                        <q-btn flat @click="openModalToGetInformations(participant)" class="dijiwalk-secondary" round icon="fas fa-info-circle" />
+                        <q-btn flat @click="openModalToGetInformations(participant)" class="dijiwalk-secondary" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -106,7 +109,7 @@
                 </transition>
                 <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
-                    <q-input v-model="idParticipant" type="hidden" />
+                    <q-input v-if="isEditing" v-model="idParticipant" type="hidden" />
                     <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-address-card" />
@@ -153,10 +156,24 @@
                         </template>
                     </q-file>
                 </q-card-section>
-                <q-card-actions  v-show="!loading" align="right">
+                <q-card-actions v-show="!loading" align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat v-if="show" label="Modifier" @click="updateParticipant" color="secondary" />
-                    <q-btn v-else label="Ajouter" @click="addedParticipant" color="secondary" />
+                    <q-btn flat v-if="isEditing" label="Modifier" @click="updateParticipant" color="secondary" />
+                    <q-btn v-if="isAdding" label="Ajouter" @click="addedParticipant" color="secondary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-if="participantSelected !== null" v-model="informations">
+            <q-card class="modal-informations">
+                <q-card-section class="items-center">
+                    <q-img :src="participantSelected.picture" class="img-radius row items-center justify-center" />
+                    <h5 class="q-my-sm">{{ participantSelected.firstName }} {{ participantSelected.lastName }}</h5>
+                    <p>{{ participantSelected.Login }} / {{ participantSelected.email }}</p>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -180,7 +197,9 @@
                 participants: null,
                 confirm: false,
 
-                show: true,
+                isEditing: false,
+                isAdding: false,
+                informations: false,
 
                 manageParticipant: false,
                 messageDeleteParticipant: null,
@@ -230,6 +249,27 @@
                     }
                 })
             },
+            openModalToGetInformations(participant) {
+                this.isAdding = false;
+                this.isEditing = false;
+                this.participantSelected = participant;
+                this.informations = true;
+            },
+
+            openModalToAdd() {
+                this.isEditing = false;
+                this.isAdding = true;
+                this.resetInput();
+                this.manageParticipant = true;
+            },
+
+            openModalToEdit(participant) {
+                this.isEditing = true;
+                this.isAdding = false;
+                this.resetInput();
+                this.fillForm(participant);
+                this.manageParticipant = true
+            },
             resetInput() {
                 this.idParticipant = null
                 this.prenomParticipant = null
@@ -239,11 +279,6 @@
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = null
                 this.pictureParticipant = null
-            },
-            openModalToManage(action) {
-                this.resetInput();
-                this.manageParticipant = true
-                this.show = action;
             },
             fillForm(participant) {
                 this.participantSelected = participant
@@ -261,9 +296,7 @@
                 if (this.participants === null) {
                     PlayerDataService.getAll().then(response => {
                         this.participants = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             onResetValidation() {
@@ -325,9 +358,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -393,9 +424,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -447,9 +476,7 @@
                         })
                     }
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
             filterEquipe(val, update) {
                 update(() => {

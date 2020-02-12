@@ -83,7 +83,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.Ok(TranslateError.Convert(e));
+                return this.StatusCode(500, TranslateError.Convert(e));
             }
         }
 
@@ -92,11 +92,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>Message action</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int idGame, int idEquipe)
         {
             try
             {
-                return this.Ok(await this._repository.Delete(id));
+                return this.Ok(await this._repository.Delete(idGame, idEquipe));
             }
             catch (Exception e)
             {

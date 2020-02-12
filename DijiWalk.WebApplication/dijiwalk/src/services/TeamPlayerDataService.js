@@ -1,8 +1,8 @@
 ﻿import http from "./http-common";
 
-class TransportDataService {
+class TeamPlayerDataService {
 
-    path = "/transport/";
+    path = "/teamplayer/";
 
     getAll() {
         return http.get(this.path);
@@ -25,4 +25,4 @@ class TransportDataService {
     }
 }
 
-export default new TransportDataService();
+export default new TeamPlayerDataService();

@@ -16,7 +16,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the TeamPlayer
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class TeamPlayerController : Controller
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(await this._repository.Find(id));
+                return this.Ok(await this._repository.FindByTeam(id));
             }
             catch (Exception e)
             {

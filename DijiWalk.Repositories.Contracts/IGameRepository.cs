@@ -51,6 +51,6 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Update the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Update</param>
-        void Update(Game game);
+        Task<ApiResponse> Update(Game game);
     }
 }

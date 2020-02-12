@@ -28,11 +28,11 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Delete(int idTeamPlayer);
 
         /// <summary>
-        /// Definition of the method to find an TeamPlayer with his Id
+        /// Definition of the method to find an TeamPlayer with the team Id
         /// </summary>
-        /// <param name="id">The Id of the TeamPlayer</param>
-        /// <returns>The TeamPlayer with the Id researched</returns>
-        Task<TeamPlayer> Find(int id);
+        /// <param name="id">The Id of the team</param>
+        /// <returns>The list of teamplayer with the Id researched</returns>
+        Task<IEnumerable<TeamPlayer>> FindByTeam(int id);
 
         /// <summary>
         /// Definition of the method to find all TeamPlayer
