@@ -85,8 +85,13 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            //return await _context.Games.FindAsync(id);
-            return await _context.Games.Where(g => g.Id == id).Include(g => g.Organizer).Include(g => g.Route).Include(g => g.Transport).Include(g => g.TeamAnswers).Include(g => g.TeamRoutes).Include(g => g.Plays).FirstAsync();
+            return await _context.Games.Where(g => g.Id == id)
+                .Include(g => g.Organizer)
+                .Include(g => g.Route)
+                .Include(g => g.Transport)
+                .Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step)
+                .Include(g => g.Plays).ThenInclude(p => p.Team)
+                .FirstAsync();
         }
 
         /// <summary>
@@ -96,6 +101,17 @@ namespace DijiWalk.Repositories
         public async Task<IEnumerable<Game>> FindAll()
         {
             return await _context.Games.ToListAsync();
+        }
+
+        /// <summary>
+        /// Method to find all active Game from the database
+        /// </summary>
+        /// <returns>A List with all actives Games</returns>
+        public async Task<IEnumerable<Game>> FindAllActifs()
+        {
+            return await _context.Games.Where(g => g.CreationDate != null && g.FinalTime == null)
+                .Include(g=>g.Organizer)
+                .ToListAsync();
         }
 
         /// <summary>

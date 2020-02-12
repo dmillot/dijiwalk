@@ -22,6 +22,11 @@ const routes = [
         component: () => import('../views/JeuActuel.vue')
     },
     {
+        path: '/jeuActif/:idJeu',
+        name: 'jeuActif',
+        component: () => import('../views/JeuActif.vue')
+    },
+    {
         path: '/jeu',
         name: 'jeu',
         component: () => import('../views/Jeu.vue')

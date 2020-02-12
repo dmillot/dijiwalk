@@ -81,6 +81,24 @@ namespace DijiWalk.WebApplication.Controllers
         }
 
         /// <summary>
+        /// Method to get all Game 
+        /// </summary>
+        /// <returns>A list of Game</returns>
+        [HttpGet]
+        [Route("actifs")]
+        public async Task<IActionResult> GetAllActifs()
+        {
+            try
+            {
+                return Ok(await this._repository.FindAllActifs());
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
         /// Method to add a game 
         /// </summary>
         /// <returns>Success or error message</returns>

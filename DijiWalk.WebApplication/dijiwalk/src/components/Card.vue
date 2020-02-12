@@ -13,10 +13,17 @@
 <script>
 export default {
   name: 'card',
-  props: ['link', 'icon', 'title', 'description'],
+  props: ['link', 'params', 'icon', 'title', 'description', 'disabled'],
   methods: {
     navigateToLink () {
-      this.$router.push(this.link)
+      if (this.params !== undefined){
+        if(this.disabled === false){
+          this.$router.push({ name: this.link, params: { idJeu: this.params.id } });
+        }
+      }
+      else{
+        this.$router.push(this.link);
+      }
     }
   }
 }
