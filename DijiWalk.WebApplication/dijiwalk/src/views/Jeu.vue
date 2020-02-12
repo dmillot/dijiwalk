@@ -175,8 +175,77 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+
+        <q-dialog v-if="gameSelected !== null" v-model="informations">
+            <q-card>
+                <q-card-section class="row items-center">
+                    <div class="row col-12">
+                        <div class="col-12">
+                            <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                            <p class="text-grey">Organisé par {{ gameSelected.organizer.firstName }} {{ gameSelected.organizer.lastName }}</p>
+                        </div>
+                    </div>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-calendar" />
+                            </q-item-section>
+
+                            <q-item-section>{{ gameSelected.creationDate | formatDate }}</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-bicycle" />
+                            </q-item-section>
+
+                            <q-item-section>{{ gameSelected.transport.libelle }}</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                        <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="grey" name="fas fa-route" />
+                            </q-item-section>
+
+                            <q-item-section>{{ gameSelected.route.name }}</q-item-section>
+                        </q-item>
+                    </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator
+                                              icon="fas fa-users"
+                                              label="Équipes">
+                                <q-expansion-item icon="fas fa-user-friends" v-for="team in selectedGameTeams" v-bind:key="team.id" v-bind:label="team.name" :header-inset-level="1" :content-inset-level="2" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                                    <q-card>
+                                        <q-card-section v-for="member in team.members" v-bind:key="member.id" class="row items-center">
+                                            <q-avatar size="48px" class="q-mr-md">
+                                                <img :src="member.picture">
+                                            </q-avatar>
+                                            {{ member.firstName }} {{ member.lastName }}
+                                            <q-icon v-if="team.id_captain == member.id" name="fas fa-star" class="q-ml-md" style="color: #ffd600 !important; font-size: 1.5em;" />
+                                        </q-card-section>
+                                    </q-card>
+                                </q-expansion-item>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
+
+<style>
+    .custom-expansion i {
+        color: #9e9e9e !important;
+    }
+</style>
 
 <script>
 
@@ -186,6 +255,7 @@
     import TransportDataService from "@/services/TransportDataService"
     import TeamDataService from "@/services/TeamDataService"
     import PlayDataService from "@/services/PlayDataService"
+    import TeamPlayerDataService from "@/services/TeamPlayerDataService"
 
     export default {
         name: 'jeu',
@@ -215,6 +285,8 @@
                 isAdding: false,
                 organizerGame: null,
                 getInformations: false,
+                informations: false,
+                selectedGameTeams: null
             }
         },
 
@@ -230,9 +302,33 @@
             openModalToGetInformations(game) {
                 this.isAdding = false;
                 this.isEditing = false;
-                this.getInformations = true;
-                this.fillForm(game);
-                this.manageGame = true;
+                this.gameSelected = game;
+
+                var teams = [];
+
+                game.plays.forEach(function (item) {
+
+                    var players = [];
+
+                    TeamPlayerDataService.get(item.idTeam).then(response => {
+                        response.data.forEach(function (i) {
+                            players.push(i.player);
+                        })
+                        
+                    }).catch(reason => {
+                        console.log(reason);
+                    });
+
+                    teams.push({
+                        id: item.team.id,
+                        name: item.team.name,
+                        id_captain: item.team.idCaptain,
+                        members: players
+                    })
+                })
+
+                this.selectedGameTeams = teams;
+                this.informations = true;
             },
 
             openModalToAdd() {

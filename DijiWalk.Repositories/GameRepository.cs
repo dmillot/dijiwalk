@@ -100,7 +100,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            return await _context.Games.Where(g => g.Id == id).Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).FirstOrDefaultAsync();
+            return await _context.Games.Where(g => g.Id == id).Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -109,7 +109,12 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Games</returns>
         public async Task<IEnumerable<Game>> FindAll()
         {
-            return await _context.Games.Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ToListAsync();
+            return await _context.Games
+                .Include(r => r.Route)
+                .Include(t => t.Transport)
+                .Include(o => o.Organizer)
+                .Include(p => p.Plays).ThenInclude(t => t.Team)
+                .ToListAsync();
         }
 
         /// <summary>
