@@ -12,6 +12,10 @@ class GameDataService {
         return http.get(this.path + id);
     }
 
+    getAllActifs() {
+        return http.get(this.path + 'actifs');
+    }
+
     create(data) {
         return http.post(this.path, data);
     }
