@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -18,13 +19,19 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Add</param>
-        void Add(Game game);
+        Task<ApiResponse> Add(Game game);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Game passed in the parameters
         /// </summary>
         /// <param name="game">Object Game to Delete</param>
-        void Delete(Game game);
+        Task<ApiResponse> Delete(int id);
+
+        /// <summary>
+        /// Method to check if route is in a game
+        /// </summary>
+        /// <param name="idRoute">id of a team</param>
+        Task<bool> ContainsRoute(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an Game with his Id
@@ -39,10 +46,11 @@ namespace DijiWalk.Repositories.Contracts
         /// <returns>A List of Games</returns>
         Task<IEnumerable<Game>> FindAll();
 
+
         /// <summary>
         /// Definition of the function that will Update the Game passed in the parameters to the database
         /// </summary>
         /// <param name="game">Object Game to Update</param>
-        void Update(Game game);
+        Task<ApiResponse> Update(Game game);
     }
 }

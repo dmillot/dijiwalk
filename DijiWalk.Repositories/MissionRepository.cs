@@ -5,10 +5,15 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Mission to the database
@@ -35,14 +40,25 @@ namespace DijiWalk.Repositories
            _context.SaveChanges();
         }
 
+       
+
         /// <summary>
         /// Method to Delete from the database the Mission passed in the parameters
         /// </summary>
         /// <param name="mission">Object Mission to Delete</param>
-        public void Delete(Mission mission)
+        public async Task<ApiResponse> Delete(int idMission)
         {
-           _context.Missions.Remove(mission);
-           _context.SaveChanges();
+            try
+            {
+                _context.Missions.Remove(await _context.Missions.FindAsync(idMission));
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>
@@ -50,18 +66,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Mission</param>
         /// <returns>The Mission with the Id researched</returns>
-        public Mission Find(int id)
+        public async Task<Mission> Find(int id)
         {
-            return _context.Missions.Find(id);
+            return await _context.Missions.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Mission from the database
         /// </summary>
         /// <returns>A List with all Mission</returns>
-        public IEnumerable<Mission> FindAll()
+        public async Task<IEnumerable<Mission>> FindAll()
         {
-            return _context.Missions;
+            return await _context.Missions.ToListAsync();
         }
 
         /// <summary>

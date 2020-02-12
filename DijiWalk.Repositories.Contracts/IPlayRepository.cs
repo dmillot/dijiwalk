@@ -6,6 +6,8 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -17,26 +19,26 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Play passed in the parameters to the database
         /// </summary>
         /// <param name="play">Object Play to Add</param>
-        void Add(Play play);
+        Task<ApiResponse> Add(Play play);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Play passed in the parameters
         /// </summary>
         /// <param name="play">Object Play to Delete</param>
-        void Delete(Play play);
+        Task<ApiResponse> Delete(int idGame, int idTeam);
 
         /// <summary>
         /// Definition of the method to find an Play with his Id
         /// </summary>
         /// <param name="id">The Id of the Play</param>
         /// <returns>The Play with the Id researched</returns>
-        Play Find(int id);
+        Task<Play> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Play
         /// </summary>
         /// <returns>A List of Plays</returns>
-        IEnumerable<Play> FindAll();
+        Task<IEnumerable<Play>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Play passed in the parameters to the database

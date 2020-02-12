@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -18,13 +19,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Step passed in the parameters to the database
         /// </summary>
         /// <param name="step">Object Step to Add</param>
-        void Add(Step step);
+        Task<ApiResponse> Add(Step step);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Step passed in the parameters
         /// </summary>
-        /// <param name="step">Object Step to Delete</param>
-        void Delete(Step step);
+        /// <param name="id">Id of the object Step to Delete</param>
+        Task<ApiResponse> Delete(int id);
 
         /// <summary>
         /// Definition of the method to find an Step with his Id
@@ -43,6 +44,6 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Update the Step passed in the parameters to the database
         /// </summary>
         /// <param name="step">Object Step to Update</param>
-        void Update(Step step);
+        Task<ApiResponse> Update(Step step);
     }
 }

@@ -6,6 +6,9 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +17,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Route
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class RouteController : Controller
     {
         /// <summary>
@@ -37,11 +40,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Route</param>
         /// <returns>A Route</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,16 +57,69 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Route</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
             }
         }
+
+        /// <summary>
+        /// Method to delete specific route
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to Add a Step 
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Route route)
+        {
+            try
+            {
+                return this.Ok(await _repository.Add(route));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to Update a Step 
+        /// </summary>
+        /// <returns>A Step</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Route route)
+        {
+            try
+            {
+                route.Id = id;
+                return this.Ok(await _repository.Update(route));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
     }
 }

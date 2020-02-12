@@ -5,10 +5,15 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Play to the database
@@ -29,20 +34,36 @@ namespace DijiWalk.Repositories
         /// Method to Add the Play passed in the parameters to the database
         /// </summary>
         /// <param name="play">Object Play to Add</param>
-        public void Add(Play play)
+        public async Task<ApiResponse> Add(Play play)
         {
-           _context.Plays.Add(play);
-           _context.SaveChanges();
+            try
+            {
+                await _context.Plays.AddAsync(play);
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>
         /// Method to Delete from the database the Play passed in the parameters
         /// </summary>
         /// <param name="play">Object Play to Delete</param>
-        public void Delete(Play play)
+        public async Task<ApiResponse> Delete(int idGame, int idTeam)
         {
-           _context.Plays.Remove(play);
-           _context.SaveChanges();
+            try
+            {
+                _context.Plays.Remove(await _context.Plays.FirstOrDefaultAsync(p => p.IdGame == idGame && p.IdTeam == idTeam));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>
@@ -50,18 +71,18 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Play</param>
         /// <returns>The Play with the Id researched</returns>
-        public Play Find(int id)
+        public async Task<Play> Find(int id)
         {
-            return _context.Plays.Find(id);
+            return await _context.Plays.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Play from the database
         /// </summary>
         /// <returns>A List with all Plays</returns>
-        public IEnumerable<Play> FindAll()
+        public async Task<IEnumerable<Play>> FindAll()
         {
-            return _context.Plays;
+            return await _context.Plays.ToListAsync();
         }
 
         /// <summary>

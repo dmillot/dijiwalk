@@ -5,10 +5,16 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Route to the database
@@ -39,29 +45,39 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the RouteStep passed in the parameters
         /// </summary>
         /// <param name="routeStep">Object RouteStep to Delete</param>
-        public void Delete(RouteStep routeStep)
+        public async Task<ApiResponse> Delete(int idRouteStep)
         {
-            _context.Routesteps.Remove(routeStep);
-            _context.SaveChanges();
+            try
+            {
+                _context.Routesteps.Remove(await _context.Routesteps.FindAsync(idRouteStep));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
+ 
 
         /// <summary>
         /// Method to find an RouteStep with his Id in the database
         /// </summary>
         /// <param name="id">The Id of the RouteStep</param>
         /// <returns>The RouteStep with the Id researched</returns>
-        public RouteStep Find(int id)
+        public async Task<RouteStep> Find(int id)
         {
-            return _context.Routesteps.Find(id);
+            return await _context.Routesteps.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all RouteStep from the database
         /// </summary>
         /// <returns>A List with all RouteSteps</returns>
-        public IEnumerable<RouteStep> FindAll()
+        public async Task<IEnumerable<RouteStep>> FindAll()
         {
-            return _context.Routesteps;
+            return await _context.Routesteps.ToListAsync();
         }
 
         /// <summary>

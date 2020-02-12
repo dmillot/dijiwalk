@@ -6,6 +6,8 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -13,35 +15,37 @@ namespace DijiWalk.Repositories.Contracts
     /// </summary>
     public interface IRouteRepository
     {
-        /// <summary>
-        /// Definition of the function that will Add the Route passed in the parameters to the database
-        /// </summary>
-        /// <param name="route">Object Route to Add</param>
-        void Add(Route route);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Route passed in the parameters
         /// </summary>
         /// <param name="route">Object Route to Delete</param>
-        void Delete(Route route);
+        Task<ApiResponse> Delete(int idRoute);
 
         /// <summary>
         /// Definition of the method to find an Route with his Id
         /// </summary>
         /// <param name="id">The Id of the Route</param>
         /// <returns>The Route with the Id researched</returns>
-        Route Find(int id);
+        Task<Route> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Route
         /// </summary>
         /// <returns>A List of Routes</returns>
-        IEnumerable<Route> FindAll();
+        Task<IEnumerable<Route>> FindAll();
 
         /// <summary>
-        /// Definition of the function that will Update the Route passed in the parameters to the database
+        /// Method to Add the route passed in the parameters to the database
         /// </summary>
-        /// <param name="route">Object Route to Update</param>
-        void Update(Route route);
+        /// <param name="route">Object Route to Add</param>
+        Task<ApiResponse> Add(Route route);
+
+        /// <summary>
+        /// Method that will Update the route passed in the parameters to the database
+        /// </summary>
+        /// <param name="step">Object Route to Update</param>
+        Task<ApiResponse> Update(Route route);
+
     }
 }

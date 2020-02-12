@@ -22,6 +22,22 @@ namespace DijiWalk.Entities
         }
 
         /// <summary>
+        /// Constructeur d'une nouvelle instance d'une Mission
+        /// </summary>
+        public Mission(Mission m)
+        {
+            Id = m.Id;
+            IdStep = m.IdStep;
+            Description = m.Description;
+            Score = m.Score;
+            Time = m.Time;
+            Name = m.Name;
+            Step = m.Step;
+            Trials = new HashSet<Trial>();
+        }
+
+
+        /// <summary>
         /// Obtient ou définit l'Id de la Mission
         /// </summary>
         public int Id { get; set; }

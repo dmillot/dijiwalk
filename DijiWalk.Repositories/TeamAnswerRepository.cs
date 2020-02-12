@@ -5,10 +5,16 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object TeamAnswer to the database
@@ -40,29 +46,38 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the TeamAnswer passed in the parameters
         /// </summary>
         /// <param name="teamAnswer">Object TeamAnswer to Delete</param>
-        public void Delete(TeamAnswer teamAnswer)
+        public async Task<ApiResponse> Delete(int idTeamAnswer)
         {
-            _context.Teamanswers.Remove(teamAnswer);
-            _context.SaveChanges();
+            try
+            {
+                _context.Teamanswers.Remove(await _context.Teamanswers.FindAsync(idTeamAnswer));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
+
 
         /// <summary>
         /// Method to find an TeamAnswer with his Id in the database
         /// </summary>
         /// <param name="id">The Id of the TeamAnswer</param>
         /// <returns>The TeamAnswer with the Id researched</returns>
-        public TeamAnswer Find(int id)
+        public async Task<TeamAnswer> Find(int id)
         {
-            return _context.Teamanswers.Find(id);
+            return await _context.Teamanswers.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all TeamAnswer from the database
         /// </summary>
         /// <returns>A List with all TeamAnswers</returns>
-        public IEnumerable<TeamAnswer> FindAll()
+        public async Task<IEnumerable<TeamAnswer>> FindAll()
         {
-            return _context.Teamanswers;
+            return await _context.Teamanswers.ToListAsync();
         }
 
         /// <summary>

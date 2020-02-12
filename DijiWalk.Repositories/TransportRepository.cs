@@ -5,10 +5,16 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object Transport to the database
@@ -29,20 +35,37 @@ namespace DijiWalk.Repositories
         /// Method to Add the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Add</param>
-        public void Add(Transport transport)
+        public async Task<ApiResponse> Add(Transport transport)
         {
-            _context.Transports.Add(transport);
-            _context.SaveChanges();
+            try
+            {
+                await _context.Transports.AddAsync(transport);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = transport };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>
         /// Method to Delete from the database the Transport passed in the parameters
         /// </summary>
         /// <param name="transport">Object Transport to Delete</param>
-        public void Delete(Transport transport)
+        public async Task<ApiResponse> Delete(int idTransport)
         {
-            _context.Transports.Remove(transport);
-            _context.SaveChanges();
+            try
+            {
+                _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>
@@ -50,28 +73,37 @@ namespace DijiWalk.Repositories
         /// </summary>
         /// <param name="id">The Id of the Transport</param>
         /// <returns>The Transport with the Id researched</returns>
-        public Transport Find(int id)
+        public async Task<Transport> Find(int id)
         {
-            return _context.Transports.Find(id);
+            return await _context.Transports.FindAsync(id);
         }
 
         /// <summary>
         /// Method to find all Transport from the database
         /// </summary>
         /// <returns>A List with all Transport</returns>
-        public IEnumerable<Transport> FindAll()
+        public async Task<IEnumerable<Transport>> FindAll()
         {
-            return _context.Transports;
+            return await _context.Transports.ToListAsync();
         }
 
         /// <summary>
         /// Method that will Update the Transport passed in the parameters to the database
         /// </summary>
         /// <param name="transport">Object Transport to Update</param>
-        public void Update(Transport transport)
+        public async Task<ApiResponse> Update(Transport transport)
         {
-            _context.Transports.Update(transport);
-            _context.SaveChanges();
+
+            try
+            {
+                _context.Transports.Update(transport);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
     }
 }

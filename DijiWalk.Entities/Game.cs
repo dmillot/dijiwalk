@@ -23,6 +23,20 @@ namespace DijiWalk.Entities
             TeamRoutes = new HashSet<TeamRoute>();
         }
 
+        public Game(Game game)
+        {
+            Id = game.Id;
+            IdRoute = game.IdRoute;
+            CreationDate = game.CreationDate;
+            IdOrganizer = game.IdOrganizer;
+            IdTransport = game.IdTransport;
+            Plays = new HashSet<Play>();
+            TeamAnswers = new HashSet<TeamAnswer>();
+            TeamRoutes = new HashSet<TeamRoute>();
+        }
+
+       
+
         /// <summary>
         /// Obtient ou définit l'Id du Jeu
         /// </summary>

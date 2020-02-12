@@ -6,6 +6,8 @@
 namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -19,24 +21,25 @@ namespace DijiWalk.Repositories.Contracts
         /// <param name="mission">Object Mission to Add</param>
         void Add(Mission mission);
 
+
         /// <summary>
         /// Definition of the function that will Delete from the database the Mission passed in the parameters
         /// </summary>
         /// <param name="mission">Object Mission to Delete</param>
-        void Delete(Mission mission);
+        Task<ApiResponse> Delete(int idMission);
 
         /// <summary>
         /// Definition of the method to find an Mission with his Id
         /// </summary>
         /// <param name="id">The Id of the Mission</param>
         /// <returns>The Mission with the Id researched</returns>
-        Mission Find(int id);
+        Task<Mission> Find(int id);
 
         /// <summary>
         /// Definition of the method to find all Mission
         /// </summary>
         /// <returns>A List of Missions</returns>
-        IEnumerable<Mission> FindAll();
+        Task<IEnumerable<Mission>> FindAll();
 
         /// <summary>
         /// Definition of the function that will Update the Mission passed in the parameters to the database

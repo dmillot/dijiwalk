@@ -12,13 +12,19 @@ namespace DijiWalk.Repositories.Contracts
     /// <summary>
     /// This is the interface for the authentification repository
     /// </summary>
-    public interface IAuthentificationRepository
+    public interface IAuthentificationBusiness
     {
         /// <summary>
         /// Definition of the function that will authentificate the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to authentificate</param>
         Task<Player> Authentificate(Player player);
+
+        /// <summary>
+        /// Definition of the function that will authentificate the Organizer passed in the parameters to the database
+        /// </summary>
+        /// <param name="player">Object Organizer to authentificate</param>
+        Task<Organizer> Authentificate(Organizer player);
 
     }
 }

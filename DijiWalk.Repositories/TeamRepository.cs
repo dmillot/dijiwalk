@@ -5,8 +5,12 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using DijiWalk.Business.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
@@ -19,12 +23,15 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
+        private readonly ITeamBusiness _teamBusiness;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public TeamRepository(SmartCityContext context)
+        public TeamRepository(SmartCityContext context, ITeamBusiness teamBusiness)
         {
             _context = context;
+            _teamBusiness = teamBusiness;
         }
 
         /// <summary>
@@ -40,12 +47,26 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Method to Delete from the database the Team passed in the parameters
         /// </summary>
-        /// <param name="team">Object Team to Delete</param>
-        public void Delete(Team team)
+        /// <param name="idTeam">Object Team to Delete</param>
+        public async Task<ApiResponse> Delete(int idTeam)
         {
-            _context.Teams.Remove(team);
-            _context.SaveChanges();
+            try
+            {
+                if (!await _teamBusiness.ContainsTeams(idTeam))
+                {
+                    await _teamBusiness.DeleteAllFromTeam(idTeam);
+                }
+                _context.Teams.Remove(await _context.Teams.FindAsync(idTeam));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
+
+        
 
         /// <summary>
         /// Method to find an Team with his Id in the database
@@ -54,7 +75,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Team with the Id researched</returns>
         public async Task<Team> Find(int id)
         {
-            return await _context.Teams.FindAsync(id);
+            return await _context.Teams.Where(t => t.Id == id).Include(t => t.TeamPlayers).ThenInclude(tp => tp.Player).Include(t => t.TeamRoutes).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -63,7 +84,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Teams</returns>
         public async Task<IEnumerable<Team>> FindAll()
         {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams.Include(t => t.TeamPlayers).ThenInclude(tp => tp.Player).Include(t => t.TeamRoutes).ToListAsync();
         }
 
         /// <summary>

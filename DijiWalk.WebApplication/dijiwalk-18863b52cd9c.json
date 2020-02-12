@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "dijiwalk",
+  "private_key_id": "18863b52cd9c2006ecd756ce022d76798ada8084",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCtpceJyuPQPtxT\nVfFSTEWFE+OQV3+Eqcl2VXjWmgfhdC+fIc3hFGgwoJRov2O4ZUsZZwrQLhnxw+vl\nGQE31LU1dSrAalqNaj6J6JNmKpJ3/Qu3zb6sA0ErA6BLs/wMY2l758MmPN+LTVil\n+UJI6QGzqk+ZeV0EuENmPI8yKCE6K+3u9c9JKsDLBAmsYD2yGeyUuY2rtLTxstfx\nGrwz4MfrVScs1gdTkT35Xy1ogC+tuGXRt7LegWMYr+3KipwgHf6T7Wx3h+4+5NrP\nRk2fhRVZjQs471jyDUS/MFiAPSXopLO+kJbmxjSNZ6xmAEoBF//dNWHz8vNLUwPh\npLvs31kRAgMBAAECggEACMvfcyqa1n1etB6ECGEaevKuWg0ipa3jqZnMEqPwHwK/\nmFIyL5MU8ZSq2/EJDEneT2m9vZy+PfXorNzyx7kf2lbGfQOONYByrVIBqIDi1U71\nYWDb5jMOga8v9zHFhHujN+5+P2FBSjlXcqXxLogWKNupZ1sDZCYw7NyHvPjVMRD7\n4IMn24/TjHQLRprU6hqbU533mF7IDGEqqmNyd3UPVFeXiaMDnE+mX7JFH+jbG0ld\nr0nOWOBBPAwStU6+CUyjF+vvgs9Ab1eGpgf8EIhNQy7L8LzBth+uy1AcUUx+7oYF\nv2sQLwbltRqWWNnhJLBayxohuochLGM9kW0vC7iIwQKBgQDryorzgK+m/bThnwGu\n8M4HpPe5y8Yzw7a5ANavp834BqttESbwGy6Fe4HArsoO3hwZ8BOGu4/Qpd900JMN\niHcz4KM/PSb2Ak4ALOrXCBI1tkCNWBdY9Z0q6BNCKFE7sCM48BNB2PxbIGC422Td\n5R/mwbNJ6j+RDCkSSOjOcd1J4QKBgQC8h8DqSFYn67QFCrXbFzJlItv7Hh8v+oZ+\nYPv4gW4ZdJGF9pbjON3kSwmYKfBYkh3Jr7Fxw33Af82cAPpzeZMKUAuTvQEhXkyx\nZP7MBR75FffrhLMlCaRIYJdYzRZbSKKd3i/J94uVR1Xl2WqtwTChtql2cFPbMc0i\nTveiHIzVMQKBgQCnizxA2mf12MD2sO2ZSTKc6/O66bjkf2UPADGMj0gjvVmCHnX0\nltvvrVr9dzXMara9F4JIcm42bCbj8nELZLSPAEf/X4yXsfuK1F/qe6m00NP9m2K7\nq4sKOe21TMCsEPR2OOD2ISDv/4m60OpTYcPRTEIBe5m/j0x/2Z7TUsVTAQKBgCQ1\ngoS8redu6p1JSFIy61fnUQ6y41SIrkoZgGtjGG1FKSnsiWBMrLlK/CXAcEvijFwP\nJWpvHHjbUvcSbQe+otIJO5/9Xfk1rk8n0ZQHq8I1SO9wBiQn7OiFvKuugAu6MJlX\nciA9Lg7Wq5XAoy+J+jgk5/k6a7CeqQJc3kzBZP8RAoGALsPFFbjSF9jv/wTgWwi0\nzxpXNALl69XQkSm0S2KfW2MxL40z1/oK6lnlneYu8DkhLmHj3WcTiklZlslxYjjz\nP1dv+ezLQdRq3VVv1eJoIMOXzIn+dF2UGg2ZdeOa2dW9ljdjTFlgOuy29wdjQ4Jn\nB4z+1i+TUagNRLX2u/dLwt8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dijiwalkadmin@dijiwalk.iam.gserviceaccount.com",
+  "client_id": "117265133066051619089",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dijiwalkadmin%40dijiwalk.iam.gserviceaccount.com"
+}

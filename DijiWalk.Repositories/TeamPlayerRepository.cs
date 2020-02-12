@@ -5,10 +5,16 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Repositories
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
     using DijiWalk.Repositories.Contracts;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Class that connect the Object TeamPlayer to the database
@@ -38,29 +44,43 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the TeamPlayer passed in the parameters
         /// </summary>
         /// <param name="teamPlayer">Object TeamPlayer to Delete</param>
-        public void Delete(TeamPlayer teamPlayer)
+        public async Task<ApiResponse> Delete(int idTeamPlayer)
         {
-           _context.Teamplayers.Remove(teamPlayer);
-           _context.SaveChanges();
+            try
+            {
+                _context.Teamplayers.Remove(await _context.Teamplayers.FindAsync(idTeamPlayer));
+                _context.SaveChanges();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
+
         }
 
         /// <summary>
-        /// Method to find an TeamPlayer with his Id in the database
+        /// Method to find an TeamPlayer with team id in the database
         /// </summary>
-        /// <param name="id">The Id of the TeamPlayer</param>
-        /// <returns>The TeamPlayer with the Id researched</returns>
-        public TeamPlayer Find(int id)
+        /// <param name="id">The Id of the team</param>
+        /// <returns>The TeamPlayer with the Id team researched</returns>
+        public async Task<IEnumerable<TeamPlayer>> FindByTeam(int id)
         {
-            return _context.Teamplayers.Find(id);
+            return await _context.Teamplayers
+                .Where(t => t.IdTeam == id)
+                .Include(p => p.Player)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Method to find all TeamPlayer from the database
         /// </summary>
         /// <returns>A List with all TeamPlayers</returns>
-        public IEnumerable<TeamPlayer> FindAll()
+        public async Task<IEnumerable<TeamPlayer>> FindAll()
         {
-            return _context.Teamplayers;
+            return await _context.Teamplayers
+                .Include(p => p.Player)
+                .ToListAsync();
         }
 
         /// <summary>

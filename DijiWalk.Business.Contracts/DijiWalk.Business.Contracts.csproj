@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DijiWalk.Common\DijiWalk.Common.csproj" />
     <ProjectReference Include="..\DijiWalk.Entities\DijiWalk.Entities.csproj" />
   </ItemGroup>
 

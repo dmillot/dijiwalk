@@ -84,6 +84,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Trial)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.IdTrial)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ANSWER_TRIAL");
             });
 
@@ -179,6 +180,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Step)
                     .WithMany(p => p.Missions)
                     .HasForeignKey(d => d.IdStep)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_MISSION_STEP");
             });
 
@@ -315,6 +317,8 @@ namespace DijiWalk.EntitiesContext
                     .WithMany(p => p.Routes)
                     .HasForeignKey(d => d.IdOrganizer)
                     .HasConstraintName("FK_ROUTE_ORGANIZER");
+
+
             });
 
             modelBuilder.Entity<RouteStep>(entity =>
@@ -332,13 +336,13 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Route)
                     .WithMany(p => p.RouteSteps)
                     .HasForeignKey(d => d.IdRoute)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ROUTESTEP_ROUTE");
 
                 entity.HasOne(d => d.Step)
                     .WithMany(p => p.RouteSteps)
                     .HasForeignKey(d => d.IdStep)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ROUTESTEP_STEP");
             });
 
@@ -391,6 +395,7 @@ namespace DijiWalk.EntitiesContext
                 entity.Property(e => e.Validation)
                     .HasColumnName("Step_Validation")
                     .HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<Tag>(entity =>
@@ -545,6 +550,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.RouteStep)
                     .WithMany(p => p.TeamRoutes)
                     .HasForeignKey(d => new { d.IdRoute, d.IdStep })
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TEAMROUTE_ROUTESTEP");
             });
 
@@ -589,6 +595,7 @@ namespace DijiWalk.EntitiesContext
                 entity.HasOne(d => d.Mission)
                     .WithMany(p => p.Trials)
                     .HasForeignKey(d => d.IdMission)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TRIAL_MISSION");
 
                 entity.HasOne(d => d.Type)

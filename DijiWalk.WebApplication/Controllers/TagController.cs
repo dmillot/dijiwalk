@@ -6,6 +6,8 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +16,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Route
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class TagController : Controller
     {
         /// <summary>
@@ -37,11 +39,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Tag</param>
         /// <returns>A Tag</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,15 +56,32 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Tag</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to delete specific tag
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

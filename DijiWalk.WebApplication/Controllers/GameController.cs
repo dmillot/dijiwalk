@@ -9,6 +9,10 @@ namespace DijiWalk.WebApplication.Controllers
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using DijiWalk.WebApplication.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -22,7 +26,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// Controller for the Games
     /// </summary>
 
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class GameController : Controller
     {
         /// <summary>
@@ -46,15 +50,34 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Game</param>
         /// <returns>An Game</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
-                return this.StatusCode(500, e);
+                return this.Ok(TranslateError.Convert(e));
+            }
+
+        }
+
+        /// <summary>
+        /// Method to Update a game 
+        /// </summary>
+        /// <returns>A game</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Game game)
+        {
+            try
+            {
+                game.Id = id;
+                return this.Ok(await _repository.Update(game));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 
@@ -63,15 +86,49 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Game</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(this._repository.FindAll());
+                return Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Game game)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Add(game));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to delete a game 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

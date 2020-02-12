@@ -6,6 +6,10 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
+    using DijiWalk.Entities;
+    using DijiWalk.Common.Response;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +18,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Administrator
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class PlayController : Controller
     {
         /// <summary>
@@ -37,11 +41,11 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="id">Id of the Administrator</param>
         /// <returns>A Play</returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                return this.Ok(this._repository.Find(id));
+                return this.Ok(await this._repository.Find(id));
             }
             catch (Exception e)
             {
@@ -54,15 +58,49 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>A list of Play</returns>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return this.Ok(this._repository.FindAll());
+                return this.Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add a play 
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Play play)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Add(play));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to delete specific play
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int idGame, int idEquipe)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(idGame, idEquipe));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }

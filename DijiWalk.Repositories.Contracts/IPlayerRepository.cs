@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories.Contracts
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
 
     /// <summary>
@@ -18,13 +19,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Add the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to Add</param>
-        void Add(Player player);
-
+        Task<ApiResponse> Add(Player player);
+        
         /// <summary>
         /// Definition of the function that will Delete from the database the Player passed in the parameters
         /// </summary>
         /// <param name="player">Object Player to Delete</param>
-        void Delete(Player player);
+        Task<ApiResponse> Delete(int idPlayer);
 
         /// <summary>
         /// Definition of the method to find an Player with his Id
@@ -40,9 +41,9 @@ namespace DijiWalk.Repositories.Contracts
         Task<IEnumerable<Player>> FindAll();
 
         /// <summary>
-        /// Definition of the function that will Update the Player passed in the parameters to the database
+        /// Method that will Update the Player passed in the parameters to the database
         /// </summary>
         /// <param name="player">Object Player to Update</param>
-        void Update(Player player);
+        Task<ApiResponse> Update(Player player);
     }
 }

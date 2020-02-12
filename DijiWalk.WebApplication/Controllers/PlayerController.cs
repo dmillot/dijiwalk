@@ -7,6 +7,9 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
+    using DijiWalk.Business.Contracts;
+    using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -15,7 +18,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Player
     /// </summary>
-    [Route("api/[controller]"), Authorize, ApiController]
+    [Route("api/[controller]"), ApiController]
     public class PlayerController : Controller
     {
         /// <summary>
@@ -29,7 +32,7 @@ namespace DijiWalk.WebApplication.Controllers
         /// <param name="repository">the repository that will interact with the data</param>
         public PlayerController(IPlayerRepository repository)
         {
-            this._repository = repository;
+            _repository = repository;
         }
 
         /// <summary>
@@ -64,6 +67,58 @@ namespace DijiWalk.WebApplication.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to add player
+        /// </summary>
+        /// <returns>Success or error message</returns>
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Player player)
+        {
+            try
+            {
+                return this.Ok(await _repository.Add(player));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to delete specific player
+        /// </summary>
+        /// <returns>Message action</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to Update a Player 
+        /// </summary>
+        /// <returns>A Player</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Player player)
+        {
+            try
+            {
+                player.Id = id;
+                return this.Ok(await _repository.Update(player));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }
