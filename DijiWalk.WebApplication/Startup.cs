@@ -9,6 +9,7 @@ using DijiWalk.Common.Contracts;
 using DijiWalk.Common.Encryption;
 using DijiWalk.Common.FileExtension;
 using DijiWalk.Common.Response;
+using DijiWalk.Common.StringExtension;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
@@ -120,6 +121,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<ICryption, Cryption>();
             services.AddSingleton<ICloudStorage, CloudStorage>();
             services.AddSingleton<IFileExtension, FileExtension>();
+            services.AddSingleton<IStringExtension, StringExtension>();
             #endregion
 
             #region JWT Token

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ICryption.cs" company="DijiWalk">
+// <copyright file="FileExtension.cs" company="DijiWalk">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,7 +8,7 @@ namespace DijiWalk.Common.Contracts
     using System.Collections.Generic;
 
     /// <summary>
-    /// This is the interface for the Cryption class
+    /// This is the interface for the FileExtension class
     /// </summary>
     public interface IFileExtension
     {

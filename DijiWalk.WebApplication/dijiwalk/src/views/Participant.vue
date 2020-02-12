@@ -101,6 +101,10 @@
         </q-dialog>
         <q-dialog v-model="manageParticipant">
             <q-card>
+                <transition name="fade">
+                    <div id="modalManage" v-show="loading"></div>
+                </transition>
+                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <q-input v-model="idParticipant" type="hidden" />
                     <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
@@ -118,7 +122,7 @@
                             <q-icon name="fas fa-user" />
                         </template>
                     </q-input>
-                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']">
+                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe si nouveeau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -128,7 +132,7 @@
                                     @click="isPwd = !isPwd" />
                         </template>
                     </q-input>
-                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe.']">
+                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe si nouveeau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -143,13 +147,13 @@
                             <q-icon name="fas fa-at" />
                         </template>
                     </q-input>
-                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable>
+                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire si nouveau participant !']" clearable>
                         <template v-slot:prepend>
                             <q-icon name="fas fa-image" />
                         </template>
                     </q-file>
                 </q-card-section>
-                <q-card-actions align="right">
+                <q-card-actions  v-show="!loading" align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="show" label="Modifier" @click="updateParticipant" color="secondary" />
                     <q-btn v-else label="Ajouter" @click="addedParticipant" color="secondary" />
@@ -202,6 +206,9 @@
 
                 isPwd: true,
                 idParticipant: null,
+
+                loading: false,
+                encryptedPassword: null
             }
         },
         created() {
@@ -213,10 +220,14 @@
         methods: {
             fileConvert() {
                 return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(this.pictureParticipant);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
+                    if (this.pictureParticipant != null) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(this.pictureParticipant);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    } else {
+                        resolve(this.pictureParticipant);
+                    }
                 })
             },
             resetInput() {
@@ -244,6 +255,7 @@
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = participant.email
                 this.pictureUrl = participant.picture
+                this.encryptedPassword = participant.Password
             },
             getAllParticipants() {
                 if (this.participants === null) {
@@ -272,6 +284,7 @@
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                this.loading = true;
                                 this.fileConvert().then(response => {
                                     PlayerDataService.create({
                                         FirstName: this.prenomParticipant,
@@ -280,8 +293,10 @@
                                         Password: this.passwordParticipant,
                                         Email: this.emailParticipant,
                                         ImageBase64: response,
-                                        ImageChanged: true
+                                        ImageChanged: true,
+                                        PasswordChanged: true
                                     }).then(response => {
+                                        this.loading = false;
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();
@@ -333,21 +348,24 @@
                 }
             },
             updateParticipant() {
-                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate()) {
+                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.email.validate()) {
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
-                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
+                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant) || this.passwordParticipant == null) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                this.loading = true;
                                 this.fileConvert().then(response => {
                                     PlayerDataService.update(this.idParticipant, {
                                         FirstName: this.prenomParticipant,
                                         LastName: this.nomParticipant,
                                         Login: this.loginParticipant,
-                                        Password: this.passwordParticipant,
+                                        Password: this.encryptedPassword,
                                         Email: this.emailParticipant,
-                                        ImageBase64: this.$refs.picture.validate() ? response : this.pictureUrl,
-                                        ImageChanged: this.$refs.picture.validate(),
-                                        Picture: this.pictureUrl
+                                        ImageBase64: this.pictureParticipant != null ? response : this.pictureUrl,
+                                        ImageChanged: this.pictureParticipant != null ? true : false,
+                                        Picture: this.pictureUrl,
+                                        PasswordChanged: this.passwordParticipant != null ? true : false
                                     }).then(response => {
+                                        this.loading = false;
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();

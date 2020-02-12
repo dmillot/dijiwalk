@@ -9,6 +9,7 @@ namespace DijiWalk.Entities
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -35,6 +36,8 @@ namespace DijiWalk.Entities
             Name = s.Name;
             Lat = s.Lat;
             Lng = s.Lng;
+            ImageBase64 = s.ImageBase64;
+            ImageChanged = s.ImageChanged;
             _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
@@ -74,6 +77,12 @@ namespace DijiWalk.Entities
         /// Obtient ou définit la Longitude de l'Etape
         /// </summary>
         public double? Lng { get; set; }
+
+        [NotMapped]
+        public string ImageBase64 { get; set; }
+
+        [NotMapped]
+        public bool ImageChanged { get; set; }
 
         /// <summary>
         /// Liste Généré par la BDD inutile pour nous mais à garder

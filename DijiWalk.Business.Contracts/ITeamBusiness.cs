@@ -43,5 +43,6 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="idPlayer">id of a player</param>
         Task<bool> ContainsTeamsWithPlayer(int idPlayer);
+
     }
 }
