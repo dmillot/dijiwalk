@@ -324,18 +324,14 @@
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
                         this.steps = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             getAllParcours() {
                 if (this.parcours === null) {
                     ParcoursDataService.getAll().then(response => {
                         this.parcours = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             filterTagAvailable(val) {
@@ -352,14 +348,11 @@
                         TagDataService.getAll().then(response => {
                             this.tags = response.data;
                             resolve(this.tags);
-                        }).catch(reason => {
-                            console.log(reason);
-                        });
+                        }).catch();
                     }
                 })
             },
             async fillForm(parcour) {
-                console.log(parcour)
                 this.parcoursSelected = parcour;
                 this.idParcours = parcour.id
                 this.nameParcours = parcour.name;
@@ -495,9 +488,7 @@
                                     position: 'top'
                                 })
                             }
-                        }).catch(reason => {
-                            console.log(reason);
-                        });
+                        }).catch();
                     } else {
                         this.errortime = true;
                         this.errormessagetime = "Doit être compris entre 00:00 et 23:59";

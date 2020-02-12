@@ -296,9 +296,7 @@
                 if (this.participants === null) {
                     PlayerDataService.getAll().then(response => {
                         this.participants = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             onResetValidation() {
@@ -360,9 +358,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -428,9 +424,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -482,9 +476,7 @@
                         })
                     }
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
             filterEquipe(val, update) {
                 update(() => {

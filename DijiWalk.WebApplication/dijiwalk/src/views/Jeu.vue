@@ -318,9 +318,7 @@
                             players.push(i.player);
                         })
 
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
 
                     teams.push({
                         id: item.team.id,
@@ -378,9 +376,7 @@
                 if (this.routes === null) {
                     RouteDataService.getAll().then(response => {
                         this.routes = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
@@ -388,9 +384,7 @@
                 if (this.teams === null) {
                     TeamDataService.getAll().then(response => {
                         this.teams = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
@@ -398,14 +392,12 @@
                 if (this.transports === null) {
                     TransportDataService.getAll().then(response => {
                         this.transports = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
             getAllGames() {
-                GameDataService.getAll().then(response => { this.games = response.data }).catch(error => { console.log(error) });
+                GameDataService.getAll().then(response => { this.games = response.data }).catch();
             },
 
             openModalToDelete(game) {
@@ -482,9 +474,7 @@
                         })
                     }
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
 
             addGame() {
@@ -509,9 +499,7 @@
                                     IdTeam: item
                                 }).then(() => {
                                     //
-                                }).catch(reason => {
-                                    console.log(reason);
-                                });
+                                }).catch();
                             })
 
                             this.$q.notify({
@@ -530,9 +518,7 @@
                             setTimeout(this.onResetValidation, 3000);
                         }
 
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
 
                     this.manageGame = false;
                 }

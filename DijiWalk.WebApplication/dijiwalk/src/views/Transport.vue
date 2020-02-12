@@ -170,9 +170,7 @@
                 if (this.transports === null) {
                     TransportDataService.getAll().then(response => {
                         this.transports = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             
@@ -180,9 +178,7 @@
                 if (this.routes === null) {
                     RouteDataService.getAll().then(response => {
                         this.routes = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
@@ -224,9 +220,7 @@
 
                 await TransportDataService.update(this.id, this.transport).then(response => {
                     this.transports.update(response.data);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
                             
             async addedTransport() {
@@ -239,9 +233,7 @@
                 await TransportDataService.create(this.transport
                 ).then(response => {
                     this.transports.push(response.data);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
 
 
                 //this.getAllTransport();
@@ -251,16 +243,12 @@
 
                 
                 var id = this.deleteTransport;
-                TransportDataService.delete(this.deleteTransport).then(response => {
+                TransportDataService.delete(this.deleteTransport).then(() => {
 
                     this.transports = this.transports.filter(function (obj) {
                         return obj.id !== id;
                     });
-
-                    console.log(response);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
                                              
                 //axios.delete('api/transport/' + this.deleteTransport).then(resp => {
                 //    if (resp.status == 200) {

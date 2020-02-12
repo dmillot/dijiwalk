@@ -306,25 +306,18 @@
             getAllSteps() {
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
-                        console.log(response.data)
                         this.steps = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             getAllMissions() {
                 if (this.missions === null) {
                     MissionDataService.getAll().then(response => {
                         this.missions = response.data;
-
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             fillForm(step) {
-                console.log(step)
                 this.stepSelected = step;
                 this.idStep = step.id
                 this.nameStep = step.name;
@@ -436,9 +429,7 @@
                                     })
                                     setTimeout(this.onResetValidation, 3000);
                                 }
-                            }).catch(reason => {
-                                console.log(reason);
-                            });
+                            }).catch();
                         });
                     } else {
                         if (!new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
@@ -486,19 +477,6 @@
             },
 
 
-            //filterParcours(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.parcoursOptions = parcours
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.parcoursOptions = parcours.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //}
         }
     }
 </script>
