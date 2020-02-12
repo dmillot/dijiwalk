@@ -25,7 +25,7 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Delete from the database the Play passed in the parameters
         /// </summary>
         /// <param name="play">Object Play to Delete</param>
-        Task<ApiResponse> Delete(int idPlay);
+        Task<ApiResponse> Delete(int idGame, int idTeam);
 
         /// <summary>
         /// Definition of the method to find an Play with his Id

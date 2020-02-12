@@ -60,13 +60,16 @@ namespace DijiWalk.Repositories
         }
 
         /// <summary>
-        /// Method to find an TeamPlayer with his Id in the database
+        /// Method to find an TeamPlayer with team id in the database
         /// </summary>
-        /// <param name="id">The Id of the TeamPlayer</param>
-        /// <returns>The TeamPlayer with the Id researched</returns>
-        public async Task<TeamPlayer> Find(int id)
+        /// <param name="id">The Id of the team</param>
+        /// <returns>The TeamPlayer with the Id team researched</returns>
+        public async Task<IEnumerable<TeamPlayer>> FindByTeam(int id)
         {
-            return await _context.Teamplayers.FindAsync(id);
+            return await _context.Teamplayers
+                .Where(t => t.IdTeam == id)
+                .Include(p => p.Player)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -75,7 +78,9 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all TeamPlayers</returns>
         public async Task<IEnumerable<TeamPlayer>> FindAll()
         {
-            return await _context.Teamplayers.ToListAsync();
+            return await _context.Teamplayers
+                .Include(p => p.Player)
+                .ToListAsync();
         }
 
         /// <summary>
