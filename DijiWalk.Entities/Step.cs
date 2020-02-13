@@ -41,6 +41,7 @@ namespace DijiWalk.Entities
             _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
         }
 
         /// <summary>
@@ -94,6 +95,11 @@ namespace DijiWalk.Entities
         /// </summary>
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
 
+        /// <summary>
+        /// Obtient ou définit la liste des Tags d'une étape
+        /// </summary>
+        public virtual ICollection<StepTag> StepTags { get; set; }
+
         [JsonExtensionData]
         private IDictionary<string, JToken> _additionalData;
 
@@ -102,8 +108,7 @@ namespace DijiWalk.Entities
         {
             Lat = Convert.ToDouble(_additionalData["Latitude"]);
             Lng = Convert.ToDouble(_additionalData["Longitude"]);
-
-
         }
+
     }
 }

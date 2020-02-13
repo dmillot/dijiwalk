@@ -10,6 +10,7 @@ using DijiWalk.Common.Encryption;
 using DijiWalk.Common.FileExtension;
 using DijiWalk.Common.Response;
 using DijiWalk.Common.StringExtension;
+using DijiWalk.Common.Vision;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
@@ -29,6 +30,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VueCliMiddleware;
 
 namespace DijiWalk.WebApplication
@@ -43,7 +45,7 @@ namespace DijiWalk.WebApplication
         public static void AddCustomSettings(this JsonSerializerSettings settings)
         {
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            settings.FloatParseHandling = FloatParseHandling.Double;
+            settings.Formatting = Formatting.Indented;
         }
     }
 
@@ -115,6 +117,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IImageBusiness, ImageBusiness>();
             services.AddScoped<IGameBusiness, GameBusiness>();
             services.AddScoped<IPlayBusiness, PlayBusiness>();
+            services.AddScoped<IStepTagBusiness, StepTagBusiness>();
             #endregion
 
             #region Common
@@ -122,6 +125,7 @@ namespace DijiWalk.WebApplication
             services.AddSingleton<ICloudStorage, CloudStorage>();
             services.AddSingleton<IFileExtension, FileExtension>();
             services.AddSingleton<IStringExtension, StringExtension>();
+            services.AddSingleton<IVision, Vision>();
             #endregion
 
             #region JWT Token

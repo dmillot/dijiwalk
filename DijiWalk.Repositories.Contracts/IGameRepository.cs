@@ -44,8 +44,13 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the method to find all Game
         /// </summary>
         /// <returns>A List of Games</returns>
-        Task<IEnumerable<Game>> FindAll();
+        Task<List<Game>> FindAll();
 
+        /// <summary>
+        /// Definition of the method to find all Game actives
+        /// </summary>
+        /// <returns>A List of Games</returns>
+        Task<IEnumerable<Game>> FindAllActifs();
 
         /// <summary>
         /// Definition of the function that will Update the Game passed in the parameters to the database

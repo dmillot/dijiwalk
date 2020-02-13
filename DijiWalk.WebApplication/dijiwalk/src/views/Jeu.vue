@@ -2,6 +2,7 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
 
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
@@ -128,11 +129,25 @@
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idGame" type="hidden" />
-                        <div class="row col-12">
-                            <div class="col-8">
-                                <q-input v-bind:disable="getInformations" ref="date" color="primary" v-model="dateGame" type="date" name="dateGame" id="dateGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner une date']" />
-                            </div>
-                        </div>
+
+
+                        <q-input ref="date" class="col-12" color="primary" v-model="dateGame" name="dateGame" id="dateGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner une date']">
+                            <template v-slot:prepend>
+                                <q-icon name="fas fa-calendar" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="dateGame" mask="YYYY-MM-DD HH:mm" />
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+
+                            <template v-slot:append>
+                                <q-icon name="fas fa-clock" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="dateGame" mask="YYYY-MM-DD HH:mm" format24h />
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                         <div v-if="getInformations" class="row col-12">
                             <div class="col-8">
                                 <q-input label="Organisateur" v-model="organizerGame" type="text" disable />
@@ -338,6 +353,7 @@
                 this.isAdding = true;
                 this.resetInput();
                 this.manageGame = true;
+                this.dateGame = moment().format("YYYY-MM-DD HH:mm");
             },
 
             openModalToEdit(game) {
@@ -364,12 +380,11 @@
                 });
                 this.gameSelected = game;
                 this.idGame = game.id;
-                this.dateGame = moment(String(game.creationDate)).format('YYYY-MM-DD');
+                this.dateGame = moment(String(game.creationDate)).format('YYYY-MM-DD HH:mm');
                 this.parcoursGame = game.route;
                 this.equipeGame = listTeams;
                 this.transportGame = game.transport;
                 this.organizerGame = game.organizer.firstName + " " + game.organizer.lastName;
-
             },
 
             getAllRoutes() {
@@ -397,7 +412,9 @@
             },
 
             getAllGames() {
-                GameDataService.getAll().then(response => { this.games = response.data }).catch();
+                GameDataService.getAll().then(response => {
+                    this.games = response.data
+                }).catch();
             },
 
             openModalToDelete(game) {
@@ -489,18 +506,19 @@
                     }).then(response => {
                         this.loading = false;
                         if (response.data.status == 1) {
-                            this.games.push(response.data.response);
-
+                            
+                            var responseData = response.data.response;
                             var idGameCreated = response.data.response.id;
-
+                          
                             this.equipeGame.forEach(function (item) {
                                 PlayDataService.create({
                                     IdGame: idGameCreated,
                                     IdTeam: item
-                                }).then(() => {
-                                    //
+                                }).then(responseItem => {
+                                    responseData.data.response.plays.push(responseItem.data.response);
                                 }).catch();
                             })
+                            this.games.push(response.data.response);
 
                             this.$q.notify({
                                 icon: 'fas fa-check-square',
@@ -573,7 +591,7 @@
         filters: {
             formatDate: function (value) {
                 if (!value) return ''
-                return moment(String(value)).format('DD/MM/YYYY')
+                return moment(String(value)).format('DD/MM/YYYY HH:mm')
             }
         }
     }

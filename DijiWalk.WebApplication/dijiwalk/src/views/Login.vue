@@ -105,21 +105,24 @@
                     axios.post("api/token/organizer", {
                         "Login": this.name,
                         "Password": this.password
-                    }).then(function (response) {
-                        if ('token' in response.data) {
-                            self.$q.cookies.set('JWTToken', response.data.token, { expries: response.data.expiration });
+                    }).then(response => {
+                        if (response.data.status == 1) {
+                           
+                            self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
                             self.$q.notify({
                                 message: "Connexion réussie !",
                                 color: 'secondary',
                                 icon: 'fas fa-check-square',
                                 position: 'top'
                             })
+                            this.$router.push("/")
                         } else {
                             self.error = true;
                             self.errorInfo = response.data["message"];
                             setTimeout(self.onResetValidation, 3000);
                         }
                     })
+
                 }
             }
         }

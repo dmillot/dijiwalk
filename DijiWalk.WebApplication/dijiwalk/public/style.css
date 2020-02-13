@@ -20,7 +20,7 @@ body {
     transform: translateX(-50%);
 }
 
-.custom-expansion .fa-shoe-prints, .custom-expansion .fa-users, .custom-expansion .fa-clipboard-list, .custom-expansion .fa-list-ol {
+.custom-expansion .fa-shoe-prints, .custom-expansion .fa-users, .custom-expansion .fa-clipboard-list, .custom-expansion .fa-list-ol, .custom-expansion .fa-tags {
     color: #9e9e9e !important;
 }
 
@@ -66,6 +66,12 @@ body {
         padding-left: 100px;
         padding-right: 100px;
     }
+}
+
+.warning-loading {
+    color: #C10015;
+    text-shadow: 1px 0 lightgray, 0 2px lightgray;
+    z-index: 5;
 }
 
 

@@ -92,7 +92,11 @@
                 <transition name="fade">
                     <div id="modalManage" v-show="loading"></div>
                 </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
+                <div v-show="loading" class="column absolute-center items-center full-width">
+                    <q-circular-progress indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" />
+                    <h5 class="warning-loading">Cela peut prendre plusieurs secondes !</h5>
+                </div>
+
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idStep" type="hidden" />
@@ -144,7 +148,7 @@
 
         <q-dialog v-if="stepSelected !== null" v-model="informations">
             <q-card class="modal-informations">
-                <q-card-section class="row items-center">
+                <q-card-section class="col items-center">
                     <q-img :src="stepSelected.validation" />
                     <h5 class="q-my-sm">{{ stepSelected.name }}</h5>
                     <p>{{ stepSelected.description }}</p>
@@ -180,6 +184,21 @@
                             </q-expansion-item>
                         </q-list>
                     </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-tags" label="Tags">
+                                <div class="row justify-start">
+                                    <div v-for="tag in stepSelected.stepTags" v-bind:key="tag.idTag">
+                                        <q-chip outline class="q-my-xs q-pa-md" size="md" icon="fas fa-tag">
+                                            {{ tag.tag.name }}
+                                        </q-chip>
+                                    </div>
+                                </div>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+
+
                 </q-card-section>
 
                 <q-card-actions align="right">
