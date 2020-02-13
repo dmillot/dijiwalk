@@ -26,6 +26,7 @@ namespace DijiWalk.Entities
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
             StepTags = new HashSet<StepTag>();
+            StepValidations = new HashSet<StepValidation>();
         }
 
         public Step(Step s)
@@ -43,6 +44,7 @@ namespace DijiWalk.Entities
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
             StepTags = new HashSet<StepTag>();
+            StepValidations = new HashSet<StepValidation>();
         }
 
         /// <summary>
@@ -100,6 +102,12 @@ namespace DijiWalk.Entities
         /// Obtient ou définit la liste des Tags d'une étape
         /// </summary>
         public virtual ICollection<StepTag> StepTags { get; set; }
+
+        /// <summary>
+        /// Obtient ou définit la liste des validations d'un étape
+        /// </summary>
+        public virtual ICollection<StepValidation> StepValidations { get; set; }
+
 
         [JsonExtensionData]
         private IDictionary<string, JToken> _additionalData;

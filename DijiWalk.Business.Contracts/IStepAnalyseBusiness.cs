@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DijiWalk.Business.Contracts
 {
-    public interface IStepTagBusiness
+    public interface IStepAnalyseBusiness
     {
 
 
@@ -15,16 +15,17 @@ namespace DijiWalk.Business.Contracts
         /// Method to Add a list of StepTag passed in the parameters to the database
         /// </summary>
         /// <param name="stepTags">List of object StepTag to Add</param>
-        Task<ApiResponse> AddRange(List<StepTag> stepTags);
+        /// <param name="stepValidations">List of object StepValidation to Add</param>
+        Task<ApiResponse> AddRange(List<StepTag> stepTags, List<StepValidation> stepValidations);
 
 
 
 
         /// <summary>
-        /// Method to Delete all step tag 
+        /// Method to Delete all step analyze
         /// </summary>
-        /// <param name="stepTags">List of step tags to delete</param>
-        Task<ApiResponse> DeleteFromStep(List<StepTag> stepTags);
+        /// <param name="idStep">Id of step</param>
+        Task<ApiResponse> DeleteFromStep(int idStep);
 
     }
 }

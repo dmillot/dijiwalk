@@ -5,9 +5,13 @@ using DijiWalk.Common.Response;
 using DijiWalk.Entities;
 using DijiWalk.EntitiesContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,16 +30,19 @@ namespace DijiWalk.Business
 
         private readonly IVision _vision;
 
-        private readonly IStepTagBusiness _stepTagBusiness;
+        private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
 
-        public ImageBusiness(SmartCityContext context, ICloudStorage cloudStorage, IFileExtension fileExtension, IStringExtension stringExtension, IVision vision, IStepTagBusiness stepTagBusiness)
+        private readonly IConfiguration _configuration;
+
+        public ImageBusiness(SmartCityContext context, IConfiguration configuration, ICloudStorage cloudStorage, IFileExtension fileExtension, IStringExtension stringExtension, IVision vision, IStepAnalyseBusiness stepAnalyseBusiness)
         {
             _context = context;
             _cloudStorage = cloudStorage;
             _fileExtension = fileExtension;
             _stringExtension = stringExtension;
             _vision = vision;
-            _stepTagBusiness = stepTagBusiness;
+            _stepAnalyseBusiness = stepAnalyseBusiness;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -59,6 +66,7 @@ namespace DijiWalk.Business
             _cloudStorage.DeleteFile(_fileExtension.GetName(pictureUrl));
         }
 
+
         /// <summary>
         /// Method to analyze picture and add some tag
         /// </summary>
@@ -80,7 +88,8 @@ namespace DijiWalk.Business
                     stepTags.AddRange(listNewTags.Select(t => new StepTag { IdStep = idStep, IdTag = t.Id }).ToList());
                 if (listAlreadyCreatedTag.Count() != 0)
                     stepTags.AddRange(listAlreadyCreatedTag.Select(t => new StepTag { IdStep = idStep, IdTag = t.Id }).ToList());
-                await _stepTagBusiness.AddRange(stepTags);
+
+                await _stepAnalyseBusiness.AddRange(stepTags, await _vision.GetWhat(image64, _fileExtension.GetExtension(image64.Substring(0, 50)), idStep));
                 await _context.SaveChangesAsync();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = "Image analyzed" };
             }

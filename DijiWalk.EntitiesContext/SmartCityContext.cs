@@ -29,6 +29,7 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<RouteTag> Routetags { get; set; }
         public virtual DbSet<StepTag> Steptags { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
+        public virtual DbSet<StepValidation> StepValidations { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamAnswer> Teamanswers { get; set; }
@@ -423,6 +424,26 @@ namespace DijiWalk.EntitiesContext
                     .HasMaxLength(50);
 
             });
+
+            modelBuilder.Entity<StepValidation>(entity =>
+            {
+                entity.ToTable("STEPVALIDATION");
+
+                entity.Property(e => e.Id).HasColumnName("StepValidation_Id");
+
+                entity.Property(e => e.IdStep).HasColumnName("StepValidation_fk_Step_Id");
+
+                entity.Property(e => e.Description).HasColumnName("StepValidation_Description");
+
+                entity.Property(e => e.Score).HasColumnName("StepValidation_Score");
+
+                entity.HasOne(e => e.Step)
+                   .WithMany(s => s.StepValidations)
+                   .HasForeignKey(d => d.IdStep)
+                   .HasConstraintName("FK_STEPVALIDATION_STEP");
+
+            });
+
 
             modelBuilder.Entity<Tag>(entity =>
             {

@@ -32,19 +32,19 @@ namespace DijiWalk.Repositories
 
         private readonly IImageBusiness _imageBusiness;
 
-        private readonly IStepTagBusiness _stepTagBusiness;
+        private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepTagBusiness stepTagBusiness)
+        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
         {
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
             _missionRepository = missionRepository;
             _imageBusiness = imageBusiness;
-            _stepTagBusiness = stepTagBusiness;
+            _stepAnalyseBusiness = stepAnalyseBusiness;
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace DijiWalk.Repositories
                     if (step.Validation != null)
                     {
                         _imageBusiness.DeleteImage(step.Validation);
-                        await _stepTagBusiness.DeleteFromStep(await _context.Steptags.Where(st => st.IdStep == step.Id).ToListAsync());
+                        await _stepAnalyseBusiness.DeleteFromStep(step.Id);
                     }
                     step.Validation = await _imageBusiness.UploadImage(step.ImageBase64, $"{step.Name}-{DateTime.Now.ToString("yyyyMMddHHmmss")}");
                     await _imageBusiness.Analyze(step.ImageBase64, step.Id);
