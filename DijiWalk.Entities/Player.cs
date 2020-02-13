@@ -12,7 +12,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json.Linq;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Class definissant un Joueur
@@ -72,6 +75,15 @@ namespace DijiWalk.Entities
         /// </summary>
         public int? IdOrganizer { get; set; }
 
+        [NotMapped]
+        public string ImageBase64 { get; set; }
+
+        [NotMapped]
+        public bool ImageChanged { get; set; }
+
+        [NotMapped]
+        public bool PasswordChanged { get; set; }
+
         /// <summary>
         /// Obtient ou définit l'Organisateur ayant créé le Joueur
         /// </summary>
@@ -92,5 +104,7 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder (même utilité que celle d'avant)
         /// </summary>
         public virtual ICollection<TeamPlayer> TeamPlayers { get; set; }
+
+
     }
 }

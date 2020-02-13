@@ -29,7 +29,13 @@ namespace DijiWalk.Business
         {
             return await _context.Players.AnyAsync(x => x.Email == player.Email || x.Login == player.Login);
         }
-
-
+        /// <summary>
+        /// Method to change check if login and email are unique but not check for the player updated
+        /// </summary>
+        /// <param name="player">Object player</param>
+        public async Task<bool> CheckUpdate(Player player)
+        {
+            return await _context.Players.Where(x => x.Id != player.Id).AnyAsync(x => x.Email == player.Email || x.Login == player.Login);
+        }
     }
 }

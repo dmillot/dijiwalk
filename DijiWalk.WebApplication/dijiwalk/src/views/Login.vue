@@ -32,14 +32,14 @@
                             </div>
                         </template>
                         <div class="col-12">
-                            <q-input ref="pseudoText" color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']" :error-message="errorInfo"  :error="error">
+                            <q-input ref="pseudoText" color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']" :error-message="errorInfo" :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-user" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-12">
-                            <q-input ref="passwordText" color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']" :error-message="errorInfo"  :error="error">
+                            <q-input ref="passwordText" color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']" :error-message="errorInfo" :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-lock" />
                                 </template>
@@ -105,15 +105,16 @@
                     axios.post("api/token/organizer", {
                         "Login": this.name,
                         "Password": this.password
-                    }).then(function (response) {
-                        if ('token' in response.data) {
-                            self.$q.cookies.set('JWTToken', response.data.token, { expries: response.data.expiration });
+                    }).then(response => {
+                        if ("id" in response.data) {
+                            self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
                             self.$q.notify({
-                            message: "Connexion réussie !",
-                            color: 'secondary',
-                            icon: 'fas fa-check-square',
-                            position: 'top'
-                        })
+                                message: "Connexion réussie !",
+                                color: 'secondary',
+                                icon: 'fas fa-check-square',
+                                position: 'top'
+                            })
+                            this.$router.push("/")
                         } else {
                             self.error = true;
                             self.errorInfo = response.data["message"];

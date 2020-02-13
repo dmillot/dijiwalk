@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
 
@@ -18,6 +19,21 @@ namespace DijiWalk.Entities
         /// </summary>
         public Route()
         {
+            Games = new HashSet<Game>();
+            RouteSteps = new HashSet<RouteStep>();
+            RouteTags = new HashSet<RouteTag>();
+        }
+
+        public Route(Route r)
+        {
+            Id = r.Id;
+            Name = r.Name;
+            Description = r.Description;
+            Handicap = r.Handicap;
+            Time = r.Time;
+            Distance = r.Distance;
+            IdOrganizer = r.IdOrganizer;
+            Organizer = r.Organizer;
             Games = new HashSet<Game>();
             RouteSteps = new HashSet<RouteStep>();
             RouteTags = new HashSet<RouteTag>();
@@ -66,6 +82,7 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit la liste des Jeux ayant utilisé la Route
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<Game> Games { get; set; }
 
         /// <summary>

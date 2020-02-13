@@ -5,8 +5,12 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Class definissant une Etape
@@ -18,8 +22,26 @@ namespace DijiWalk.Entities
         /// </summary>
         public Step()
         {
+            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+        }
+
+        public Step(Step s)
+        {
+            Id = s.Id;
+            Description = s.Description;
+            Validation = s.Validation;
+            CreationDate = s.CreationDate;
+            Name = s.Name;
+            Lat = s.Lat;
+            Lng = s.Lng;
+            ImageBase64 = s.ImageBase64;
+            ImageChanged = s.ImageChanged;
+            _additionalData = new Dictionary<string, JToken>();
+            Missions = new HashSet<Mission>();
+            RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
         }
 
         /// <summary>
@@ -57,6 +79,12 @@ namespace DijiWalk.Entities
         /// </summary>
         public double? Lng { get; set; }
 
+        [NotMapped]
+        public string ImageBase64 { get; set; }
+
+        [NotMapped]
+        public bool ImageChanged { get; set; }
+
         /// <summary>
         /// Liste Généré par la BDD inutile pour nous mais à garder
         /// </summary>
@@ -66,5 +94,21 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder
         /// </summary>
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
+
+        /// <summary>
+        /// Obtient ou définit la liste des Tags d'une étape
+        /// </summary>
+        public virtual ICollection<StepTag> StepTags { get; set; }
+
+        [JsonExtensionData]
+        private IDictionary<string, JToken> _additionalData;
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Lat = Convert.ToDouble(_additionalData["Latitude"]);
+            Lng = Convert.ToDouble(_additionalData["Longitude"]);
+        }
+
     }
 }

@@ -28,12 +28,6 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Delete(int idRouteStep);
 
         /// <summary>
-        /// Method to Delete all route step of a route
-        /// </summary>
-        /// <param name="idRoute">id of the route</param>
-        Task<ApiResponse> DeleteAllFromRoute(int idRoute);
-
-        /// <summary>
         /// Definition of the method to find an RouteStep with his Id
         /// </summary>
         /// <param name="id">The Id of the RouteStep</param>

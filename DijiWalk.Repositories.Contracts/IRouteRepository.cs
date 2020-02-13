@@ -15,11 +15,6 @@ namespace DijiWalk.Repositories.Contracts
     /// </summary>
     public interface IRouteRepository
     {
-        /// <summary>
-        /// Definition of the function that will Add the Route passed in the parameters to the database
-        /// </summary>
-        /// <param name="route">Object Route to Add</param>
-        void Add(Route route);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Route passed in the parameters
@@ -41,9 +36,16 @@ namespace DijiWalk.Repositories.Contracts
         Task<IEnumerable<Route>> FindAll();
 
         /// <summary>
-        /// Definition of the function that will Update the Route passed in the parameters to the database
+        /// Method to Add the route passed in the parameters to the database
         /// </summary>
-        /// <param name="route">Object Route to Update</param>
-        void Update(Route route);
+        /// <param name="route">Object Route to Add</param>
+        Task<ApiResponse> Add(Route route);
+
+        /// <summary>
+        /// Method that will Update the route passed in the parameters to the database
+        /// </summary>
+        /// <param name="step">Object Route to Update</param>
+        Task<ApiResponse> Update(Route route);
+
     }
 }

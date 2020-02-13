@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Class definissant un Moyen de Transport

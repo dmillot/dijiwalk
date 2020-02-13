@@ -40,7 +40,7 @@ namespace DijiWalk.Repositories
             {
                 await _context.Plays.AddAsync(play);
                 _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = play };
             }
             catch (Exception e)
             {
@@ -52,11 +52,11 @@ namespace DijiWalk.Repositories
         /// Method to Delete from the database the Play passed in the parameters
         /// </summary>
         /// <param name="play">Object Play to Delete</param>
-        public async Task<ApiResponse> Delete(int idPlay)
+        public async Task<ApiResponse> Delete(int idGame, int idTeam)
         {
             try
             {
-                _context.Plays.Remove(await _context.Plays.FindAsync(idPlay));
+                _context.Plays.Remove(await _context.Plays.FirstOrDefaultAsync(p => p.IdGame == idGame && p.IdTeam == idTeam));
                 _context.SaveChanges();
                 return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
             }
@@ -64,7 +64,6 @@ namespace DijiWalk.Repositories
             {
                 return TranslateError.Convert(e);
             }
-
         }
 
         /// <summary>

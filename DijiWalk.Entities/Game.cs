@@ -7,6 +7,7 @@ namespace DijiWalk.Entities
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Class definissant un Jeu
@@ -22,6 +23,20 @@ namespace DijiWalk.Entities
             TeamAnswers = new HashSet<TeamAnswer>();
             TeamRoutes = new HashSet<TeamRoute>();
         }
+
+        public Game(Game game)
+        {
+            Id = game.Id;
+            IdRoute = game.IdRoute;
+            CreationDate = game.CreationDate;
+            IdOrganizer = game.IdOrganizer;
+            IdTransport = game.IdTransport;
+            Plays = new HashSet<Play>();
+            TeamAnswers = new HashSet<TeamAnswer>();
+            TeamRoutes = new HashSet<TeamRoute>();
+        }
+
+       
 
         /// <summary>
         /// Obtient ou définit l'Id du Jeu
@@ -87,5 +102,7 @@ namespace DijiWalk.Entities
         /// Obtient ou définit la liste des Routes pour chaques Teams du Jeu
         /// </summary>
         public virtual ICollection<TeamRoute> TeamRoutes { get; set; }
+
+
     }
 }

@@ -21,6 +21,18 @@ namespace DijiWalk.Entities
             TeamAnswers = new HashSet<TeamAnswer>();
         }
 
+        public Trial(Trial t)
+        {
+            Id = t.Id;
+            IdType = t.IdType;
+            IdMission = t.IdMission;
+            IdCorrectAnswer = t.IdCorrectAnswer;
+            Score = t.Score;
+            Libelle = t.Libelle;
+            Answers = new HashSet<Answer>();
+            TeamAnswers = new HashSet<TeamAnswer>();
+        }
+
         /// <summary>
         /// Obtient ou définit l'Id de l'Epreuve
         /// </summary>

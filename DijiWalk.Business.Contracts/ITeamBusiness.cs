@@ -30,7 +30,7 @@ namespace DijiWalk.Business.Contracts
         /// Method to Delete all team route with route id
         /// </summary>
         /// <param name="idRoute">id of the route</param>
-        Task<ApiResponse> DeleteAllFromRoute(int idRoute);
+        Task<ApiResponse> DeleteTeamRoutesFromRoute(int idRoute);
 
         /// <summary>
         /// Method to check if team has participed to a game
@@ -43,5 +43,6 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="idPlayer">id of a player</param>
         Task<bool> ContainsTeamsWithPlayer(int idPlayer);
+
     }
 }

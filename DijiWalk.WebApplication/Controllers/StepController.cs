@@ -7,6 +7,7 @@ namespace DijiWalk.WebApplication.Controllers
 {
     using System;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
@@ -73,16 +74,15 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         /// <returns>Ok Object</returns>
         [HttpPost]
-        public async Task<IActionResult> Add(Step step)
+        public async Task<IActionResult> Add([FromBody] Step step)
         {
             try
             {
-                this._repository.Add(step);
-                return this.Ok("Ok");
+                return this.Ok(await _repository.Add(step));
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok, exception: " + e);
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 
@@ -96,12 +96,11 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 step.Id = id;
-                this._repository.Update(step);
-                return this.Ok("Ok");
+                return this.Ok(await _repository.Update(step));
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok, exception :" + e);
+                return this.Ok(TranslateError.Convert(e));
             }
         }
 
@@ -118,7 +117,7 @@ namespace DijiWalk.WebApplication.Controllers
             }
             catch (Exception e)
             {
-                return this.Ok("Pas Ok, exception :" + e);
+                return this.Ok(TranslateError.Convert(e));
             }
         }
     }
