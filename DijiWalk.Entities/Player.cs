@@ -7,6 +7,7 @@
 
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
