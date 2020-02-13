@@ -41,6 +41,7 @@ namespace DijiWalk.Entities
             _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
         }
 
         /// <summary>
@@ -93,6 +94,11 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder
         /// </summary>
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
+
+        /// <summary>
+        /// Obtient ou définit la liste des Tags d'une étape
+        /// </summary>
+        public virtual ICollection<StepTag> StepTags { get; set; }
 
         [JsonExtensionData]
         private IDictionary<string, JToken> _additionalData;

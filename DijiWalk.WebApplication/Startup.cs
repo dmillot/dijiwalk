@@ -10,6 +10,7 @@ using DijiWalk.Common.Encryption;
 using DijiWalk.Common.FileExtension;
 using DijiWalk.Common.Response;
 using DijiWalk.Common.StringExtension;
+using DijiWalk.Common.Vision;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
@@ -115,6 +116,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IImageBusiness, ImageBusiness>();
             services.AddScoped<IGameBusiness, GameBusiness>();
             services.AddScoped<IPlayBusiness, PlayBusiness>();
+            services.AddScoped<IStepTagBusiness, StepTagBusiness>();
             #endregion
 
             #region Common
@@ -122,6 +124,7 @@ namespace DijiWalk.WebApplication
             services.AddSingleton<ICloudStorage, CloudStorage>();
             services.AddSingleton<IFileExtension, FileExtension>();
             services.AddSingleton<IStringExtension, StringExtension>();
+            services.AddSingleton<IVision, Vision>();
             #endregion
 
             #region JWT Token

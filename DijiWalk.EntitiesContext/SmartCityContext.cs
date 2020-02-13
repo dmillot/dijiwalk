@@ -27,6 +27,7 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<RouteStep> Routesteps { get; set; }
         public virtual DbSet<RouteTag> Routetags { get; set; }
+        public virtual DbSet<StepTag> Steptags { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
@@ -368,6 +369,30 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => d.IdTag)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_STEPTAG_TAG");
+            });
+
+            modelBuilder.Entity<StepTag>(entity =>
+            {
+                entity.HasKey(e => new { e.IdStep, e.IdTag })
+                    .HasName("PK_STEP_TAG");
+
+                entity.ToTable("STEPTAG");
+
+                entity.Property(e => e.IdStep).HasColumnName("StepTag_fk_Step_Id");
+
+                entity.Property(e => e.IdTag).HasColumnName("StepTag_fk_Tag_Id");
+
+                entity.HasOne(d => d.Step)
+                    .WithMany(p => p.StepTags)
+                    .HasForeignKey(d => d.IdStep)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_STEP_TAG_STEP");
+
+                entity.HasOne(d => d.Tag)
+                    .WithMany(p => p.StepTags)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_STEP_TAG_TAG");
             });
 
             modelBuilder.Entity<Step>(entity =>
