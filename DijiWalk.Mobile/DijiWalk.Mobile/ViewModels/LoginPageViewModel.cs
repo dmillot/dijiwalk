@@ -55,8 +55,13 @@ namespace DijiWalk.Mobile.ViewModels
         {
             if (Login.Validate())
             {
-                var test = (JWTTokens)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
-                this.NavigationService.NavigateAsync(nameof(MainPage), null);
+                var user = (Player)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
+                if (user.JwtToken != null)
+                {
+                    var navigationParams = new NavigationParameters();
+                    navigationParams.Add("player", user);
+                    await this.NavigationService.NavigateAsync(nameof(MainPage), navigationParams);
+                }
             }
         }
 

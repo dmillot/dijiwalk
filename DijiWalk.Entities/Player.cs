@@ -5,11 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
 namespace DijiWalk.Entities
 {
     using Newtonsoft.Json.Linq;
@@ -101,6 +96,9 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder (même utilité que celle d'avant)
         /// </summary>
         public virtual ICollection<TeamPlayer> TeamPlayers { get; set; }
+
+        [NotMapped]
+        public JWTTokens JwtToken { get; set; }
 
 
     }

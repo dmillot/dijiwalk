@@ -25,7 +25,7 @@
 
             <AbsoluteLayout HorizontalOptions="CenterAndExpand">
                 <BoxView Color="{StaticResource SecondaryDarkColor}" WidthRequest="148" HeightRequest="149" CornerRadius="100"/>
-                <ffimageloading:CachedImage  WidthRequest="144" HeightRequest="144" DownsampleToViewSize="true" Source = "profil.jpg">
+                <ffimageloading:CachedImage  WidthRequest="144" HeightRequest="144" DownsampleToViewSize="true" Source = "{Binding User.Picture}">
                     <ffimageloading:CachedImage.Transformations>
                         <fftransformations:CircleTransformation />
                         <fftransformations:GrayscaleTransformation />
@@ -34,7 +34,7 @@
             </AbsoluteLayout>
 
 
-            <Label Text="Nathan GAGNIARRE / Nat299" HorizontalOptions="CenterAndExpand" FontSize="Title" TextColor="{StaticResource WhiteColor}">
+            <Label Text="{Binding User.NameAndPseudo}" HorizontalOptions="CenterAndExpand" FontSize="Title" TextColor="{StaticResource WhiteColor}">
                 <Label.Effects>
                     <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                         <effects:ShadowEffect.Color>

@@ -7,6 +7,7 @@ using System.Text;
 using DijiWalk.Entities;
 using Prism.Commands;
 using DijiWalk.Mobile.Views;
+using DijiWalk.Mobile.ViewModels.ViewEntities;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -18,6 +19,8 @@ namespace DijiWalk.Mobile.ViewModels
 
         #region Properties
         public INavigationService NavigationService { get; private set; }
+        private ViewPlayer _user;
+        public ViewPlayer User { get { return _user; } set { SetProperty(ref _user, value); } }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToActualGamePage { get; set; }
         public DelegateCommand<object> NavigateToClassementPage { get; set; }
@@ -103,6 +106,23 @@ namespace DijiWalk.Mobile.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
+            if (App.User == null)
+            {
+                var response = parameters.GetValue<Player>("player");
+
+                var user = new ViewPlayer
+                {
+                    Id = response.Id,
+                    FirstName = response.FirstName,
+                    LastName = response.LastName,
+                    Picture = response.Picture,
+                    Login = response.Login
+                };
+
+                App.User = user;
+            }
+
+            this.User = App.User;
 
         }
         #endregion

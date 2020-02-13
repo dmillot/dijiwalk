@@ -27,7 +27,7 @@ namespace DijiWalk.Mobile.ViewModels
         public Dictionary<string, string>  ColorValidation = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color) Application.Current.Resources["ValidationColor"]) }};
 
 
-private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
+        private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
         public ObservableCollection<ViewTeam> Groupes
         {
             get { return _groupes; }

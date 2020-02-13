@@ -22,5 +22,12 @@ namespace DijiWalk.Business.Contracts
         /// <param name="player">Object player</param>
         Task<bool> CheckUpdate(Player player);
 
+        /// <summary>
+        /// Method to get all previous games of a player.
+        /// </summary>
+        /// <param name="player">Object player</param>
+        /// <returns>List of previous games</returns>
+        Task<IEnumerable<Game>> GetPreviousGames(Player player);
+
     }
 }

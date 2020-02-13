@@ -96,7 +96,7 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.CreationDate)
                     .HasColumnName("Game_CreationDate")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FinalScore).HasColumnName("Game_FinalScore");
 

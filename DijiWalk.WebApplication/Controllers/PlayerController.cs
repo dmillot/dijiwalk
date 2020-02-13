@@ -71,6 +71,23 @@ namespace DijiWalk.WebApplication.Controllers
         }
 
         /// <summary>
+        /// Method to get all previous games of a player
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("previous-games")]
+        public async Task<IActionResult> GetPreviousGames([FromBody] Player player)
+        {
+            try
+            {
+                return this.Ok(await this._repository.GetPreviousGames(player));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
         /// Method to add player
         /// </summary>
         /// <returns>Success or error message</returns>
