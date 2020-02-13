@@ -72,7 +72,7 @@ namespace DijiWalk.WebApplication
                 });
             });
             services.AddControllers().AddNewtonsoftJson(option => option.SerializerSettings.AddCustomSettings());
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "dijiwalk/dist");
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
 
             #region Services
@@ -199,7 +199,7 @@ namespace DijiWalk.WebApplication
             {
                 if (env.IsDevelopment())
                 {
-                    spa.Options.SourcePath = "DijiWalk";
+                    spa.Options.SourcePath = "dijiwalk";
                     spa.UseVueCli(npmScript: "serve");
                 }
                 else

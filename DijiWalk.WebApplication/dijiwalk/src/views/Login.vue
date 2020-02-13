@@ -106,8 +106,7 @@
                         "Login": this.name,
                         "Password": this.password
                     }).then(response => {
-                        if (response.data.status == 1) {
-                           
+                        if ("id" in response.data) {
                             self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
                             self.$q.notify({
                                 message: "Connexion réussie !",
