@@ -25,9 +25,9 @@ namespace DijiWalk.Business.Contracts
         /// <summary>
         /// Method to get all previous games of a player.
         /// </summary>
-        /// <param name="player">Object player</param>
+        /// <param name="player">Id of the player</param>
         /// <returns>List of previous games</returns>
-        Task<IEnumerable<Game>> GetPreviousGames(Player player);
+        Task<IEnumerable<Game>> GetPreviousGames(int idPlayer);
 
     }
 }

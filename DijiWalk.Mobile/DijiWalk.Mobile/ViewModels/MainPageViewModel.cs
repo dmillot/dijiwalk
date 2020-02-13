@@ -8,6 +8,7 @@ using DijiWalk.Entities;
 using Prism.Commands;
 using DijiWalk.Mobile.Views;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
+using DijiWalk.Mobile.Services;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -20,12 +21,16 @@ namespace DijiWalk.Mobile.ViewModels
         #region Properties
         public INavigationService NavigationService { get; private set; }
         private ViewPlayer _user;
+        private readonly PlayerService _playerService;
         public ViewPlayer User { get { return _user; } set { SetProperty(ref _user, value); } }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToActualGamePage { get; set; }
         public DelegateCommand<object> NavigateToClassementPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
+        private ObservableCollection<Game> _previousGames;
+
+        public ObservableCollection<Game> PreviousGames = new ObservableCollection<Game>();
 
         private ObservableCollection<Game> _anciensJeux;
         public ObservableCollection<Game> AnciensJeux
@@ -35,9 +40,11 @@ namespace DijiWalk.Mobile.ViewModels
         }
         #endregion
 
-        public MainPageViewModel(INavigationService navigationService)
+        public MainPageViewModel(PlayerService playerService, INavigationService navigationService)
         {
             NavigationService = navigationService;
+            _playerService = playerService;
+
             AnciensJeux = new ObservableCollection<Game>
             {
                 new Game {Id = 1, CreationDate = DateTime.Now.Date},
@@ -51,6 +58,9 @@ namespace DijiWalk.Mobile.ViewModels
                 new Game {Id = 9, CreationDate = DateTime.Now.Date},
                 new Game {Id = 10, CreationDate = DateTime.Now.Date},
             };
+
+            //this.GetPreviousGames();
+
             this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
             this.NavigateToActualGamePage = new DelegateCommand<object>(GoToActualGame);
             this.NavigateToClassementPage = new DelegateCommand<object>(GoToClassement);
@@ -104,7 +114,7 @@ namespace DijiWalk.Mobile.ViewModels
 
         }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
+        public async void OnNavigatedTo(INavigationParameters parameters)
         {
             if (App.User == null)
             {
@@ -123,6 +133,7 @@ namespace DijiWalk.Mobile.ViewModels
             }
 
             this.User = App.User;
+            PreviousGames = new ObservableCollection<Game>(await _playerService.GetPreviousGames(this.User.Id));
 
         }
         #endregion

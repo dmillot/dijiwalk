@@ -38,10 +38,20 @@ namespace DijiWalk.Business
             return await _context.Players.Where(x => x.Id != player.Id).AnyAsync(x => x.Email == player.Email || x.Login == player.Login);
         }
 
-        public async Task<IEnumerable<Game>> GetPreviousGames(Player player)
+        public async Task<IEnumerable<Game>> GetPreviousGames(int idPlayer)
         {
-            var listeDesIdTeams = await _context.Teamplayers.Where(t => t.IdPlayer == player.Id).Select(t => t.IdTeam).ToListAsync();
-            var test = await _context.Games.Where(g => g.CreationDate < DateTime.Now && listeDesIdTeams.Any(p => g.Plays.Select(pl => pl.IdTeam).ToList().Contains(p))).ToListAsync();
+
+            var test = from game in _context.Games
+                       join play in _context.Plays
+                        on game.Id equals play.IdGame
+                       join teamplayer in _context.Teamplayers
+                        on play.IdTeam equals teamplayer.IdTeam
+                       join player in _context.Players
+                        on teamplayer.IdPlayer equals player.Id
+                       where game.CreationDate < DateTime.Now
+                       where player.Id == idPlayer
+                       select game;
+
             return test;
         }
     }

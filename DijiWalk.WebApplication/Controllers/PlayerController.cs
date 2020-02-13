@@ -74,12 +74,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all previous games of a player
         /// </summary>
         /// <returns></returns>
-        [HttpPost, Route("previous-games")]
-        public async Task<IActionResult> GetPreviousGames([FromBody] Player player)
+        [HttpGet("previous/{id}")]
+        public async Task<IActionResult> GetPreviousGames(int id)
         {
             try
             {
-                return this.Ok(await this._repository.GetPreviousGames(player));
+                return this.Ok(await this._repository.GetPreviousGames(id));
             }
             catch (Exception e)
             {
