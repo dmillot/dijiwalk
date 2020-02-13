@@ -107,7 +107,7 @@ namespace DijiWalk.Repositories
         /// Method to find all Game from the database
         /// </summary>
         /// <returns>A List with all Games</returns>
-        public async Task<IEnumerable<Game>> FindAll()
+        public async Task<List<Game>> FindAll()
         {
             return await _context.Games
                 .Include(r => r.Route)
@@ -164,7 +164,7 @@ namespace DijiWalk.Repositories
             }
             catch (Exception e)
             {
-                throw;
+                return TranslateError.Convert(e);
             }
         }
     }

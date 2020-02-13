@@ -1,6 +1,11 @@
 <template>
     <q-page class="q-px-xl">
-
+        <q-header elevated>
+            <q-toolbar>
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/jeuActuel' " />
+                <q-toolbar-title>DijiWalk</q-toolbar-title>
+            </q-toolbar>
+        </q-header>
         <h5 class="text-bold text-left">Game {{id}}</h5>
 
         <q-card class="my-card full-height q-px-xl q-py-lg">
@@ -17,7 +22,7 @@
                         </q-item>
 
                         <q-separator spaced inset />
-                        
+
                         <q-item>
                             <q-item-section>
                                 <q-item-label overline>Nom de l'organisateur</q-item-label>
@@ -26,7 +31,7 @@
                         </q-item>
 
                         <q-separator spaced inset />
-                        
+
                         <q-item>
                             <q-item-section>
                                 <q-item-label overline>Parcours</q-item-label>
@@ -36,7 +41,7 @@
                         </q-item>
 
                         <q-separator spaced inset />
-                        
+
                         <q-item>
                             <q-item-section>
                                 <q-item-section>
@@ -95,11 +100,10 @@
                                 <q-item-label>
                                     <div class="q-pa-md">
                                         <q-table title="Avancement des équipes participantes par étapes"
-                                                :data="steps"
-                                                :columns="stepsColumns"
-                                                row-key="name"
-                                                @row-click="onRowClick"
-                                                />
+                                                 :data="steps"
+                                                 :columns="stepsColumns"
+                                                 row-key="name"
+                                                 @row-click="onRowClick" />
                                     </div>
                                 </q-item-label>
                             </q-item-section>
@@ -114,17 +118,17 @@
             <q-card>
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
-                        <div class="q-pa-md" >
+                        <div class="q-pa-md">
 
                             <div v-for="player in players" v-bind:key="player.name">
-                                <q-item >
+                                <q-item>
                                     <q-item-section avatar>
-                                    <q-avatar rounded>
-                                        <img :src="player.picture">
-                                    </q-avatar>
+                                        <q-avatar rounded>
+                                            <img :src="player.picture">
+                                        </q-avatar>
                                     </q-item-section>
                                     <q-item-section v-if="player.captain === team.idCaptain">{{player.playerName}}<i class="fas fa-crown"></i></q-item-section>
-                                        <q-item-section v-else >{{player.playerName}}</q-item-section>
+                                    <q-item-section v-else>{{player.playerName}}</q-item-section>
                                 </q-item>
 
                             </div>

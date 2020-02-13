@@ -2,7 +2,7 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
-
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
                 <div class="q-ml-md cursor-pointer non-selectable">

@@ -108,8 +108,7 @@ namespace DijiWalk.Entities
         {
             Lat = Convert.ToDouble(_additionalData["Latitude"]);
             Lng = Convert.ToDouble(_additionalData["Longitude"]);
-
-
         }
+
     }
 }
