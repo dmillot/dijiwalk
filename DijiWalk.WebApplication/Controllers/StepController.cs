@@ -6,6 +6,8 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
@@ -61,7 +63,40 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(await this._repository.FindAll());
+                var step = await this._repository.FindAll();
+                return Ok(step.Select(g =>
+                {
+                    g.Missions = g.Missions.Select(m =>
+                    {
+                        m.Step = null;
+                        m.Trials = m.Trials.Select(t =>
+                        {
+                            t.Answers = new HashSet<Answer>();
+                            t.TeamAnswers = new HashSet<TeamAnswer>();
+                            t.Mission = null;
+                            t.Type = null;
+                            t.CorrectAnswer = null;
+                            return t;
+                        }).ToList();
+                        return m;
+                    }).ToList();
+                    g.RouteSteps = g.RouteSteps.Select(rs =>
+                    {
+                        rs.Route.Games = new HashSet<Game>();
+                        rs.Route.RouteSteps = new HashSet<RouteStep>();
+                        rs.Route.RouteTags = new HashSet<RouteTag>();
+                        rs.Route.Organizer = null;
+                        return rs;
+                    }).ToList();
+                    g.StepTags = g.StepTags.Select(st =>
+                    {
+                        st.Step = null;
+                        st.Tag.StepTags = new HashSet<StepTag>();
+                        st.Tag.RouteTags = new HashSet<RouteTag>();
+                        return st;
+                    }).ToList();
+                    return g;
+                }).ToList());
             }
             catch (Exception e)
             {

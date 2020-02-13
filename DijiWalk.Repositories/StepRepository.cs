@@ -116,8 +116,6 @@ namespace DijiWalk.Repositories
         public async Task<Step> Find(int id)
         {
             return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).FirstOrDefaultAsync();
-            // return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
-            // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);
         }
 
         /// <summary>
@@ -126,7 +124,12 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Steps</returns>
         public async Task<IEnumerable<Step>> FindAll()
         {
-            return await _context.Steps.Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).ToListAsync();
+            return await _context.Steps
+                .Include(s => s.Missions)
+                .ThenInclude(m => m.Trials)
+                .Include(s => s.StepTags)
+                .ThenInclude(st => st.Tag)
+                .ToListAsync();
         }
 
         /// <summary>

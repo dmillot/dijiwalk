@@ -93,7 +93,7 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 var games = await this._repository.FindAll();
-                games.Select(g =>
+                return Ok(games.Select(g =>
                 {
                     g.Organizer.Games = new HashSet<Game>();
                     g.Organizer.Messages = new HashSet<Message>();
@@ -120,8 +120,7 @@ namespace DijiWalk.WebApplication.Controllers
                     }).ToList();
                     return g;
 
-                }).ToList();
-                return Ok(games);
+                }).ToList());
             }
             catch (Exception e)
             {

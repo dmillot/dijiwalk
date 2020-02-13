@@ -25,6 +25,7 @@ namespace DijiWalk.Entities
             _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
         }
 
         public Step(Step s)
