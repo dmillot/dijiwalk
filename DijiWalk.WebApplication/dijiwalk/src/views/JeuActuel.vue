@@ -1,16 +1,21 @@
 <template>
     <q-page class="q-px-xl">
+        <q-header elevated>
+            <q-toolbar>
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
+                <q-toolbar-title>DijiWalk</q-toolbar-title>
+            </q-toolbar>
+        </q-header>
 
         <h5 class="text-bold text-left">Jeu en cours</h5>
         <q-card class=" full-height q-px-xl q-py-lg">
             <q-card-section class="flex column flex-center">
                 <div class="q-pa-md">
                     <q-table title="Avancement des équipes participantes"
-                                :data="dataGame"
-                                :columns="columns"
-                                row-key="name" 
-                                @row-click="onRowClick"
-                                />
+                             :data="dataGame"
+                             :columns="columns"
+                             row-key="name"
+                             @row-click="onRowClick" />
                 </div>
             </q-card-section>
             <q-card-section :disabled="game===null" class="flex column flex-center">

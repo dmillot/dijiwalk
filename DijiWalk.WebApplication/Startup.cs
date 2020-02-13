@@ -30,6 +30,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VueCliMiddleware;
 
 namespace DijiWalk.WebApplication
@@ -44,7 +45,7 @@ namespace DijiWalk.WebApplication
         public static void AddCustomSettings(this JsonSerializerSettings settings)
         {
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            settings.FloatParseHandling = FloatParseHandling.Double;
+            settings.Formatting = Formatting.Indented;
         }
     }
 

@@ -97,13 +97,13 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.CreationDate)
                     .HasColumnName("Game_CreationDate")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FinalScore).HasColumnName("Game_FinalScore");
 
                 entity.Property(e => e.FinalTime)
                     .HasColumnName("Game_FinalTime")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.IdOrganizer).HasColumnName("Game_fk_Organizer_Id");
 
@@ -116,15 +116,16 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => d.IdOrganizer)
                     .HasConstraintName("FK_GAME_ORGANIZER");
 
-                entity.HasOne(d => d.Route)
-                    .WithMany(p => p.Games)
-                    .HasForeignKey(d => d.IdRoute)
-                    .HasConstraintName("FK_GAME_ROUTE");
-
                 entity.HasOne(d => d.Transport)
                     .WithMany(p => p.Games)
                     .HasForeignKey(d => d.IdTransport)
                     .HasConstraintName("FK_GAME_TRANSPORT");
+
+
+                entity.HasOne(d => d.Route)
+                    .WithMany(p => p.Games)
+                    .HasForeignKey(d => d.IdRoute)
+                    .HasConstraintName("FK_GAME_ROUTE");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -592,6 +593,7 @@ namespace DijiWalk.EntitiesContext
                 entity.Property(e => e.Libelle)
                     .HasColumnName("Transport_Libelle")
                     .HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<Trial>(entity =>
