@@ -134,7 +134,29 @@
                         </effects:ShadowEffect>
                     </Label.Effects>
                 </Label>
-                <Label TextColor="White" Text="{Binding Step.Clue.Description}">
+                <ListView ItemsSource="{Binding Step.Clues}" RowHeight="150">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame VerticalOptions="Start" HorizontalOptions="Center">
+                                    <Label TextColor="White" Text="{Binding Description}">
+                                        <Label.Effects>
+                                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                                <effects:ShadowEffect.Color>
+                                                    <OnPlatform x:TypeArguments="Color">
+                                                        <On Platform="iOS" Value="Black" />
+                                                        <On Platform="Android" Value="Black" />
+                                                    </OnPlatform>
+                                                </effects:ShadowEffect.Color>
+                                            </effects:ShadowEffect>
+                                        </Label.Effects>
+                                    </Label>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Label TextColor="White" Text="{Binding Clue.Description}">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>

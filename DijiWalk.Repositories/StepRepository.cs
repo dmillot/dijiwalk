@@ -38,6 +38,7 @@ namespace DijiWalk.Repositories
         /// Parameter that serve to connect to the database
         /// </summary>
         public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+
         {
             _context = context;
             _stepBusiness = stepBusiness;
@@ -115,8 +116,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s=>s.Clues).FirstOrDefaultAsync();
-            //return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).FirstOrDefaultAsync();
+            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).Include(s => s.Clues).FirstOrDefaultAsync();
 
             // return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
             // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);

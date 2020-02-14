@@ -109,14 +109,13 @@ namespace DijiWalk.Entities
         /// </summary>
         public virtual ICollection<StepValidation> StepValidations { get; set; }
 
-
         /// <summary>
         /// Obtient ou définit la liste des Indices d'une Etape
         /// </summary>
         public virtual ICollection<Clue> Clues { get; set; }
 
         [JsonExtensionData]
-        private IDictionary<string, JToken> _additionalData;
+        private readonly IDictionary<string, JToken> _additionalData;
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
