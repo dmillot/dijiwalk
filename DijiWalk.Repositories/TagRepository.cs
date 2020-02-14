@@ -7,7 +7,9 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using DijiWalk.Business.Contracts;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
@@ -22,24 +24,38 @@ namespace DijiWalk.Repositories
     {
         private readonly SmartCityContext _context;
 
+        private readonly ITagBusiness _tagBusiness;
+
+        private readonly IRouteTagRepository _routeTagRepository;
+
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public TagRepository(SmartCityContext context)
+        public TagRepository(SmartCityContext context, ITagBusiness tagBusiness, IRouteTagRepository routeTagRepository)
         {
             _context = context;
+            _tagBusiness = tagBusiness;
+            _routeTagRepository = routeTagRepository;
         }
 
         /// <summary>
         /// Method to Add the Tag passed in the parameters to the database
         /// </summary>
         /// <param name="tag">Object Tag to Add</param>
-        public void Add(Tag tag)
+        public async Task<ApiResponse> Add(Tag tag)
         {
-            _context.Tags.Add(tag);
-            _context.SaveChanges();
+            try
+            {
+                await _context.Tags.AddAsync(tag);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = tag };
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
-
         /// <summary>
         /// Method to Delete from the database the Tag passed in the parameters
         /// </summary>

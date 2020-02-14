@@ -29,7 +29,14 @@ namespace DijiWalk.Business
         /// <param name="idPlayer">Id of the player</param>
         public async Task<bool> OnlyThisPlayer(int idPlayer)
         {
-            return await _context.Teams.AnyAsync(t => t.TeamPlayers.All(team => team.IdPlayer == idPlayer));
+            bool canDelete = true;
+            await _context.Teams.ForEachAsync(t => {
+                if (t.TeamPlayers.Count() != 0 && t.TeamPlayers.Count() == t.TeamPlayers.Where(team => team.IdPlayer == idPlayer).ToList().Count())
+                {
+                    canDelete = false;
+                }
+            });
+            return canDelete;
         }
 
         /// <summary>

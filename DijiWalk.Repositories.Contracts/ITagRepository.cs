@@ -16,10 +16,10 @@ namespace DijiWalk.Repositories.Contracts
     public interface ITagRepository
     {
         /// <summary>
-        /// Definition of the function that will Add the Tag passed in the parameters to the database
+        /// Method to Add the Tag passed in the parameters to the database
         /// </summary>
         /// <param name="tag">Object Tag to Add</param>
-        void Add(Tag tag);
+        Task<ApiResponse> Add(Tag tag);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Tag passed in the parameters

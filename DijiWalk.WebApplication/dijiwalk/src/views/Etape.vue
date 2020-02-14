@@ -38,12 +38,12 @@
                         <q-img :src="step.validation" />
 
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(step)"
+                            <q-btn v-on:click.stop="openModalToDelete(step)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
                                    class="absolute"
-                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                                   style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
                             <div class="row no-wrap">
                                 <div class="col text-left text-bold text-h6 ellipsis">
                                     {{ step.name }}
@@ -111,10 +111,14 @@
                             </template>
                         </q-input>
 
-                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoireque si nouvelle étape !']" clearable>
+                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire que si nouvelle étape !']" clearable hint="Peut être vide si mise à jour !" @input="takePicture" @clear="clearPicture">
                             <template v-slot:prepend>
-                                <q-icon name="fas fa-image" />
+                                <q-avatar id="avatarSelected" v-show="!noPicture">
+
+                                </q-avatar>
+                                <q-icon v-show="noPicture" name="fas fa-image" />
                             </template>
+
                         </q-file>
 
                         <q-input class="col-12 q-my-xs" ref="latitude" v-model="latitudeStep" type="text" label="Latitude *" option-value="id" option-label="name" name="latitudeStep" id="latitudeStep" :error-message="errormessagelatitude" :error="errorlatitude">
@@ -130,7 +134,7 @@
                         </q-input>
 
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" />
+                            <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" hint="Vous pouvez en rajouter une cliquant sur le bouton à droite !" />
                             <div v-show="!loading" class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
                             </div>
@@ -189,8 +193,8 @@
                             <q-expansion-item expand-separator icon="fas fa-tags" label="Tags">
                                 <div class="row justify-start">
                                     <div v-for="tag in stepSelected.stepTags" v-bind:key="tag.idTag">
-                                        <q-chip outline class="q-my-xs q-pa-md" size="md" icon="fas fa-tag">
-                                            {{ tag.tag.name }}
+                                        <q-chip outline class="q-my-xs q-px-lg q-py-md" color="red" text-color="white" size="md" icon="fas fa-tag">
+                                            <div class="q-px-sm q-my-sm">{{ tag.tag.name }}</div>
                                         </q-chip>
                                     </div>
                                 </div>
@@ -252,6 +256,7 @@
                 idStep: null,
 
                 loading: false,
+                noPicture: true
             }
         },
         created() {
@@ -265,6 +270,23 @@
             }
         },
         methods: {
+            clearPicture() {
+                document.getElementById('avatarSelected').innerHTML = "";
+                this.noPicture = true;
+            },
+            takePicture() {
+                if (this.pictureStep != null) {
+                    this.noPicture = false;
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (e.target.result.indexOf("image") != -1) {
+                            document.getElementById('avatarSelected').innerHTML = ['<img src="', e.target.result, '" />'].join('')
+                        }
+                    };
+                    reader.readAsDataURL(this.pictureStep);
+                }
+
+            },
             fileConvert() {
                 return new Promise((resolve, reject) => {
                     if (this.pictureStep != null) {

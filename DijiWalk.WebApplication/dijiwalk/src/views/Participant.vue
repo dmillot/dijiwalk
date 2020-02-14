@@ -53,12 +53,12 @@
                         <q-img :src="participant.picture" />
 
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(participant)"
+                            <q-btn v-on:click.stop="openModalToDelete(participant)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
                                    class="absolute"
-                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                                   style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
 
                             <div class="row no-wrap">
                                 <div class="col text-left text-bold text-h6 ellipsis">
@@ -125,7 +125,7 @@
                             <q-icon name="fas fa-user" />
                         </template>
                     </q-input>
-                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe si nouveeau participant.']">
+                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe si nouveau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -135,7 +135,7 @@
                                     @click="isPwd = !isPwd" />
                         </template>
                     </q-input>
-                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe si nouveeau participant.']">
+                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe si nouveau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -150,9 +150,12 @@
                             <q-icon name="fas fa-at" />
                         </template>
                     </q-input>
-                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire si nouveau participant !']" clearable>
+                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire si nouveau participant !']" clearable @input="takePicture" @clear="clearPicture">
                         <template v-slot:prepend>
-                            <q-icon name="fas fa-image" />
+                            <q-avatar id="avatarSelected" v-show="!noPicture">
+
+                            </q-avatar>
+                            <q-icon v-show="noPicture" name="fas fa-image" />
                         </template>
                     </q-file>
                 </q-card-section>
@@ -227,7 +230,8 @@
                 idParticipant: null,
 
                 loading: false,
-                encryptedPassword: null
+                encryptedPassword: null,
+                noPicture: true
             }
         },
         created() {
@@ -249,6 +253,22 @@
                     }
                 })
             },
+             clearPicture() {
+                document.getElementById('avatarSelected').innerHTML = "";
+                this.noPicture = true;
+            },
+            takePicture() {
+                if (this.pictureParticipant != null && "name" in this.pictureParticipant) {
+                    this.noPicture = false;
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (e.target.result.indexOf("image") != -1) {
+                            document.getElementById('avatarSelected').innerHTML = ['<img src="', e.target.result, '" />'].join('')
+                        }
+                    };
+                    reader.readAsDataURL(this.pictureParticipant);
+                }
+            },
             openModalToGetInformations(participant) {
                 this.isAdding = false;
                 this.isEditing = false;
@@ -268,7 +288,7 @@
                 this.isAdding = false;
                 this.resetInput();
                 this.fillForm(participant);
-                this.manageParticipant = true
+                this.manageParticipant = true  
             },
             resetInput() {
                 this.idParticipant = null
@@ -290,7 +310,7 @@
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = participant.email
                 this.pictureUrl = participant.picture
-                this.encryptedPassword = participant.Password
+                this.encryptedPassword = participant.Password        
             },
             getAllParticipants() {
                 if (this.participants === null) {

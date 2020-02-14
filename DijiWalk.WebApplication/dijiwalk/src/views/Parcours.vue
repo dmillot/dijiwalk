@@ -50,12 +50,12 @@
                         <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
 
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(parcour)"
+                            <q-btn v-on:click.stop="openModalToDelete(parcour)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
                                    class="absolute"
-                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                                   style="top: 0; right: 12px; transform: translateY(-50%);  z-index: 999;" />
 
                             <div class="row no-wrap">
                                 <div class="col text-left text-bold text-h6 ellipsis">
@@ -137,26 +137,24 @@
                         <q-toggle class="col-5 q-my-xs on-left" v-show="!loading" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" />
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter un si elle n'existe pas (bouton à droite) !" />
                             <div v-show="!loading" class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/etape')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
 
+                        <div class="row items-center justify-center col-12">
+                            <q-select class="col-12 q-my-xs" ref="tags" v-model="tagSelected" clearable use-input fill-input :options="tagsOptions" label="Tags" option-value="id" option-label="name" @filter="filterTag" hint="Vous pouvez en rajouter un en l'écrivant puis touche entrer !" @new-value="createTag" />
+                        </div>
+
                         <div class="row justify-start">
-                            <div v-for="tag in tagsParcours" v-bind:key="tag.idTag">
-                                <q-chip outline removable class="q-my-xs q-pa-md" size="md" icon="fas fa-tag" @remove="removeTags(tag)">
-                                    {{ tag.name }}
+                            <div v-for="tag in tagsParcours" v-show="!loading" v-bind:key="tag.idTag">
+                                <q-chip removable color="red" outline text-color="white" class="q-my-xs q-px-lg q-py-md" size="md" icon="fas fa-tag" @remove="removeTags(tag)">
+                                    <div class="q-px-sm q-my-sm">{{ tag.name }}</div>
                                 </q-chip>
                             </div>
                         </div>
 
-                        <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="tags" v-model="tagSelected" :options="tagsAvailable" label="Tags" option-value="id" option-label="name" />
-                            <div v-show="!loading" class="col-1 q-ml-md">
-                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
-                            </div>
-                        </div>
                     </div>
                 </q-card-section>
 
@@ -197,6 +195,19 @@
                                         {{ step.step.name }}
                                     </q-card-section>
                                 </q-card>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-tags" label="Tags">
+                                <div class="row justify-start">
+                                    <div v-for="tag in parcoursSelected.routeTags" v-bind:key="tag.idTag">
+                                        <q-chip outline class="q-my-xs q-px-lg q-py-md" color="red" text-color="white" size="md" icon="fas fa-tag">
+                                            <div class="q-px-sm q-my-sm">{{ tag.tag.name }}</div>
+                                        </q-chip>
+                                    </div>
+                                </div>
                             </q-expansion-item>
                         </q-list>
                     </div>
@@ -249,6 +260,7 @@
                 tags: null,
                 tagSelected: null,
                 tagsAvailable: null,
+                tagsOptions: null,
 
                 idParcours: null,
                 loading: false
@@ -279,6 +291,26 @@
             }
         },
         methods: {
+            capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            },
+            createTag(val) {
+                var tagsAlreadyExists = this.tags.filter(function (el) {
+                    if (el.name.toLowerCase() == val.toLowerCase()) return true;
+                });
+                if (tagsAlreadyExists.length == 0) {
+                    TagDataService.create({
+                        Id: 0,
+                        Name: this.capitalizeFirstLetter(val.toLowerCase()),
+                        Description: this.capitalizeFirstLetter(val.toLowerCase()),
+                    }).then(response => {
+                        this.tags.push(response.data.response);
+                        this.tagsParcours.push(response.data.response);
+                        this.tagSelected = null;
+                    });
+                }
+
+            },
             navigateTo(page) {
                 this.$router.push(page)
             },
@@ -533,10 +565,21 @@
                     })
                     return
                 }
-
                 update(() => {
                     const needle = val.toLowerCase()
-                    this.stepsOptions = this.steps.filter(v => v.step.name.toLowerCase().indexOf(needle) > -1)
+                    this.stepsOptions = this.steps.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+                })
+            },
+            filterTag(val, update) {
+                if (val === '') {
+                    update(() => {
+                        this.tagsOptions = this.tagsAvailable
+                    })
+                    return
+                }
+                update(() => {
+                    const needle = val.toLowerCase()
+                    this.tagsOptions = this.tagsAvailable.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
                 })
             },
             //filterJeux(val, update) {
@@ -552,19 +595,6 @@
             //        }
             //    })
             //},
-            //filterSteps(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.stepsOptions = listeEtape
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.stepsOptions = listeEtape.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //}
         }
     }
 </script>

@@ -81,14 +81,20 @@
                                    style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
 
                             <div class="row no-wrap">
-                                <div class="col text-left text-bold text-h6 ellipsis">
+                                <div class="col text-left text-bold text-h5 ellipsis">
                                     Jeu n°{{ game.id }}
+                                </div>
+                            </div>
+                            <div class="row no-wrap q-mb-sm">
+                                <div class="col text-left text-h6 ellipsis">
+                                    {{ game.route.name }}
                                 </div>
                             </div>
                             <div class="row items-center no-wrap text-grey">
                                 <q-icon name="fas fa-calendar" />
                                 <p class="q-ma-none q-ml-xs">{{ game.creationDate | formatDate }}</p>
                             </div>
+
                         </q-card-section>
 
                     </div>
@@ -202,6 +208,9 @@
                     <div class="row col-12">
                         <div class="col-12">
                             <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                            <h5 class="q-my-sm">Game n°{{ gameSelected.id }}</h5>
+                            <p class= "q-mb-none text-bold">{{  gameSelected.route.name }}</p>
+                            <p class= "q-mt-none">{{ gameSelected.route.description }}</p>
                             <p class="text-grey">Organisé par {{ gameSelected.organizer.firstName }} {{ gameSelected.organizer.lastName }}</p>
                         </div>
                     </div>

@@ -118,6 +118,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IGameBusiness, GameBusiness>();
             services.AddScoped<IPlayBusiness, PlayBusiness>();
             services.AddScoped<IStepAnalyseBusiness, StepAnalyseBusiness>();
+            services.AddScoped<ITagBusiness, TagBusiness>();
             #endregion
 
             #region Common

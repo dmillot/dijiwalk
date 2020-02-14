@@ -81,7 +81,7 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                if (!await _teamBusiness.OnlyThisPlayer(idPlayer))
+                if (await _teamBusiness.OnlyThisPlayer(idPlayer))
                 {
                     if (!await _teamBusiness.ContainsTeamsWithPlayer(idPlayer))
                     {
@@ -145,7 +145,7 @@ namespace DijiWalk.Repositories
                 {
                     if (player.ImageChanged)
                     {
-                        if (player.Picture != null)
+                        if (player.Picture != null && player.Picture != "")
                         {
                             _imageBusiness.DeleteImage(player.Picture);
                         }
