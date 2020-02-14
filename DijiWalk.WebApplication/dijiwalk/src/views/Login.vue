@@ -109,7 +109,6 @@
                     var self = this;
                     LoginDataService.login(this.name, this.password)
                         .then(response => {
-                            console.log(response)
                             if ("id" in response.data) {
                                 self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
                                 self.$q.sessionStorage.set("connectedOrganizer", response.data)
