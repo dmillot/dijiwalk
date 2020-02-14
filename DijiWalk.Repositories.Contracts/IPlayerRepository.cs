@@ -47,6 +47,13 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Update(Player player);
 
         /// <summary>
+        /// Method to get actual game of a player.
+        /// </summary>
+        /// <param name="id">Id of the player</param>
+        /// <returns>Actual game</returns>
+        Task<Game> GetActualGame(int idPlayer);
+
+        /// <summary>
         /// Method to get all previous games of a player.
         /// </summary>
         /// <param name="id">Id of the player</param>

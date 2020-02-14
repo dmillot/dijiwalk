@@ -9,34 +9,53 @@ using Prism.Commands;
 using DijiWalk.Mobile.Views;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
 using DijiWalk.Mobile.Services;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
+using System.ComponentModel;
 
 namespace DijiWalk.Mobile.ViewModels
 {
     public class MainPageViewModel : BindableBase, INavigationAware
     {
-
-
         //ChangeColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFill(Color.Blue) } }; EXEMPLE REPLACESTRINGMAP SVG
 
         #region Properties
         public INavigationService NavigationService { get; private set; }
         private ViewPlayer _user;
         private readonly PlayerService _playerService;
-        public ViewPlayer User { get { return _user; } set { SetProperty(ref _user, value); } }
+        public ViewPlayer User 
+        { 
+            get { return _user; } 
+            set 
+            {
+                SetProperty(ref _user, value);
+            } 
+        }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToActualGamePage { get; set; }
         public DelegateCommand<object> NavigateToClassementPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
         private ObservableCollection<Game> _previousGames;
-
-        public ObservableCollection<Game> PreviousGames = new ObservableCollection<Game>();
+        public ObservableCollection<Game> PreviousGames
+        {
+            get { return _previousGames; }
+            set 
+            {
+                SetProperty(ref _previousGames, value);
+            }
+        }
 
         private ObservableCollection<Game> _anciensJeux;
+
         public ObservableCollection<Game> AnciensJeux
         {
             get { return _anciensJeux; }
-            set { SetProperty(ref _anciensJeux, value); }
+            set 
+            {
+                SetProperty(ref _anciensJeux, value);
+            }
         }
         #endregion
 
@@ -58,8 +77,6 @@ namespace DijiWalk.Mobile.ViewModels
                 new Game {Id = 9, CreationDate = DateTime.Now.Date},
                 new Game {Id = 10, CreationDate = DateTime.Now.Date},
             };
-
-            //this.GetPreviousGames();
 
             this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
             this.NavigateToActualGamePage = new DelegateCommand<object>(GoToActualGame);
@@ -133,7 +150,9 @@ namespace DijiWalk.Mobile.ViewModels
             }
 
             this.User = App.User;
-            PreviousGames = new ObservableCollection<Game>(await _playerService.GetPreviousGames(this.User.Id));
+
+            var games = await _playerService.GetPreviousGames(this.User.Id);
+            PreviousGames = new ObservableCollection<Game>(games);
 
         }
         #endregion

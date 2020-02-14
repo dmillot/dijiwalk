@@ -23,6 +23,13 @@ namespace DijiWalk.Business.Contracts
         Task<bool> CheckUpdate(Player player);
 
         /// <summary>
+        /// Method to get actual game of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>Actual game</returns>
+        Task<Game> GetActualGame(int idPlayer);
+
+        /// <summary>
         /// Method to get all previous games of a player.
         /// </summary>
         /// <param name="player">Id of the player</param>

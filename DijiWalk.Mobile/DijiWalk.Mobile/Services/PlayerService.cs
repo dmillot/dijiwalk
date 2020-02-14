@@ -34,6 +34,33 @@ namespace DijiWalk.Mobile.Services
             return JsonConvert.DeserializeObject<Player>(await CommonService.GetId(id, typeof(Player)));
         }
 
+        public async Task<Game> GetActualGame(int playerId)
+        {
+            var json = "";
+
+            using (HttpClient client = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false))
+            {
+                try
+                {
+                    var response = await client.GetAsync(String.Concat(Application.Current.Properties["url"], typeof(Player).Name.ToLower(), "/actual/", playerId));
+                    if (!response.IsSuccessStatusCode)
+                        throw new ApiException(JsonConvert.DeserializeObject<ApiException>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                    else
+                        json = await response.Content.ReadAsStringAsync();
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw new ApiException(ex, false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return JsonConvert.DeserializeObject<Game>(json);
+        }
+
         public async Task<List<Game>> GetPreviousGames(int playerId)
         {
             var json = "";

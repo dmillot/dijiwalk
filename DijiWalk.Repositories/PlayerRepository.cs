@@ -130,6 +130,12 @@ namespace DijiWalk.Repositories
             return await _context.Players.ToListAsync();
         }
 
+
+        public async Task<Game> GetActualGame(int idPlayer)
+        {
+            return await _playerBusiness.GetActualGame(idPlayer);
+        }
+
         public async Task<IEnumerable<Game>> GetPreviousGames(int idPlayer)
         {
             return await _playerBusiness.GetPreviousGames(idPlayer);

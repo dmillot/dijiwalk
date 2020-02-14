@@ -1,4 +1,6 @@
-﻿using DijiWalk.Mobile.Resources.Utils;
+﻿using DijiWalk.Entities;
+using DijiWalk.Mobile.Resources.Utils;
+using DijiWalk.Mobile.Services;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
 using DijiWalk.Mobile.Views;
 using DijiWalk.Mobile.Views.PopUp;
@@ -19,6 +21,18 @@ namespace DijiWalk.Mobile.ViewModels
     {
         #region Properties
         public INavigationService NavigationService { get; private set; }
+
+        private Game _actualGame;
+        public Game ActualGame 
+        {
+            get { return _actualGame; }
+            set
+            {
+                SetProperty(ref _actualGame, value);
+            }
+        }
+
+        private readonly PlayerService _playerService;
         public DelegateCommand<object> NavigateToMainPage { get; set; }
         public DelegateCommand<object> NavigateToStepPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
@@ -56,8 +70,9 @@ namespace DijiWalk.Mobile.ViewModels
         }
         #endregion
 
-        public GamePageViewModel(INavigationService navigationService)
+        public GamePageViewModel(PlayerService playerService, INavigationService navigationService)
         {
+            _playerService = playerService;
             NavigationService = navigationService;
             Random rnd = new Random();
             List<string> namePrenoms = new List<string>
@@ -179,9 +194,9 @@ namespace DijiWalk.Mobile.ViewModels
 
         }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
+        public async void OnNavigatedTo(INavigationParameters parameters)
         {
-
+            this.ActualGame = await _playerService.GetActualGame(App.User.Id);
         }
         #endregion
 

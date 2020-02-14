@@ -25,7 +25,7 @@
         </Grid.ColumnDefinitions>
 
         <StackLayout Spacing="15" Grid.RowSpan="2" Grid.ColumnSpan="3" Margin="0,30,0,0">
-            <Label Text="Jeu 1" HorizontalOptions="CenterAndExpand" FontSize="35" TextColor="{StaticResource WhiteColor}">
+            <Label Text="{Binding ActualGame.Id}" HorizontalOptions="CenterAndExpand" FontSize="35" TextColor="{StaticResource WhiteColor}">
                 <Label.Effects>
                     <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                         <effects:ShadowEffect.Color>
@@ -37,7 +37,7 @@
                     </effects:ShadowEffect>
                 </Label.Effects>
             </Label>
-            <Label Text="23/01/2020" HorizontalOptions="CenterAndExpand" FontSize="Subtitle" TextColor="{StaticResource WhiteColor}">
+            <Label Text="{Binding ActualGame.CreationDate, StringFormat='{0:MMMM dd, yyyy}'}" HorizontalOptions="CenterAndExpand" FontSize="Subtitle" TextColor="{StaticResource WhiteColor}">
                 <Label.Effects>
                     <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                         <effects:ShadowEffect.Color>
