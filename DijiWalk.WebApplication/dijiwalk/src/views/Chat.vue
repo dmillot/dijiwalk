@@ -251,7 +251,7 @@ export default {
       participantsOptions: participants,
       jeux: listeJeux
     }
-  },
+        },
   methods: {
     // navigateToJeu () {
     //   this.$router.push({ name: 'home' })

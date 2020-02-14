@@ -1,9 +1,8 @@
 import Vue from 'vue'
-
 import './styles/quasar.scss'
 import iconSet from 'quasar/icon-set/fontawesome-v5.js'
 import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
-import { Quasar, Notify, GoBack, Cookies } from 'quasar'
+import { Quasar, Notify, GoBack, Cookies, SessionStorage} from 'quasar'
 
 Vue.use(Quasar, {
     config: {
@@ -14,7 +13,7 @@ Vue.use(Quasar, {
         GoBack
     },
     plugins: {
-        Notify, Cookies
+        Notify, Cookies, SessionStorage
     },
     iconSet: iconSet
 })

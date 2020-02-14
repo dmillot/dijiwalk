@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
+import { SessionStorage } from 'quasar'
 
 Vue.use(VueRouter)
 
@@ -44,7 +45,7 @@ const routes = [
     {
         path: '/etape',
         name: 'etape',
-        component: () => import('../views/Etape.vue')
+        component: () => import('../views/Etape.vue'),
     },
     {
         path: '/transport',
@@ -67,6 +68,15 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.path != '/login') {
+         if (SessionStorage.has("connectedOrganizer")) next()
+         else next('/login')
+    } else {
+        next()
+    }
 })
 
 export default router

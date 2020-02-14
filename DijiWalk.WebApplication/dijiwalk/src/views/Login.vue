@@ -69,7 +69,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import LoginDataService from '@/services/LoginDataService';
 
     export default {
         data() {
@@ -83,6 +83,11 @@
                 mail: null,
                 error: false,
                 errorInfo: null
+            }
+        },
+        created() {
+            if (this.$q.sessionStorage.has("connectedOrganizer") && this.$q.cookies.has("JWTToken")) {
+                this.$router.push("/")
             }
         },
         methods: {
@@ -102,25 +107,25 @@
             onSubmit() {
                 if (this.password != null && this.name != null) {
                     var self = this;
-                    axios.post("api/token/organizer", {
-                        "Login": this.name,
-                        "Password": this.password
-                    }).then(response => {
-                        if ("id" in response.data) {
-                            self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
-                            self.$q.notify({
-                                message: "Connexion réussie !",
-                                color: 'secondary',
-                                icon: 'fas fa-check-square',
-                                position: 'top'
-                            })
-                            this.$router.push("/")
-                        } else {
-                            self.error = true;
-                            self.errorInfo = response.data["message"];
-                            setTimeout(self.onResetValidation, 3000);
-                        }
-                    })
+                    LoginDataService.login(this.name, this.password)
+                        .then(response => {
+                            console.log(response)
+                            if ("id" in response.data) {
+                                self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
+                                self.$q.sessionStorage.set("connectedOrganizer", response.data)
+                                self.$q.notify({
+                                    message: "Connexion réussie !",
+                                    color: 'secondary',
+                                    icon: 'fas fa-check-square',
+                                    position: 'top'
+                                })
+                                self.$router.push("/")
+                            } else {
+                                self.error = true;
+                                self.errorInfo = response.data["message"];
+                                setTimeout(self.onResetValidation, 3000);
+                            }
+                        })
 
                 }
             }

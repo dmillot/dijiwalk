@@ -2,7 +2,7 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
-                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-power-off" v-go-back=" '/login' " />
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-power-off" @click="onDisconnected" />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
             </q-toolbar>
         </q-header>
@@ -40,6 +40,11 @@ export default {
         methods: {
             onJeuxActuels() {
                  this.$router.push("/jeuActuel")
+            },
+            onDisconnected() {
+                this.$q.cookies.remove('JWTToken')
+                this.$q.sessionStorage.remove("connectedOrganizer")
+                this.$router.push("/login")
             }
         }
 }
