@@ -61,7 +61,7 @@ namespace DijiWalk.Repositories
                 var missions = await _context.Missions.AsNoTracking().Where(m => oldIdMissions.Contains((int)m.IdStep)).Include(m => m.Trials).ThenInclude(t => t.Answers).ToListAsync();
                 await _context.Steps.AddAsync(newStep);
                 await _context.SaveChangesAsync();
-                _imageBusiness.Analyze(newStep.ImageBase64, newStep.Id);
+                await _imageBusiness.Analyze(newStep.ImageBase64, newStep.Id);
                 var response = await _missionBusiness.SetUp(missions, newStep.Id);
 
                 if (response.Status == ApiStatus.Ok)
@@ -115,7 +115,11 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).FirstOrDefaultAsync();
+            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s=>s.Clues).FirstOrDefaultAsync();
+            //return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).FirstOrDefaultAsync();
+
+            // return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
+            // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);
         }
 
         /// <summary>

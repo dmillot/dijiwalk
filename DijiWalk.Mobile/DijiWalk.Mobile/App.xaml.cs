@@ -25,7 +25,7 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/GamePage");
 
             #region Property configuration
             Application.Current.Properties["url"] = "https://10.0.2.2:5001/api/";
@@ -64,6 +64,7 @@ namespace DijiWalk.Mobile
             #region Pages / Navigation
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<QuizzPage, QuizzPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<EtapePage, EtapePageViewModel>();
             containerRegistry.RegisterForNavigation<WaitingPage, WaitingPageViewModel>();
