@@ -106,6 +106,7 @@
             },
             onSubmit() {
                 if (this.password != null && this.name != null) {
+                    this.$q.loading.show()
                     var self = this;
                     LoginDataService.login(this.name, this.password)
                         .then(response => {
@@ -118,8 +119,10 @@
                                     icon: 'fas fa-check-square',
                                     position: 'top'
                                 })
+                                this.$q.loading.hide()
                                 self.$router.push("/")
                             } else {
+                                 this.$q.loading.hide()
                                 self.error = true;
                                 self.errorInfo = response.data["message"];
                                 setTimeout(self.onResetValidation, 3000);

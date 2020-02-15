@@ -207,9 +207,11 @@ export default {
         },
         methods: {
             async getGameInfo() {
+                this.$q.loading.show()
                 if (this.game === null) {
                    await GameDataService.get(this.id).then(response => {
                        this.game = response.data;
+                       this.$q.loading.hide()
                    }).catch();
                 }
                 this.plays = this.game.plays;

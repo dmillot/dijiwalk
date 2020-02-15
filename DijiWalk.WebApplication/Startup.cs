@@ -69,6 +69,7 @@ namespace DijiWalk.WebApplication
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://localhost:5001").AllowAnyHeader().AllowAnyMethod();
                 });
             });
             services.AddControllers().AddNewtonsoftJson(option => option.SerializerSettings.AddCustomSettings());
@@ -119,6 +120,7 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IPlayBusiness, PlayBusiness>();
             services.AddScoped<IStepAnalyseBusiness, StepAnalyseBusiness>();
             services.AddScoped<ITagBusiness, TagBusiness>();
+            services.AddScoped<ITeamPlayerBusiness, TeamPlayerBusiness>();
             #endregion
 
             #region Common

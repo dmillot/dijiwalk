@@ -32,13 +32,13 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Card from '@/components/Card.vue'
-import GameDataService from "@/services/GameDataService";
+    // @ is an alias to /src
+    import Card from '@/components/Card.vue'
+    import GameDataService from "@/services/GameDataService";
 
-export default {
+    export default {
         name: 'jeuActuel',
-        
+
         data() {
             return {
                 games: null,
@@ -64,24 +64,26 @@ export default {
         components: {
             Card
         },
-        computed:{
-            gameActual : function(){
-                
-                return this.games.filter((g)=> g.active == true);
+        computed: {
+            gameActual: function () {
+
+                return this.games.filter((g) => g.active == true);
             }
         },
 
 
-        created () {
+        created() {
             this.getActualGames();
         },
-  
+
         methods: {
             async getActualGames() {
+                this.$q.loading.show()
                 if (this.games === null) {
-                   await GameDataService.getAllActifs().then(response => {
-                       this.games = response.data;
-                   }).catch();
+                    await GameDataService.getAllActifs().then(response => {
+                        this.games = response.data;
+                        this.$q.loading.hide()
+                    }).catch();
                 }
 
                 this.games.forEach(g => this.dataGame.push({
@@ -93,7 +95,7 @@ export default {
                 );
             },
 
-            async onRowClick (evt, row) {
+            async onRowClick(evt, row) {
                 this.game = null;
 
                 await GameDataService.get(row.idGame).then(response => {
@@ -101,6 +103,6 @@ export default {
                 }).catch();
                 this.idGame = this.game.id;
             }
-        }   
+        }
     }
 </script>

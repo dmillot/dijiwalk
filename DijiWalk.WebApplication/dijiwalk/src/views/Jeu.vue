@@ -6,58 +6,6 @@
 
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="equipeFilter"
-                                          label="Filtrer par équipe"
-                                          v-model="teamsFilterModel"
-                                          :options="teamsFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.name"
-                                          emit-value
-                                          map-options
-                                          @filter="filterEquipe"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="parcoursFilter"
-                                          label="Filtrer par parcours"
-                                          v-model="routesFilterModel"
-                                          :options="routesFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.name"
-                                          emit-value
-                                          map-options
-                                          @filter="filterParcours"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="transportFilter"
-                                          label="Filtrer par transport"
-                                          v-model="transportsFilterModel"
-                                          :options="transportsFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.libelle"
-                                          emit-value
-                                          map-options
-                                          @filter="filterTransport"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -209,8 +157,8 @@
                         <div class="col-12">
                             <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
                             <h5 class="q-my-sm">Game n°{{ gameSelected.id }}</h5>
-                            <p class= "q-mb-none text-bold">{{  gameSelected.route.name }}</p>
-                            <p class= "q-mt-none">{{ gameSelected.route.description }}</p>
+                            <p class="q-mb-none text-bold">{{  gameSelected.route.name }}</p>
+                            <p class="q-mt-none">{{ gameSelected.route.description }}</p>
                             <p class="text-grey">Organisé par {{ gameSelected.organizer.firstName }} {{ gameSelected.organizer.lastName }}</p>
                         </div>
                     </div>
@@ -277,7 +225,6 @@
     import RouteDataService from "@/services/RouteDataService"
     import TransportDataService from "@/services/TransportDataService"
     import TeamDataService from "@/services/TeamDataService"
-    import PlayDataService from "@/services/PlayDataService"
     import TeamPlayerDataService from "@/services/TeamPlayerDataService"
 
     export default {
@@ -421,8 +368,10 @@
             },
 
             getAllGames() {
+                this.$q.loading.show()
                 GameDataService.getAll().then(response => {
                     this.games = response.data
+                    this.$q.loading.hide()
                 }).catch();
             },
 
@@ -463,6 +412,7 @@
                                     position: 'top'
                                 })
                             } else {
+                                this.manageGame = false;
                                 this.$q.notify({
                                     icon: 'fas fa-exclamation-triangle',
                                     color: 'negative',
@@ -476,9 +426,10 @@
             },
 
             deleteGame() {
+                this.$q.loading.show()
                 var id = this.selectedGameId;
                 GameDataService.delete(this.selectedGameId).then(response => {
-
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         this.games = this.games.filter(function (obj) {
                             return obj.id !== id;
@@ -507,35 +458,35 @@
 
                 if (this.$refs.date.validate() && this.$refs.transport.validate() && this.$refs.parcours.validate() && this.$refs.equipe.validate()) {
                     this.loading = true;
+                    var listPlays = [];
+                    this.equipeGame.forEach(function (item) {
+                        if (Number.isInteger(item)) {
+                            listPlays.push({ IdGame: 0, IdTeam: item });
+                        } else {
+                            listPlays.push({ IdGame: 0, IdTeam: item.id });
+                        }
+                    })
                     GameDataService.create({
                         IdRoute: this.parcoursGame.id,
                         CreationDate: this.dateGame,
                         IdTransport: this.transportGame.id,
                         IdOrganizer: 1,
+                        Plays: listPlays
                     }).then(response => {
                         this.loading = false;
                         if (response.data.status == 1) {
-                            
-                            var responseData = response.data.response;
-                            var idGameCreated = response.data.response.id;
-                          
-                            this.equipeGame.forEach(function (item) {
-                                PlayDataService.create({
-                                    IdGame: idGameCreated,
-                                    IdTeam: item
-                                }).then(responseItem => {
-                                    responseData.data.response.plays.push(responseItem.data.response);
-                                }).catch();
-                            })
+                            this.manageGame = false;
+
                             this.games.push(response.data.response);
 
                             this.$q.notify({
                                 icon: 'fas fa-check-square',
                                 color: 'secondary',
-                                message: `Ajout du jeu n°${idGameCreated} réussi !`,
+                                message: `Ajout du jeu n°${response.data.response.id} réussi !`,
                                 position: 'top'
                             })
                         } else {
+                            this.manageGame = false;
                             this.$q.notify({
                                 icon: 'fas fa-exclamation-triangle',
                                 color: 'negative',

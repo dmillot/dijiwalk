@@ -7,37 +7,6 @@
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelJeu"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par jeux"
-                                          :options="jeuxOptions"
-                                          @filter="filterJeux"
-                                          style="width: 250px" />
-                            </q-item>
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelEquipe"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par équipe"
-                                          :options="equipesOptions"
-                                          @filter="filterEquipe"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -206,7 +175,7 @@
 
                 manageParticipant: false,
                 messageDeleteParticipant: null,
-                messageBonus: "Si vous supprimer un participant, cela supprimer ses liens avec les équipes !",
+                messageBonus: "Si vous supprimer un participant, cela supprimera ses liens avec les équipes !",
                 deleteParticipant: null,
 
                 participantSelected: null,
@@ -253,7 +222,7 @@
                     }
                 })
             },
-             clearPicture() {
+            clearPicture() {
                 document.getElementById('avatarSelected').innerHTML = "";
                 this.noPicture = true;
             },
@@ -288,7 +257,7 @@
                 this.isAdding = false;
                 this.resetInput();
                 this.fillForm(participant);
-                this.manageParticipant = true  
+                this.manageParticipant = true
             },
             resetInput() {
                 this.idParticipant = null
@@ -310,12 +279,14 @@
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = participant.email
                 this.pictureUrl = participant.picture
-                this.encryptedPassword = participant.Password        
+                this.encryptedPassword = participant.Password
             },
             getAllParticipants() {
+                this.$q.loading.show()
                 if (this.participants === null) {
                     PlayerDataService.getAll().then(response => {
                         this.participants = response.data;
+                        this.$q.loading.hide()
                     }).catch();
                 }
             },
@@ -354,10 +325,6 @@
                                             this.manageParticipant = false;
                                             this.onResetValidation();
                                             this.participants.push(response.data.response);
-
-
-                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
-
                                             this.$q.notify({
                                                 icon: 'fas fa-check-square',
                                                 color: 'secondary',
@@ -422,8 +389,6 @@
                                             this.onResetValidation();
                                             this.participants[this.participants.map(e => e.id).indexOf(this.participantSelected.id)] = response.data.response
 
-                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
-
                                             this.$q.notify({
                                                 icon: 'fas fa-check-square',
                                                 color: 'secondary',
@@ -475,7 +440,9 @@
             deletedParticipant() {
                 var self = this;
                 var id = self.deleteParticipant;
+                this.$q.loading.show()
                 PlayerDataService.delete(id).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',

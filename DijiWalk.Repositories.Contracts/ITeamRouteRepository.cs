@@ -28,11 +28,11 @@ namespace DijiWalk.Repositories.Contracts
         Task<ApiResponse> Delete(int idTeamRoute);
 
         /// <summary>
-        /// Definition of the method to find an TeamRoute with his Id
+        /// Method to find an TeamRoute with his Id in the database
         /// </summary>
-        /// <param name="id">The Id of the TeamRoute</param>
+        /// <param name="id">The Id of the game</param>
         /// <returns>The TeamRoute with the Id researched</returns>
-        Task<TeamRoute> Find(int id);
+        Task<List<TeamRoute>> FindInGame(int id);
 
         /// <summary>
         /// Definition of the method to find all TeamRoute
@@ -44,6 +44,6 @@ namespace DijiWalk.Repositories.Contracts
         /// Definition of the function that will Update the TeamRoute passed in the parameters to the database
         /// </summary>
         /// <param name="teamRoute">Object TeamRoute to Update</param>
-        void Update(TeamRoute teamRoute);
+        Task<ApiResponse> Update(TeamRoute teamRoute, bool validate);
     }
 }

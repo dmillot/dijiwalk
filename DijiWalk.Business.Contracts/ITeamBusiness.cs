@@ -1,4 +1,5 @@
 ﻿using DijiWalk.Common.Response;
+using DijiWalk.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,6 +44,19 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="idPlayer">id of a player</param>
         Task<bool> ContainsTeamsWithPlayer(int idPlayer);
+
+        /// <summary>
+        /// Method to separate team and mission 
+        /// </summary>
+        /// <param name="team">Object List team</param>
+        Team SeparateTeam(Team team);
+
+        /// <summary>
+        /// Method to check if a player is in two or more teams
+        /// </summary>
+        /// <param name="plays">List of plays</param>
+        /// <returns>false if not duplicate, true if duplicate</returns>
+        Task<bool> DuplicatePlayer(List<Play> plays);
 
     }
 }

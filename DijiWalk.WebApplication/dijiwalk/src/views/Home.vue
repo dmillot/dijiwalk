@@ -7,21 +7,20 @@
             </q-toolbar>
         </q-header>
 
-        <h5 class="text-bold text-left">Accueil</h5>
-
-        <div class="row flex-center full-width justify-center q-col-gutter-xl">
+        <div class="row flex-center full-width justify-center q-col-gutter-xl q-mt-lg">
 
             <div class="col-12 col-grow">
                 <q-card @click="onJeuxActuels" link="/jeuActuel" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
-                    <p class="text-white text-bold q-ma-none text-h4">JEU(X) ACTUEL(S)</p>
+                    <p class="text-white text-bold q-ma-none text-h4">JEUX ACTUELS</p>
                 </q-card>
             </div>
+            <Card link="/jeu" icon="fas fa-dice" title="Jeux" description="Page de gestion des jeux" />
             <Card link="/parcours" icon="fas fa-route" title="Parcours" description="Page de gestion d'un parcours" />
-            <Card link="/participant" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
-            <Card link="/equipe" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
             <Card link="/etape" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
+            <Card link="/equipe" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
+            <Card link="/participant" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
             <Card link="/" :disabled="true" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
-            <Card link="/jeu" icon="fas fa-hand-lizard" title="Jeux" description="Page de gestion des jeux" />
+
 
         </div>
 
@@ -29,17 +28,17 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Card from '@/components/Card.vue'
+    // @ is an alias to /src
+    import Card from '@/components/Card.vue'
 
-export default {
-  name: 'home',
-  components: {
-    Card
+    export default {
+        name: 'home',
+        components: {
+            Card
         },
         methods: {
             onJeuxActuels() {
-                 this.$router.push("/jeuActuel")
+                this.$router.push("/jeuActuel")
             },
             onDisconnected() {
                 this.$q.cookies.remove('JWTToken')
@@ -47,5 +46,5 @@ export default {
                 this.$router.push("/login")
             }
         }
-}
+    }
 </script>

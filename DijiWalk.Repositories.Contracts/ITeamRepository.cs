@@ -15,11 +15,6 @@ namespace DijiWalk.Repositories.Contracts
     /// </summary>
     public interface ITeamRepository
     {
-        /// <summary>
-        /// Definition of the function that will Add the Team passed in the parameters to the database
-        /// </summary>
-        /// <param name="team">Object Team to Add</param>
-        void Add(Team team);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the Team passed in the parameters
@@ -42,10 +37,19 @@ namespace DijiWalk.Repositories.Contracts
         /// <returns>A List of Teams</returns>
         Task<IEnumerable<Team>> FindAll();
 
+
         /// <summary>
-        /// Definition of the function that will Update the Team passed in the parameters to the database
+        /// Method to Add the team passed in the parameters to the database
+        /// </summary>
+        /// <param name="step">Object Team to Add</param>
+        Task<ApiResponse> Add(Team team);
+
+
+        /// <summary>
+        /// Method that will Update the Team passed in the parameters to the database
         /// </summary>
         /// <param name="team">Object Team to Update</param>
-        void Update(Team team);
+        Task<ApiResponse> Update(Team team);
+
     }
 }

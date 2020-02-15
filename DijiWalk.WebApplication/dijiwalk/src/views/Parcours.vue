@@ -4,38 +4,6 @@
             <q-toolbar>
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
-
-                <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <!--<q-item>
-                                <q-select filled
-                                          v-model="modelJeu"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par jeux"
-                                          :options="jeuxOptions"
-                                          @filter="filterJeux"
-                                          style="width: 250px" />
-                            </q-item>
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelStep"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par étapes"
-                                          :options="stepsOptions"
-                                          @filter="filterSteps"
-                                          style="width: 250px" />
-                            </q-item>-->
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -137,7 +105,18 @@
                         <q-toggle class="col-5 q-my-xs on-left" v-show="!loading" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter un si elle n'existe pas (bouton à droite) !" />
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !">
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                                        <q-avatar>
+                                            <q-img :src="scope.opt.validation" style="width:50px; height: 50px;" />
+                                        </q-avatar>
+                                        <q-item-section class="q-ml-sm">
+                                            <q-item-label v-html="scope.opt.name" />
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
                             <div v-show="!loading" class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/etape')" rounded icon="fas fa-plus" />
                             </div>
@@ -360,9 +339,11 @@
                 }
             },
             getAllParcours() {
+                this.$q.loading.show()
                 if (this.parcours === null) {
                     ParcoursDataService.getAll().then(response => {
                         this.parcours = response.data;
+                        this.$q.loading.hide()
                     }).catch();
                 }
             },
@@ -513,6 +494,7 @@
                                     position: 'top'
                                 })
                             } else {
+                                this.manageParcours = false;
                                 this.$q.notify({
                                     icon: 'fas fa-exclamation-triangle',
                                     color: 'negative',
@@ -536,7 +518,9 @@
             },
             deletedParcours() {
                 var self = this;
+                this.$q.loading.show()
                 ParcoursDataService.delete(self.deleteParcours).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',
@@ -581,20 +565,7 @@
                     const needle = val.toLowerCase()
                     this.tagsOptions = this.tagsAvailable.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
                 })
-            },
-            //filterJeux(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.jeuxOptions = listeJeux
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.jeuxOptions = listeJeux.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //},
+            }
         }
     }
 </script>

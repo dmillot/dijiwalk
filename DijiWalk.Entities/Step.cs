@@ -22,7 +22,6 @@ namespace DijiWalk.Entities
         /// </summary>
         public Step()
         {
-            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
             StepTags = new HashSet<StepTag>();
@@ -40,7 +39,6 @@ namespace DijiWalk.Entities
             Lng = s.Lng;
             ImageBase64 = s.ImageBase64;
             ImageChanged = s.ImageChanged;
-            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
             StepTags = new HashSet<StepTag>();
@@ -107,17 +105,6 @@ namespace DijiWalk.Entities
         /// Obtient ou définit la liste des validations d'un étape
         /// </summary>
         public virtual ICollection<StepValidation> StepValidations { get; set; }
-
-
-        [JsonExtensionData]
-        private IDictionary<string, JToken> _additionalData;
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            Lat = Convert.ToDouble(_additionalData["Latitude"]);
-            Lng = Convert.ToDouble(_additionalData["Longitude"]);
-        }
 
     }
 }

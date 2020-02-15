@@ -7,22 +7,6 @@
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par parcours"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -345,9 +329,11 @@
                 this.manageStep = true
             },
             getAllSteps() {
+                this.$q.loading.show()
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
                         this.steps = response.data;
+                        this.$q.loading.hide()
                     }).catch();
                 }
             },
@@ -379,8 +365,8 @@
                                 Name: this.nameStep,
                                 Description: this.descriptionStep,
                                 CreationDate: this.creationDateStep,
-                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                Lng: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Lat: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
                                 Missions: this.missionSelected,
                                 ImageBase64: this.$refs.picture.validate() ? response : this.validationUrl,
                                 ImageChanged: this.$refs.picture.validate(),
@@ -439,8 +425,8 @@
                             StepDataService.create({
                                 Name: this.nameStep,
                                 Description: this.descriptionStep,
-                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                Lng: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Lat: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
                                 CreationDate: moment().format("YYYY-MM-DD hh:mm:ss"),
                                 Missions: this.missionSelected,
                                 ImageBase64: response,
@@ -493,8 +479,10 @@
             },
 
             deletedStep() {
+                this.$q.loading.show()
                 var self = this;
                 StepDataService.delete(self.deleteStep).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',

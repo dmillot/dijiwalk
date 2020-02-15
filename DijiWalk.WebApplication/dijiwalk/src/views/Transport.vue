@@ -2,32 +2,8 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
-
-
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
-
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          use-input
-                                          use-chips
-                                          v-model="routesFilterModel"
-                                          option-id="id"
-                                          option-label="name"
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par parcours"
-                                          :options="routesFiltered"
-                                          @filter="filterParcours"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">

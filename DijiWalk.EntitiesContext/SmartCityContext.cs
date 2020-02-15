@@ -39,7 +39,6 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<Trial> Trials { get; set; }
         public virtual DbSet<Entities.Type> Types { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Administrator>(entity =>
@@ -578,9 +577,15 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.IdStep).HasColumnName("TeamRoute_fk_Step_Id");
 
+                entity.Property(e => e.Validate).HasColumnName("TeamRoute_Validate");
+
+                entity.Property(e => e.Picture).HasColumnName("TeamRoute_Picture");
+
+                entity.Property(e => e.AskValidationDate).HasColumnName("TeamRoute_AskValidationDate").HasColumnType("datetime"); 
+
                 entity.Property(e => e.ValidationDate)
                     .HasColumnName("TeamRoute_ValidationDate")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.TeamRoutes)
@@ -599,6 +604,7 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => new { d.IdRoute, d.IdStep })
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TEAMROUTE_ROUTESTEP");
+               
             });
 
             modelBuilder.Entity<Transport>(entity =>
@@ -660,6 +666,7 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.Description).HasColumnName("Type_Description");
             });
+
 
             OnModelCreatingPartial(modelBuilder);
         }
