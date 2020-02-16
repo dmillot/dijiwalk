@@ -75,11 +75,6 @@
 
         <q-dialog v-model="manageGame">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
-
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idGame" type="hidden" />
@@ -109,23 +104,23 @@
                         </div>
                         <div class="row col-12">
                             <div class="col-10">
-                                <q-select v-bind:disable="getInformations" use-input ref="transport" v-model="transportGame" option-value="id" option-label="libelle" :options="transports" label="Transport" id="transportGame" name="transportGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un transport']" />
+                                <q-select use-input ref="transport" v-model="transportGame" option-value="id" option-label="libelle" :options="transports" label="Transport" id="transportGame" name="transportGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un transport']" />
                             </div>
-                            <div v-if="!getInformations" v-show="!loading" class="col-2 row justify-center items-center">
+                            <div v-if="!getInformations" class="col-2 row justify-center items-center">
                                 <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                         <div class="row col-12">
                             <div class="col-10">
-                                <q-select v-bind:disable="getInformations" use-input ref="parcours" v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un parcours']" />
+                                <q-select use-input ref="parcours" v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un parcours']" />
                             </div>
-                            <div v-if="!getInformations" v-show="!loading" class="col-2 row justify-center items-center">
+                            <div v-if="!getInformations" class="col-2 row justify-center items-center">
                                 <q-btn color="primary" @click="navigateTo('/parcours')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                         <div class="row col-12">
                             <div class="col-10">
-                                <q-select v-bind:disable="getInformations" multiple use-input ref="equipe" label="Equipes" v-model="equipeGame"
+                                <q-select multiple use-input ref="equipe" label="Equipes" v-model="equipeGame"
                                           :options="teams"
                                           :option-value="opt => opt.id"
                                           :option-label="opt => opt.name"
@@ -135,14 +130,14 @@
                                           lazy-rules
                                           :rules="[val => val.length > 0 || 'Veuillez renseigner au minimum une équipe']" />
                             </div>
-                            <div v-if="!getInformations" v-show="!loading" class="col-2 row justify-center items-center">
+                            <div class="col-2 row justify-center items-center">
                                 <q-btn color="primary" @click="navigateTo('/equipe')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                     </div>
                 </q-card-section>
 
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateGame()" color="secondary" />
                     <q-btn flat v-if="isAdding" label="Ajouter" color="primary" @click="addGame()" />
@@ -198,7 +193,7 @@
                                     <q-card class="card-expansion">
                                         <q-card-section v-for="member in team.members" v-bind:key="member.id" class="row items-center">
                                             <q-avatar size="48px" class="q-mr-md">
-                                                <img :src="member.picture">
+                                                <q-img :src="member.picture" style="width:50px; height: 50px;" />
                                             </q-avatar>
                                             {{ member.firstName }} {{ member.lastName }}
                                             <q-icon v-if="team.id_captain == member.id" name="fas fa-star" class="q-ml-md" style="color: #ffd600 !important; font-size: 1.5em;" />
@@ -256,9 +251,7 @@
                 organizerGame: null,
                 getInformations: false,
                 informations: false,
-                selectedGameTeams: null,
-
-                loading: false
+                selectedGameTeams: null
             }
         },
 
@@ -383,6 +376,7 @@
             updateGame() {
                 if (this.$refs.date.validate() && this.$refs.transport.validate() && this.$refs.parcours.validate() && this.$refs.equipe.validate()) {
                     if (this.equipeGame.length > 0) {
+                         this.$q.loading.show()
                         var plays = [];
                         this.equipeGame.forEach((function (item) {
                             if (Number.isInteger(item)) {
@@ -392,15 +386,15 @@
                             }
 
                         }).bind(this))
-                        this.loading = true;
                         GameDataService.update(this.idGame, {
                             CreationDate: this.dateGame,
                             IdRoute: this.parcoursGame.id,
+                            Route: this.parcoursGame,
                             IdTransport: this.transportGame.id,
                             IdOrganizer: 1,
                             Plays: plays
                         }).then(response => {
-                            this.loading = false;
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageGame = false;
                                 this.games[this.games.map(e => e.id).indexOf(this.gameSelected.id)] = response.data.response
@@ -457,7 +451,7 @@
             addGame() {
 
                 if (this.$refs.date.validate() && this.$refs.transport.validate() && this.$refs.parcours.validate() && this.$refs.equipe.validate()) {
-                    this.loading = true;
+                    this.$q.loading.show()
                     var listPlays = [];
                     this.equipeGame.forEach(function (item) {
                         if (Number.isInteger(item)) {
@@ -468,12 +462,13 @@
                     })
                     GameDataService.create({
                         IdRoute: this.parcoursGame.id,
+                        Route: this.parcoursGame,
                         CreationDate: this.dateGame,
                         IdTransport: this.transportGame.id,
                         IdOrganizer: 1,
                         Plays: listPlays
                     }).then(response => {
-                        this.loading = false;
+                        this.$q.loading.hide();
                         if (response.data.status == 1) {
                             this.manageGame = false;
 

@@ -49,34 +49,51 @@ namespace DijiWalk.WebApplication.Controllers
                 var teamRoutes = await this._repository.FindInGame(id);
                 return Ok(teamRoutes.Select(tr =>
                 {
-                    tr.Game.Organizer = null;
-                    tr.Game.Plays = new HashSet<Play>();
-                    tr.Game.TeamAnswers = new HashSet<TeamAnswer>();
-                    tr.Game.TeamRoutes = new HashSet<TeamRoute>();
-                    tr.Game.Route = null;
-                    tr.Game.Transport = null;
+                    if (tr.Game != null)
+                    {
+                        tr.Game.Organizer = null;
+                        tr.Game.Plays = new HashSet<Play>();
+                        tr.Game.TeamAnswers = new HashSet<TeamAnswer>();
+                        tr.Game.TeamRoutes = new HashSet<TeamRoute>();
+                        tr.Game.Route = null;
+                        tr.Game.Transport = null;
+                    }
 
-                    tr.Team.Captain.Organizer = null;
-                    tr.Team.Captain.Messages = new HashSet<Message>();
-                    tr.Team.Captain.Teams = new HashSet<Team>();
-                    tr.Team.Captain.TeamPlayers = new HashSet<TeamPlayer>(); ;
+                    if (tr.Team != null)
+                    {
+                        if (tr.Team.Captain != null)
+                        {
+                            tr.Team.Captain.Organizer = null;
+                            tr.Team.Captain.Messages = new HashSet<Message>();
+                            tr.Team.Captain.Teams = new HashSet<Team>();
+                            tr.Team.Captain.TeamPlayers = new HashSet<TeamPlayer>();
+                        }
+                        tr.Team.Plays = new HashSet<Play>();
+                        tr.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                        tr.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                        tr.Team.TeamRoutes = new HashSet<TeamRoute>();
+                        tr.Team.Organizer = null;
+                    }
 
-                    tr.Team.Plays = new HashSet<Play>();
-                    tr.Team.TeamAnswers = new HashSet<TeamAnswer>();
-                    tr.Team.TeamPlayers = new HashSet<TeamPlayer>();
-                    tr.Team.TeamRoutes = new HashSet<TeamRoute>();
-                    tr.Team.Organizer = null;
+                    if (tr.RouteStep != null)
+                    {
+                        tr.RouteStep.TeamRoutes = new HashSet<TeamRoute>();
+                        if (tr.RouteStep.Route != null)
+                        {
 
-                    tr.RouteStep.TeamRoutes = new HashSet<TeamRoute>();
-                    tr.RouteStep.Route.Games = new HashSet<Game>();
-                    tr.RouteStep.Route.RouteSteps = new HashSet<RouteStep>();
-                    tr.RouteStep.Route.RouteTags = new HashSet<RouteTag>();
-                    tr.RouteStep.Route.Organizer = null;
-
-                    tr.RouteStep.Step.Missions = new HashSet<Mission>();
-                    tr.RouteStep.Step.RouteSteps = new HashSet<RouteStep>();
-                    tr.RouteStep.Step.StepTags = new HashSet<StepTag>();
-                    tr.RouteStep.Step.StepValidations = new HashSet<StepValidation>();
+                            tr.RouteStep.Route.Games = new HashSet<Game>();
+                            tr.RouteStep.Route.RouteSteps = new HashSet<RouteStep>();
+                            tr.RouteStep.Route.RouteTags = new HashSet<RouteTag>();
+                            tr.RouteStep.Route.Organizer = null;
+                        }
+                        if (tr.RouteStep.Step != null)
+                        {
+                            tr.RouteStep.Step.Missions = new HashSet<Mission>();
+                            tr.RouteStep.Step.RouteSteps = new HashSet<RouteStep>();
+                            tr.RouteStep.Step.StepTags = new HashSet<StepTag>();
+                            tr.RouteStep.Step.StepValidations = new HashSet<StepValidation>();
+                        }
+                    }
                     return tr;
 
                 }).ToList());

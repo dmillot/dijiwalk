@@ -73,10 +73,6 @@
         </q-dialog>
         <q-dialog v-model="manageParticipant">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <q-input v-if="isEditing" v-model="idParticipant" type="hidden" />
                     <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
@@ -128,7 +124,7 @@
                         </template>
                     </q-file>
                 </q-card-section>
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateParticipant" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedParticipant" color="secondary" />
@@ -197,8 +193,6 @@
 
                 isPwd: true,
                 idParticipant: null,
-
-                loading: false,
                 encryptedPassword: null,
                 noPicture: true
             }
@@ -232,7 +226,7 @@
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         if (e.target.result.indexOf("image") != -1) {
-                            document.getElementById('avatarSelected').innerHTML = ['<img src="', e.target.result, '" />'].join('')
+                            document.getElementById('avatarSelected').innerHTML = ['<img style="width:35px; height: 35px;" src="', e.target.result, '" />'].join('')
                         }
                     };
                     reader.readAsDataURL(this.pictureParticipant);
@@ -308,7 +302,7 @@
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
-                                this.loading = true;
+                                this.$q.loading.show()
                                 this.fileConvert().then(response => {
                                     PlayerDataService.create({
                                         FirstName: this.prenomParticipant,
@@ -320,7 +314,7 @@
                                         ImageChanged: true,
                                         PasswordChanged: true
                                     }).then(response => {
-                                        this.loading = false;
+                                        this.$q.loading.hide()
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();
@@ -370,7 +364,7 @@
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant) || this.passwordParticipant == null) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
-                                this.loading = true;
+                                this.$q.loading.show()
                                 this.fileConvert().then(response => {
                                     PlayerDataService.update(this.idParticipant, {
                                         FirstName: this.prenomParticipant,
@@ -383,7 +377,7 @@
                                         Picture: this.pictureUrl,
                                         PasswordChanged: this.passwordParticipant != null ? true : false
                                     }).then(response => {
-                                        this.loading = false;
+                                       this.$q.loading.hide()
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();

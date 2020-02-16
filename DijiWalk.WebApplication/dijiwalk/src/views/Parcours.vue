@@ -70,11 +70,6 @@
 
         <q-dialog v-model="manageParcours">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
-
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idParcours" type="hidden" />
@@ -102,7 +97,7 @@
                             </template>
                         </q-input>
 
-                        <q-toggle class="col-5 q-my-xs on-left" v-show="!loading" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
+                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
                         <div class="row items-center justify-center col-12">
                             <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !">
@@ -117,7 +112,7 @@
                                     </q-item>
                                 </template>
                             </q-select>
-                            <div v-show="!loading" class="col-1 q-ml-md">
+                            <div class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/etape')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
@@ -127,7 +122,7 @@
                         </div>
 
                         <div class="row justify-start">
-                            <div v-for="tag in tagsParcours" v-show="!loading" v-bind:key="tag.idTag">
+                            <div v-for="tag in tagsParcours" v-bind:key="tag.idTag">
                                 <q-chip removable color="red" outline text-color="white" class="q-my-xs q-px-lg q-py-md" size="md" icon="fas fa-tag" @remove="removeTags(tag)">
                                     <div class="q-px-sm q-my-sm">{{ tag.name }}</div>
                                 </q-chip>
@@ -137,7 +132,7 @@
                     </div>
                 </q-card-section>
 
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateParcours" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedParcours" color="secondary" />
@@ -241,8 +236,7 @@
                 tagsAvailable: null,
                 tagsOptions: null,
 
-                idParcours: null,
-                loading: false
+                idParcours: null
 
             }
         },
@@ -394,7 +388,7 @@
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         var self = this;
                         var listeRouteTag = [];
                         this.tagsParcours.forEach(element => {
@@ -418,14 +412,11 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
-                            this.loading = false;
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();
                                 this.parcours[this.parcours.map(e => e.id).indexOf(this.parcoursSelected.id)] = response.data.response
-
-                                //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
-
                                 this.$q.notify({
                                     icon: 'fas fa-check-square',
                                     color: 'secondary',
@@ -454,7 +445,7 @@
             },
             addedParcours() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
-                    this.loading = true;
+                    this.$q.loading.show()
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
                         var listeRouteTag = [];
@@ -479,7 +470,7 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
-                            this.loading = false;
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();

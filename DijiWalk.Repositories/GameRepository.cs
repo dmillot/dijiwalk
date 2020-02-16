@@ -60,7 +60,11 @@ namespace DijiWalk.Repositories
                     var reponse = await _playBusiness.SetUp(game.Plays.ToList(), newGame.Id);
                     if (reponse.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(newGame.Id) };
+                        var reponseGenerate = await _gameBusiness.GenerateTeamRoute(game, newGame.Id);
+                        if (reponseGenerate.Status == ApiStatus.Ok)
+                            return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(newGame.Id) };
+                        else
+                            return reponseGenerate;
                     }
                     else
                         return reponse;
@@ -94,7 +98,7 @@ namespace DijiWalk.Repositories
                 }
                 else
                 {
-                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce jeu est en cours.." };
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce jeu est en cours ou a déjà été joué." };
                 }
             }
             catch (Exception e)
@@ -119,7 +123,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            var game = await _context.Games.Where(g => g.Id == id).Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
+            var game = await _context.Games.Where(g => g.Id == id).Include(r => r.Route).ThenInclude(r => r.RouteSteps).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
             if (game.Organizer != null)
             {
                 game.Organizer.Games = new HashSet<Game>();
@@ -134,7 +138,13 @@ namespace DijiWalk.Repositories
             if (game.Route != null)
             {
                 game.Route.Games = new HashSet<Game>();
-                game.Route.RouteSteps = new HashSet<RouteStep>();
+                game.Route.RouteSteps =  game.Route.RouteSteps.Select(rs =>
+                {
+                    rs.Route = null;
+                    rs.Step = null;
+                    rs.TeamRoutes = new HashSet<TeamRoute>();
+                    return rs;
+                }).ToList();
                 game.Route.RouteTags = new HashSet<RouteTag>();
             } else
             {
@@ -163,6 +173,68 @@ namespace DijiWalk.Repositories
             }
             return game;
         }
+
+        /// <summary>
+        /// Method to find an Game with his Id in the database
+        /// </summary>
+        /// <param name="id">The Id of the Game</param>
+        /// <returns>The Game with the Id researched</returns>
+        public async Task<Game> FindNoTracking(int id)
+        {
+            var game = await _context.Games.AsNoTracking().Where(g => g.Id == id).Include(r => r.Route).ThenInclude(r => r.RouteSteps).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
+            if (game.Organizer != null)
+            {
+                game.Organizer.Games = new HashSet<Game>();
+                game.Organizer.Messages = new HashSet<Message>();
+                game.Organizer.Players = new HashSet<Player>();
+                game.Organizer.Routes = new HashSet<Route>();
+                game.Organizer.Teams = new HashSet<Team>();
+            }
+            else
+            {
+                game.Organizer = await _context.Organizers.FirstOrDefaultAsync(o => o.Id == game.IdOrganizer);
+            }
+            if (game.Route != null)
+            {
+                game.Route.Games = new HashSet<Game>();
+                game.Route.RouteSteps = game.Route.RouteSteps.Select(rs =>
+                {
+                    rs.Route = null;
+                    rs.Step = null;
+                    rs.TeamRoutes = new HashSet<TeamRoute>();
+                    return rs;
+                }).ToList();
+                game.Route.RouteTags = new HashSet<RouteTag>();
+            }
+            else
+            {
+                game.Route = await _context.Routes.FirstOrDefaultAsync(r => r.Id == game.IdRoute);
+            }
+            if (game.Transport != null)
+            {
+                game.Transport.Games = new HashSet<Game>();
+            }
+            else
+            {
+                game.Transport = await _context.Transports.FirstOrDefaultAsync(t => t.Id == game.IdTransport);
+            }
+
+            if (game.Plays != null)
+            {
+                game.Plays = game.Plays.Select(p =>
+                {
+                    p.Game = null;
+                    p.Team.Organizer = null;
+                    p.Team.Plays = new HashSet<Play>();
+                    p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                    p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                    p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                    return p;
+                }).ToList();
+            }
+            return game;
+        }
+
 
         /// <summary>
         /// Method to find all Game from the database
@@ -199,7 +271,7 @@ namespace DijiWalk.Repositories
             {
                 if (!await _teamBusiness.DuplicatePlayer(game.Plays.ToList()))
                 {
-                    _context.Games.Update(_gameBusiness.SeparatePlay(game));
+                    await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE [dbo].[GAME] SET  [Game_fk_Route_Id] = {game.IdRoute},  [Game_fk_Organizer_Id] = {game.IdOrganizer},  [Game_fk_Transport_Id] = {game.IdTransport} WHERE [Game_Id] = {game.Id}");
                     await _context.SaveChangesAsync();
 
                     // Récupérer tous les id actuels des teams de la game dans la DB
@@ -217,7 +289,16 @@ namespace DijiWalk.Repositories
                         var responsePlayAdd = await _playBusiness.SetUp(game.Plays.Where(p => !currentIdPlays.Contains(p.IdTeam)).ToList(), game.Id);
                         if (responsePlayAdd.Status == ApiStatus.Ok)
                         {
-                            return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };
+                            var responseDeleteTeamRoutes = await _gameBusiness.DeleteAllTeamsRoute(game.Id);
+                            if (responseDeleteTeamRoutes.Status == ApiStatus.Ok)
+                            {
+                                var reponseGenerate = await _gameBusiness.GenerateTeamRoute(await this.FindNoTracking(game.Id), game.Id);
+                                if (reponseGenerate.Status == ApiStatus.Ok) 
+                                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };  
+                                else
+                                    return reponseGenerate;
+                        } else
+                                return responseDeleteTeamRoutes;
                         }
                         else
                             return responsePlayAdd;

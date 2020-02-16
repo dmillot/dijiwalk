@@ -22,7 +22,7 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit l'Id de la Route de la Team
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         /// <summary>
         /// Obtient ou définit l'Id du Jeu correspondant à la Route de la Team
@@ -83,6 +83,7 @@ namespace DijiWalk.Entities
         /// Obtient ou définit l'Etape de la Route rataché à la Route de la Team
         /// </summary>
         public virtual RouteStep RouteStep { get; set; }
+
 
         /// <summary>
         /// Obtient ou définit le Jeu rataché à la Route de la Team

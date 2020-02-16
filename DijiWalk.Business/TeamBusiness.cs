@@ -96,6 +96,7 @@ namespace DijiWalk.Business
             }
         }
 
+
         /// <summary>
         /// Method to check if team has participed to a game
         /// </summary>
@@ -104,6 +105,7 @@ namespace DijiWalk.Business
         {
             return await _context.Plays.AnyAsync(t => t.IdTeam == idTeam);
         }
+
 
         /// <summary>
         /// Method to check if player has participed to a game
@@ -123,7 +125,7 @@ namespace DijiWalk.Business
         {
             var listTeams = plays.Select(p => p.IdTeam).ToList();
             var listPlayer = new List<int>();
-            var teams = await _context.Teams.Where(t => listTeams.Contains(t.Id)).Include(t => t.TeamPlayers).ToListAsync();
+            var teams = await _context.Teams.AsNoTracking().Where(t => listTeams.Contains(t.Id)).Include(t => t.TeamPlayers).ToListAsync();
             var listTeamPlayer = teams.Select(t => {
                 if(t.TeamPlayers.Count != 0)
                 {
@@ -145,7 +147,7 @@ namespace DijiWalk.Business
             } else
             {
                 var idTeams = teams.Select(t => t.Id).ToList();
-                var teamPlayers = await _context.Teamplayers.Where(tp => tp.IdTeam == idTeams[0]).ToListAsync();
+                var teamPlayers = await _context.Teamplayers.AsNoTracking().Where(tp => tp.IdTeam == idTeams[0]).ToListAsync();
                 listPlayer.AddRange(teamPlayers.Select(tp => tp.IdPlayer).ToList());
             }
             var result = false;

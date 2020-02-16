@@ -73,10 +73,6 @@
 
         <q-dialog v-model="manageTeam">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <q-input v-if="isEditing" v-model="idTeam" type="hidden" />
                     <q-input ref="name" class="col-12 q-my-xs" label="Nom de l'équipe *" color="primary" v-model="nameTeam" name="nameTeam" id="nameTeam" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']">
@@ -98,7 +94,7 @@
                                 </q-item>
                             </template>
                         </q-select>
-                        <div v-show="!loading" class="col-1 q-ml-md">
+                        <div class="col-1 q-ml-md">
                             <q-btn color="primary" @click="navigateTo('/participant')" rounded icon="fas fa-plus" />
                         </div>
                     </div>
@@ -116,7 +112,7 @@
                         </template>
                     </q-select>
                 </q-card-section>
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateTeam" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedTeam" color="secondary" />
@@ -180,8 +176,7 @@
                 captainTeam: null,
                 nameTeam: null,
 
-                idTeam: null,
-                loading: false,
+                idTeam: null
             }
         },
         created() {
@@ -256,7 +251,7 @@
             },
             addedTeam() {
                 if (this.$refs.name.validate() && this.$refs.participants.validate() && this.$refs.captain.validate()) {
-                    this.loading = true;
+                    this.$q.loading.show()
                     var teamPlayers = [];
                     this.participantTeam.forEach((function (item) {
                         teamPlayers.push({ IdTeam: 0, IdPlayer: item.id });
@@ -266,7 +261,7 @@
                         Captain: this.captainTeam,
                         TeamPlayers: teamPlayers
                     }).then(response => {
-                        this.loading = false;
+                       this.$q.loading.hide()
                         if (response.data.status == 1) {
                             this.manageTeam = false;
                             this.equipes.push(response.data.response);
@@ -291,7 +286,7 @@
             },
             updateTeam() {
                 if (this.$refs.name.validate() && this.$refs.participants.validate() && this.$refs.captain.validate()) {
-                    this.loading = true;
+                   this.$q.loading.show()
                     var teamPlayers = [];
                     this.participantTeam.forEach((function (item) {
                         teamPlayers.push({ IdTeam: this.idTeam, IdPlayer: item.id });
@@ -301,7 +296,7 @@
                         Captain: this.captainTeam,
                         TeamPlayers: teamPlayers
                     }).then(response => {
-                        this.loading = false;
+                        this.$q.loading.hide()
                         if (response.data.status == 1) {
                             this.manageTeam = false;
                             this.equipes[this.equipes.map(e => e.id).indexOf(this.equipeSelected.id)] = response.data.response

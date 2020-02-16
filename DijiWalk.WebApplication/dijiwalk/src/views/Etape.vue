@@ -73,14 +73,6 @@
 
         <q-dialog v-model="manageStep">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <div v-show="loading" class="column absolute-center items-center full-width">
-                    <q-circular-progress indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" />
-                    <h5 class="warning-loading">Cela peut prendre plusieurs secondes !</h5>
-                </div>
-
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idStep" type="hidden" />
@@ -119,14 +111,14 @@
 
                         <div class="row items-center justify-center col-12">
                             <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" hint="Vous pouvez en rajouter une cliquant sur le bouton à droite !" />
-                            <div v-show="!loading" class="col-1 q-ml-md">
+                            <div class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                     </div>
                 </q-card-section>
 
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateStep" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedStep" color="secondary" />
@@ -238,8 +230,6 @@
                 errormessagelongitude: null,
                 errorlongitude: false,
                 idStep: null,
-
-                loading: false,
                 noPicture: true
             }
         },
@@ -264,7 +254,7 @@
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         if (e.target.result.indexOf("image") != -1) {
-                            document.getElementById('avatarSelected').innerHTML = ['<img src="', e.target.result, '" />'].join('')
+                            document.getElementById('avatarSelected').innerHTML = ['<img style="width:35px; height: 35px;" src="', e.target.result, '" />'].join('')
                         }
                     };
                     reader.readAsDataURL(this.pictureStep);
@@ -359,7 +349,7 @@
             updateStep() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         this.fileConvert().then(response => {
                             StepDataService.update(this.idStep, {
                                 Name: this.nameStep,
@@ -372,14 +362,12 @@
                                 ImageChanged: this.$refs.picture.validate(),
                                 Validation: this.validationUrl,
                             }).then(response => {
-                                this.loading = false;
+                                this.$q.loading.hide()
                                 if (response.data.status == 1) {
                                     this.manageStep = false;
                                     this.onResetValidation();
                                     this.getAllMissions();
                                     this.steps[this.steps.map(e => e.id).indexOf(this.stepSelected.id)] = response.data.response
-
-                                    //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
                                     this.$q.notify({
                                         icon: 'fas fa-check-square',
@@ -420,7 +408,7 @@
             addedStep() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.latitude.validate() && this.$refs.longitude.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         this.fileConvert().then(response => {
                             StepDataService.create({
                                 Name: this.nameStep,
@@ -432,7 +420,7 @@
                                 ImageBase64: response,
                                 ImageChanged: true
                             }).then(response => {
-                                this.loading = false;
+                                this.$q.loading.hide()
                                 if (response.data.status == 1) {
                                     this.manageStep = false;
                                     this.onResetValidation();
