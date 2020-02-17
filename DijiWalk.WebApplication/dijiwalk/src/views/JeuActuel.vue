@@ -9,21 +9,43 @@
 
         <h5 class="text-bold text-left">Jeu en cours</h5>
         <q-card class=" full-height q-px-xl q-py-lg">
-            <q-card-section class="flex column flex-center">
+            <q-card-section class="flex column flex">
                 <div class="q-pa-md">
-                    <q-table title="Avancement des équipes participantes"
-                             :data="dataGame"
-                             :columns="columns"
-                             row-key="name"
-                             @row-click="onRowClick" />
+                    <q-carousel v-model="slide"
+                                transition-prev="scale"
+                                transition-next="scale"
+                                swipeable
+                                @transition="transitionSlide(game)"
+                                animated
+                                control-color="white"
+                                navigation
+                                padding
+                                arrows
+                                height="300px"
+                                class="bg-primary text-white shadow-1 rounded-borders">
+                        <q-carousel-slide v-for="game in gamesActifs" v-bind:key="game.id" :name="game.id" class="column no-wrap flex-center">
+                            <h2>Jeu {{game.id}}</h2>
+                            <div class="q-mt-md text-center column">
+                                <label>{{game.route.description}}</label>
+                                <label>Organisateur: {{game.organizer.firstName}} {{game.organizer.lastName}} </label>
+                                <label>Date de création: {{game.creationDate | formatDate}}</label>
+                            </div>
+                            <div class="row q-mb-lg" style="align-items:center;">
+                                <label>État de validation: </label>
+
+                                <q-icon v-if class="text-red " name="fas fa-times-circle" v-for="size in ['lg']" :key="size" :size="size"></q-iconv-if>
+
+                            </div>
+                        </q-carousel-slide>
+                    </q-carousel>
                 </div>
             </q-card-section>
-            <q-card-section :disabled="game===null" class="flex column flex-center">
+            <q-card-section :disabled="gameSelected===null" class="flex column flex-center">
                 <div class="row flex-center full-width justify-center q-mt-lg q-col-gutter-xl">
 
-                    <Card link="jeuActif" :disabled="game===null" v-bind:params="{id: idGame}" icon="fas fa-hand-lizard" title="Jeu" description="Page de visualisation des information général du jeu" />
-                    <Card link="" :disabled="game===null" icon="fas fa-clipboard-check" title="Validation" description="Page de gestion des problèmes de validation" />
-                    <Card link="" :disabled="game===null" icon="fas fa-comments" title="Chat" description="Page de chat avec les participants" />
+                    <Card link="jeuActif" :disabled="gameSelected===null" v-bind:params="{id: idGame}" icon="fas fa-dice" title="Jeu" description="Page de visualisation des information général du jeu" />
+                    <Card link="" :disabled="gameSelected===null" icon="fas fa-clipboard-check" title="Validation" description="Page de gestion des problèmes de validation" />
+                    <Card link="" :disabled="gameSelected===null" icon="fas fa-comments" title="Chat" description="Page de chat avec les participants" />
 
                 </div>
             </q-card-section>
@@ -34,55 +56,43 @@
 <script>
     // @ is an alias to /src
     import Card from '@/components/Card.vue'
-    import GameDataService from "@/services/GameDataService";
+    import GameDataService from "@/services/GameDataService"
+    import moment from "moment"
 
     export default {
+
         name: 'jeuActuel',
 
-        data() {
+        data: function () {
             return {
-                games: null,
-                game: null,
-                idGame: 0,
-                columns: [
-                    {
-                        name: 'name',
-                        required: true,
-                        label: 'Game',
-                        align: 'left',
-                        field: row => row.name,
-                        format: val => `${val}`,
-                        sortable: true
-                    },
-                    { name: 'creationDate', align: 'center', label: 'Date de Début', field: 'creationDate', sortable: true },
-                    { name: 'organizer', align: 'center', label: 'Date de Fin', field: 'organizer', sortable: true }
-                ],
-                dataGame: [],
+                slide: 'style',
+                gamesActifs: null,
+                gameSelected: null,
+
+
             }
         },
 
         components: {
             Card
         },
-        computed: {
-            gameActual: function () {
-
-                return this.games.filter((g) => g.active == true);
-            }
-        },
-
 
         created() {
             this.getActualGames();
         },
+        filters: {
+            formatDate: function (value) {
+                if (!value) return ''
+                return moment(String(value)).format('DD/MM/YYYY HH:mm')
+            }
+        },
 
         methods: {
             async getActualGames() {
-                this.$q.loading.show()
-                if (this.games === null) {
+                if (this.gamesActifs === null) {
                     await GameDataService.getAllActifs().then(response => {
-                        this.games = response.data;
-                        this.$q.loading.hide()
+                        console.log(response);
+                        this.gamesActifs = response.data;
                     }).catch();
                 }
 
@@ -90,18 +100,23 @@
                     name: 'Game' + g.id,
                     idGame: g.id,
                     creationDate: g.creationDate,
-                    organizer: g.organizer.firstName + ' ' + g.organizer.firstName
+                    organizer: g.organizer.name + ' ' + g.organizer.firstName
                 })
                 );
             },
 
+            transitionSlide(game) {
+                this.gameSelected = game
+                console.log(this.idGame)
+            },
+
             async onRowClick(evt, row) {
-                this.game = null;
+                this.gameSelected = null;
 
                 await GameDataService.get(row.idGame).then(response => {
-                    this.game = response.data;
+                    this.gameSelected = response.data;
                 }).catch();
-                this.idGame = this.game.id;
+                this.idGame = this.gameSelected.id;
             }
         }
     }
