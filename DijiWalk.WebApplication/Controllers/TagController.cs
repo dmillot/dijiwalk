@@ -8,6 +8,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System;
     using System.Threading.Tasks;
     using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -84,5 +85,23 @@ namespace DijiWalk.WebApplication.Controllers
                 return this.Ok(TranslateError.Convert(e));
             }
         }
+
+        /// <summary>
+        /// Method to Add a Tag
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Tag tag)
+        {
+            try
+            {
+                return this.Ok(await _repository.Add(tag));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
     }
 }

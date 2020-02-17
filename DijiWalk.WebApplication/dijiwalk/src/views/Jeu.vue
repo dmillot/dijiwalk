@@ -2,66 +2,15 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
 
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="equipeFilter"
-                                          label="Filtrer par équipe"
-                                          v-model="teamsFilterModel"
-                                          :options="teamsFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.name"
-                                          emit-value
-                                          map-options
-                                          @filter="filterEquipe"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="parcoursFilter"
-                                          label="Filtrer par parcours"
-                                          v-model="routesFilterModel"
-                                          :options="routesFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.name"
-                                          emit-value
-                                          map-options
-                                          @filter="filterParcours"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                            <q-item>
-                                <q-select multiple
-                                          use-input
-                                          ref="transportFilter"
-                                          label="Filtrer par transport"
-                                          v-model="transportsFilterModel"
-                                          :options="transportsFiltered"
-                                          :option-value="opt => opt.id"
-                                          :option-label="opt => opt.libelle"
-                                          emit-value
-                                          map-options
-                                          @filter="filterTransport"
-                                          style="min-width: 250px; max-width: 300px">
-                                </q-select>
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="openModalToAdd(false);" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
+                <q-card @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card">
                     <q-icon name="fas fa-plus text-white" style="font-size: 4em;" />
                 </q-card>
             </div>
@@ -80,14 +29,20 @@
                                    style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
 
                             <div class="row no-wrap">
-                                <div class="col text-left text-bold text-h6 ellipsis">
+                                <div class="col text-left text-bold text-h5 ellipsis">
                                     Jeu n°{{ game.id }}
+                                </div>
+                            </div>
+                            <div class="row no-wrap q-mb-sm">
+                                <div class="col text-left text-h6 ellipsis">
+                                    {{ game.route.name }}
                                 </div>
                             </div>
                             <div class="row items-center no-wrap text-grey">
                                 <q-icon name="fas fa-calendar" />
                                 <p class="q-ma-none q-ml-xs">{{ game.creationDate | formatDate }}</p>
                             </div>
+
                         </q-card-section>
 
                     </div>
@@ -95,8 +50,8 @@
                     <q-separator />
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn @click="openModalToGetInformations(game)" flat color="primary text-bold">
+                        <q-btn @click="openModalToGetInformations(game)" class="dijiwalk-secondary" flat round icon="fas fa-info-circle" />
+                        <q-btn @click="openModalToGetInformations(game)" class="dijiwalk-secondary" flat>
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -123,35 +78,49 @@
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idGame" type="hidden" />
-                        <div class="row col-12">
-                            <div class="col-8">
-                                <q-input v-bind:disable="getInformations" ref="date" color="primary" v-model="dateGame" type="date" name="dateGame" id="dateGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner une date']" />
-                            </div>
-                        </div>
+
+
+                        <q-input ref="date" class="col-12" color="primary" v-model="dateGame" name="dateGame" id="dateGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner une date']">
+                            <template v-slot:prepend>
+                                <q-icon name="fas fa-calendar" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="dateGame" mask="YYYY-MM-DD HH:mm" />
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+
+                            <template v-slot:append>
+                                <q-icon name="fas fa-clock" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="dateGame" mask="YYYY-MM-DD HH:mm" format24h />
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                         <div v-if="getInformations" class="row col-12">
                             <div class="col-8">
                                 <q-input label="Organisateur" v-model="organizerGame" type="text" disable />
                             </div>
                         </div>
                         <div class="row col-12">
-                            <div class="col-8">
-                                <q-select v-bind:disable="getInformations" use-input ref="transport" v-model="transportGame" option-value="id" option-label="libelle" :options="transports" label="Transport" id="transportGame" name="transportGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un transport']" />
+                            <div class="col-10">
+                                <q-select use-input ref="transport" v-model="transportGame" option-value="id" option-label="libelle" :options="transports" label="Transport" id="transportGame" name="transportGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un transport']" />
                             </div>
-                            <div v-if="!getInformations" class="col-4 row justify-center items-center">
-                                <q-btn color="primary" label="Ajouter" />
-                            </div>
-                        </div>
-                        <div class="row col-12">
-                            <div class="col-8">
-                                <q-select v-bind:disable="getInformations" use-input ref="parcours" v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un parcours']" />
-                            </div>
-                            <div v-if="!getInformations" class="col-4 row justify-center items-center">
-                                <q-btn color="primary" label="Ajouter" />
+                            <div v-if="!getInformations" class="col-2 row justify-center items-center">
+                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                         <div class="row col-12">
-                            <div class="col-8">
-                                <q-select v-bind:disable="getInformations" multiple use-input ref="equipe" label="Equipes" v-model="equipeGame"
+                            <div class="col-10">
+                                <q-select use-input ref="parcours" v-model="parcoursGame" option-value="id" option-label="name" :options="routes" label="Parcours" id="parcoursGame" name="parcoursGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un parcours']" />
+                            </div>
+                            <div v-if="!getInformations" class="col-2 row justify-center items-center">
+                                <q-btn color="primary" @click="navigateTo('/parcours')" rounded icon="fas fa-plus" />
+                            </div>
+                        </div>
+                        <div class="row col-12">
+                            <div class="col-10">
+                                <q-select multiple use-input ref="equipe" label="Equipes" v-model="equipeGame"
                                           :options="teams"
                                           :option-value="opt => opt.id"
                                           :option-label="opt => opt.name"
@@ -161,8 +130,8 @@
                                           lazy-rules
                                           :rules="[val => val.length > 0 || 'Veuillez renseigner au minimum une équipe']" />
                             </div>
-                            <div v-if="!getInformations" class="col-4 row justify-center items-center">
-                                <q-btn color="primary" label="Ajouter" />
+                            <div class="col-2 row justify-center items-center">
+                                <q-btn color="primary" @click="navigateTo('/equipe')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                     </div>
@@ -177,11 +146,14 @@
         </q-dialog>
 
         <q-dialog v-if="gameSelected !== null" v-model="informations">
-            <q-card>
+            <q-card class="modal-informations">
                 <q-card-section class="row items-center">
                     <div class="row col-12">
                         <div class="col-12">
                             <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                            <h5 class="q-my-sm">Game n°{{ gameSelected.id }}</h5>
+                            <p class="q-mb-none text-bold">{{  gameSelected.route.name }}</p>
+                            <p class="q-mt-none">{{ gameSelected.route.description }}</p>
                             <p class="text-grey">Organisé par {{ gameSelected.organizer.firstName }} {{ gameSelected.organizer.lastName }}</p>
                         </div>
                     </div>
@@ -218,10 +190,10 @@
                                               icon="fas fa-users"
                                               label="Équipes">
                                 <q-expansion-item icon="fas fa-user-friends" v-for="team in selectedGameTeams" v-bind:key="team.id" v-bind:label="team.name" :header-inset-level="1" :content-inset-level="2" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
-                                    <q-card>
+                                    <q-card class="card-expansion">
                                         <q-card-section v-for="member in team.members" v-bind:key="member.id" class="row items-center">
                                             <q-avatar size="48px" class="q-mr-md">
-                                                <img :src="member.picture">
+                                                <q-img :src="member.picture" style="width:50px; height: 50px;" />
                                             </q-avatar>
                                             {{ member.firstName }} {{ member.lastName }}
                                             <q-icon v-if="team.id_captain == member.id" name="fas fa-star" class="q-ml-md" style="color: #ffd600 !important; font-size: 1.5em;" />
@@ -241,12 +213,6 @@
     </q-page>
 </template>
 
-<style>
-    .custom-expansion i {
-        color: #9e9e9e !important;
-    }
-</style>
-
 <script>
 
     import moment from 'moment'
@@ -254,7 +220,6 @@
     import RouteDataService from "@/services/RouteDataService"
     import TransportDataService from "@/services/TransportDataService"
     import TeamDataService from "@/services/TeamDataService"
-    import PlayDataService from "@/services/PlayDataService"
     import TeamPlayerDataService from "@/services/TeamPlayerDataService"
 
     export default {
@@ -290,7 +255,7 @@
             }
         },
 
-        created () {
+        created() {
             this.getAllGames();
             this.getAllRoutes();
             this.getAllTeams();
@@ -298,7 +263,9 @@
         },
 
         methods: {
-
+            navigateTo(page) {
+                this.$router.push(page)
+            },
             openModalToGetInformations(game) {
                 this.isAdding = false;
                 this.isEditing = false;
@@ -314,10 +281,8 @@
                         response.data.forEach(function (i) {
                             players.push(i.player);
                         })
-                        
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+
+                    }).catch();
 
                     teams.push({
                         id: item.team.id,
@@ -337,6 +302,7 @@
                 this.isAdding = true;
                 this.resetInput();
                 this.manageGame = true;
+                this.dateGame = moment().format("YYYY-MM-DD HH:mm");
             },
 
             openModalToEdit(game) {
@@ -363,56 +329,54 @@
                 });
                 this.gameSelected = game;
                 this.idGame = game.id;
-                this.dateGame = moment(String(game.creationDate)).format('YYYY-MM-DD');
+                this.dateGame = moment(String(game.creationDate)).format('YYYY-MM-DD HH:mm');
                 this.parcoursGame = game.route;
                 this.equipeGame = listTeams;
                 this.transportGame = game.transport;
                 this.organizerGame = game.organizer.firstName + " " + game.organizer.lastName;
-                
             },
 
-            getAllRoutes () {
+            getAllRoutes() {
                 if (this.routes === null) {
                     RouteDataService.getAll().then(response => {
                         this.routes = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
-            getAllTeams () {
+            getAllTeams() {
                 if (this.teams === null) {
                     TeamDataService.getAll().then(response => {
                         this.teams = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
-            getAllTransports () {
+            getAllTransports() {
                 if (this.transports === null) {
                     TransportDataService.getAll().then(response => {
                         this.transports = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
-            getAllGames () {
-                GameDataService.getAll().then(response => { this.games = response.data }).catch(error => { console.log(error) });
+            getAllGames() {
+                this.$q.loading.show()
+                GameDataService.getAll().then(response => {
+                    this.games = response.data
+                    this.$q.loading.hide()
+                }).catch();
             },
 
-            openModalToDelete (game) {
+            openModalToDelete(game) {
                 this.confirm = true,
-                this.selectedGameId = game.id
+                    this.selectedGameId = game.id
             },
 
             updateGame() {
                 if (this.$refs.date.validate() && this.$refs.transport.validate() && this.$refs.parcours.validate() && this.$refs.equipe.validate()) {
                     if (this.equipeGame.length > 0) {
+                         this.$q.loading.show()
                         var plays = [];
                         this.equipeGame.forEach((function (item) {
                             if (Number.isInteger(item)) {
@@ -420,16 +384,17 @@
                             } else {
                                 plays.push({ IdGame: this.idGame, IdTeam: item.id });
                             }
-                        
-                        }).bind(this))
 
+                        }).bind(this))
                         GameDataService.update(this.idGame, {
                             CreationDate: this.dateGame,
                             IdRoute: this.parcoursGame.id,
+                            Route: this.parcoursGame,
                             IdTransport: this.transportGame.id,
                             IdOrganizer: 1,
                             Plays: plays
                         }).then(response => {
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageGame = false;
                                 this.games[this.games.map(e => e.id).indexOf(this.gameSelected.id)] = response.data.response
@@ -441,23 +406,24 @@
                                     position: 'top'
                                 })
                             } else {
+                                this.manageGame = false;
                                 this.$q.notify({
                                     icon: 'fas fa-exclamation-triangle',
                                     color: 'negative',
                                     message: response.data.message,
                                     position: 'top'
                                 })
-                                setTimeout(this.onResetValidation, 3000);
                             }
                         })
                     }
                 }
             },
 
-            deleteGame () {
+            deleteGame() {
+                this.$q.loading.show()
                 var id = this.selectedGameId;
                 GameDataService.delete(this.selectedGameId).then(response => {
-
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         this.games = this.games.filter(function (obj) {
                             return obj.id !== id;
@@ -479,51 +445,59 @@
                         })
                     }
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
 
             addGame() {
 
                 if (this.$refs.date.validate() && this.$refs.transport.validate() && this.$refs.parcours.validate() && this.$refs.equipe.validate()) {
+                    this.$q.loading.show()
+                    var listPlays = [];
+                    this.equipeGame.forEach(function (item) {
+                        if (Number.isInteger(item)) {
+                            listPlays.push({ IdGame: 0, IdTeam: item });
+                        } else {
+                            listPlays.push({ IdGame: 0, IdTeam: item.id });
+                        }
+                    })
                     GameDataService.create({
                         IdRoute: this.parcoursGame.id,
+                        Route: this.parcoursGame,
                         CreationDate: this.dateGame,
                         IdTransport: this.transportGame.id,
                         IdOrganizer: 1,
+                        Plays: listPlays
                     }).then(response => {
-                        this.games.push(response.data.response);
+                        this.$q.loading.hide();
+                        if (response.data.status == 1) {
+                            this.manageGame = false;
 
-                        var idGameCreated = response.data.response.id;
+                            this.games.push(response.data.response);
 
-                        this.equipeGame.forEach(function (item) {
-                            PlayDataService.create({
-                                IdGame: idGameCreated,
-                                IdTeam: item
-                            }).then(() => {
-                                //
-                            }).catch(reason => {
-                                console.log(reason);
-                            });
-                        })
+                            this.$q.notify({
+                                icon: 'fas fa-check-square',
+                                color: 'secondary',
+                                message: `Ajout du jeu n°${response.data.response.id} réussi !`,
+                                position: 'top'
+                            })
+                        } else {
+                            this.manageGame = false;
+                            this.$q.notify({
+                                icon: 'fas fa-exclamation-triangle',
+                                color: 'negative',
+                                message: response.data.message,
+                                position: 'top'
+                            })
+                            setTimeout(this.onResetValidation, 3000);
+                        }
 
-                        this.$q.notify({
-                            icon: 'fas fa-check-square',
-                            color: 'secondary',
-                            message: `Ajout du jeu n°${idGameCreated} réussi !`,
-                            position: 'top'
-                        })
-
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
 
                     this.manageGame = false;
                 }
             },
 
-            filterParcours (val, update) {
+            filterParcours(val, update) {
 
                 if (val === '') {
                     update(() => {
@@ -572,7 +546,7 @@
         filters: {
             formatDate: function (value) {
                 if (!value) return ''
-                return moment(String(value)).format('DD/MM/YYYY')
+                return moment(String(value)).format('DD/MM/YYYY HH:mm')
             }
         }
     }
@@ -581,17 +555,5 @@
 <style scoped>
     .first-card:hover {
         background-color: #cc0016 !important;
-    }
-
-    .game-card:hover:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: black;
-        opacity: 0.3;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
     }
 </style>

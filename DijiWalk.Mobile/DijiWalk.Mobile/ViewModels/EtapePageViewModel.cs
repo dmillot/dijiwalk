@@ -1,5 +1,7 @@
-﻿using DijiWalk.Mobile.Services;
-using DijiWalk.Mobile.ViewModels.ViewEntities;
+﻿using DijiWalk.Mobile.ViewModels.ViewEntities;
+using DijiWalk.Entities;
+using DijiWalk.Mobile.Services;
+using DijiWalk.Mobile.Services.Interfaces;
 using DijiWalk.Mobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -20,6 +22,7 @@ namespace DijiWalk.Mobile.ViewModels
         public DelegateCommand<object> NavigateToChatPage { get; set; }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
+        public Step Step { get; set; }
 
         private ViewStep _actualStep;
         public ViewStep ActualStep
@@ -31,12 +34,14 @@ namespace DijiWalk.Mobile.ViewModels
             }
         }
         #endregion
+        private readonly StepService _stepService;
 
-
-        public EtapePageViewModel(PlayerService playerService, INavigationService navigationService)
+        public EtapePageViewModel(INavigationService navigationService, StepService stepService, PlayerService playerService)
         {
             this._playerService = playerService;
             this.NavigationService = navigationService;
+            this._stepService = stepService;
+
             this.NavigateToQuizzPage = new DelegateCommand<object>(GoToQuizz);
             this.NavigateToValidationPage = new DelegateCommand<object>(GoToValidation);
             this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
@@ -45,13 +50,14 @@ namespace DijiWalk.Mobile.ViewModels
         }
 
         #region NavigationFunction
+
         /// <summary>
         /// Fonction appelée quand l'utilisateur veut aller sur la page du quizz.
         /// </summary>
         /// <param name="parameters">Id quizz</param>
         void GoToQuizz(object parameters)
         {
-            //this.NavigationService.NavigateAsync(nameof(QuizzPage), null); TO DO /////////////////////////////////////////////////////////////////
+            this.NavigationService.NavigateAsync(nameof(QuizzPage), null);
         }
 
         /// <summary>
@@ -95,7 +101,6 @@ namespace DijiWalk.Mobile.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public async void OnNavigatedTo(INavigationParameters parameters)
@@ -108,8 +113,8 @@ namespace DijiWalk.Mobile.ViewModels
             //    Name = response.Name
             //};
         }
+        }
 
         #endregion
-
     }
 }

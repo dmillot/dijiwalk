@@ -22,8 +22,6 @@ namespace DijiWalk.Mobile.ViewModels
 
         #region Authentification
 
-
-
         private Login _login;
         public Login Login
         {

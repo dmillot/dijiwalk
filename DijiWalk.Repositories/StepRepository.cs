@@ -30,15 +30,22 @@ namespace DijiWalk.Repositories
 
         private readonly IMissionRepository _missionRepository;
 
+        private readonly IImageBusiness _imageBusiness;
+
+        private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness)
+        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+
         {
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
             _missionRepository = missionRepository;
+            _imageBusiness = imageBusiness;
+            _stepAnalyseBusiness = stepAnalyseBusiness;
         }
 
         /// <summary>
@@ -49,18 +56,20 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                Step newStep = _stepBusiness.SeparateStep(step);
+                var newStep = _stepBusiness.SeparateStep(step);
+                newStep.Validation = await _imageBusiness.UploadImage(newStep.ImageBase64, $"{newStep.Name}-{DateTime.Now.ToString("yyyyMMddHHmmss")}");
                 var oldIdMissions = step.Missions.Select(m => { return m.Id; }).ToList();
                 var missions = await _context.Missions.AsNoTracking().Where(m => oldIdMissions.Contains((int)m.IdStep)).Include(m => m.Trials).ThenInclude(t => t.Answers).ToListAsync();
                 await _context.Steps.AddAsync(newStep);
                 await _context.SaveChangesAsync();
-
+                await _imageBusiness.Analyze(newStep.ImageBase64, newStep.Id);
                 var response = await _missionBusiness.SetUp(missions, newStep.Id);
 
                 if (response.Status == ApiStatus.Ok)
                 {
                     return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Steps.Where(s => s.Id == newStep.Id).Include(s => s.Missions).FirstOrDefaultAsync() };
-                } else
+                }
+                else
                     return response;
             }
             catch (Exception e)
@@ -77,17 +86,22 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                if(!await _stepBusiness.ContainsStep(idStep))
+                if (!await _stepBusiness.ContainsStep(idStep))
                 {
-                    Step step = await _context.Steps.Where(s => s.Id == idStep).Include(s => s.Missions).ThenInclude(m => m.Trials).ThenInclude(t => t.Answers).FirstOrDefaultAsync();
+                    var step = await _context.Steps.Where(s => s.Id == idStep).Include(s => s.Missions).ThenInclude(m => m.Trials).ThenInclude(t => t.Answers).Include(s => s.StepTags).FirstOrDefaultAsync();
+                    if (step.Validation != null)
+                    {
+                        _imageBusiness.DeleteImage(step.Validation);
+                    }
                     _context.Steps.Remove(step);
                     await _context.SaveChangesAsync();
                     return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
-                } else
+                }
+                else
                 {
                     return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Impossible, l'étape est utilisée dans un jeu" };
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -102,7 +116,8 @@ namespace DijiWalk.Repositories
         /// <returns>The Step with the Id researched</returns>
         public async Task<Step> Find(int id)
         {
-            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).FirstOrDefaultAsync();
+            return await _context.Steps.Where(s => s.Id == id).Include(s => s.Missions).ThenInclude(m => m.Trials).Include(s => s.StepTags).ThenInclude(st => st.Tag).Include(s => s.Clues).FirstOrDefaultAsync();
+
             // return await _context.Steps.Where(step => step.Id == id).Include(s => s.RouteSteps).FirstOrDefaultAsync();
             // return await _context.Steps.Where(step => step.Id == id).Include(step => step.RouteSteps).ThenInclude(routeStep => routeStep);
         }
@@ -113,7 +128,12 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Steps</returns>
         public async Task<IEnumerable<Step>> FindAll()
         {
-            return await _context.Steps.Include(s => s.Missions).ToListAsync();
+            return await _context.Steps
+                .Include(s => s.Missions)
+                .ThenInclude(m => m.Trials)
+                .Include(s => s.StepTags)
+                .ThenInclude(st => st.Tag)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -124,9 +144,18 @@ namespace DijiWalk.Repositories
         {
             try
             {
-
-                Step newStep = _stepBusiness.SeparateStep(step);
+                if (step.ImageChanged)
+                {
+                    if (step.Validation != null)
+                    {
+                        _imageBusiness.DeleteImage(step.Validation);
+                        await _stepAnalyseBusiness.DeleteFromStep(step.Id);
+                    }
+                    step.Validation = await _imageBusiness.UploadImage(step.ImageBase64, $"{step.Name}-{DateTime.Now.ToString("yyyyMMddHHmmss")}");
+                    await _imageBusiness.Analyze(step.ImageBase64, step.Id);
+                }
                 _context.Steps.Update(step);
+                
                 await _context.SaveChangesAsync();
 
                 var oldIdMissions = _context.Missions.Where(m => m.IdStep == step.Id).Select(m => m.Id).ToList();
@@ -141,11 +170,13 @@ namespace DijiWalk.Repositories
                     if (responseAdd.Status == ApiStatus.Ok)
                     {
                         return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(step.Id) };
-                    } else
+                    }
+                    else
                         return responseAdd;
-                } else
+                }
+                else
                     return responseDelete;
-             }
+            }
             catch (Exception e)
             {
                 return TranslateError.Convert(e);

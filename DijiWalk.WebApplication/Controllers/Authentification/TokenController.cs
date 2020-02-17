@@ -87,8 +87,8 @@ namespace DijiWalk.WebApplication.Controllers.Authentification
                        };
 
                     var token = new JwtSecurityToken(claims: claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTSettings:SecretKey"])), SecurityAlgorithms.HmacSha256));
-
-                    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
+                    user.JWTTokens = new JWTTokens { Token = new JwtSecurityTokenHandler().WriteToken(token), Expiration = token.ValidTo };
+                    return Ok(user);
                 }
                 else
                 {

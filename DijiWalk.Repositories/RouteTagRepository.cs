@@ -35,10 +35,18 @@ namespace DijiWalk.Repositories
         /// Method to Add the RouteTag passed in the parameters to the database
         /// </summary>
         /// <param name="routeTag">Object RouteTag to Add</param>
-        public void Add(RouteTag routeTag)
+        public async Task<ApiResponse> Add(RouteTag routeTag)
         {
-            _context.Routetags.Add(routeTag);
-            _context.SaveChanges();
+            try
+            {
+                await _context.Routetags.AddAsync(routeTag);
+                await _context.SaveChangesAsync();
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = routeTag};
+            }
+            catch (Exception e)
+            {
+                return TranslateError.Convert(e);
+            }
         }
 
         /// <summary>

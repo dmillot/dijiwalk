@@ -12,12 +12,15 @@
   <ItemGroup>
     <PackageReference Include="Forms.Controls.FlexButton" Version="0.11.0" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.5.0" />
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="1.7.0" />
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.Face" Version="2.5.0-preview.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DijiWalk.Common.Contracts\DijiWalk.Common.Contracts.csproj" />
+    <ProjectReference Include="..\DijiWalk.Entities\DijiWalk.Entities.csproj" />
   </ItemGroup>
 
 </Project>

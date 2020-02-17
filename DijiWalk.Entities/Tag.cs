@@ -18,6 +18,20 @@ namespace DijiWalk.Entities
         public Tag()
         {
             RouteTags = new HashSet<RouteTag>();
+            StepTags = new HashSet<StepTag>();
+        }
+
+        /// <summary>
+        /// Constructeur d'une nouvelle instance d'un Tag
+        /// </summary>
+        public Tag(Tag t)
+        {
+            Id = t.Id;
+            Description = t.Description;
+            Name = t.Name;
+            Color = t.Color;
+            RouteTags = new HashSet<RouteTag>();
+            StepTags = new HashSet<StepTag>();
         }
 
         /// <summary>
@@ -44,5 +58,10 @@ namespace DijiWalk.Entities
         /// Liste Généré par la BDD inutile pour nous mais à garder
         /// </summary>
         public virtual ICollection<RouteTag> RouteTags { get; set; }
+
+        /// <summary>
+        /// Liste Généré par la BDD inutile pour nous mais à garder
+        /// </summary>
+        public virtual ICollection<StepTag> StepTags { get; set; }
     }
 }

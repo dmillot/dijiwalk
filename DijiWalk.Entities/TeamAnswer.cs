@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
     using System;
 
     /// <summary>
@@ -55,11 +56,13 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit la Reponse correspondant à l'Epreuve dans les cas ou il y a la choix
         /// </summary>
+        [JsonIgnore]
         public virtual Answer Answer { get; set; }
 
         /// <summary>
         /// Obtient ou définit le Jeu de la Réponse de la Team
         /// </summary>
+        [JsonIgnore]
         public virtual Game Game { get; set; }
 
         /// <summary>

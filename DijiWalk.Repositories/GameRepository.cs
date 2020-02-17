@@ -30,15 +30,19 @@ namespace DijiWalk.Repositories
 
         private readonly IPlayBusiness _playBusiness;
 
+        private readonly ITeamBusiness _teamBusiness;
+
+
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public GameRepository(SmartCityContext context, IGameBusiness gameBusiness, IPlayBusiness playBusiness)
+        public GameRepository(SmartCityContext context, IGameBusiness gameBusiness, IPlayBusiness playBusiness, ITeamBusiness teamBusiness)
         {
-            this._context = context;
-            this._gameBusiness = gameBusiness;
-            this._playBusiness = playBusiness;
+            _context = context;
+            _gameBusiness = gameBusiness;
+            _playBusiness = playBusiness;
+            _teamBusiness = teamBusiness;
         }
         /// <summary>
         /// Method to Add the Game passed in the parameters to the database
@@ -48,9 +52,27 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                await _context.Games.AddAsync(game);
-                _context.SaveChanges();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await this.Find(game.Id) };
+                if (!await _teamBusiness.DuplicatePlayer(game.Plays.ToList()))
+                {
+                    var newGame = _gameBusiness.SeparatePlay(game);
+                    await _context.Games.AddAsync(newGame);
+                    await _context.SaveChangesAsync();
+                    var reponse = await _playBusiness.SetUp(game.Plays.ToList(), newGame.Id);
+                    if (reponse.Status == ApiStatus.Ok)
+                    {
+                        var reponseGenerate = await _gameBusiness.GenerateTeamRoute(game, newGame.Id);
+                        if (reponseGenerate.Status == ApiStatus.Ok)
+                            return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(newGame.Id) };
+                        else
+                            return reponseGenerate;
+                    }
+                    else
+                        return reponse;
+                }
+                else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantAdd, Message = "Impossible, un joueur est dans plusieurs équipes selectionnées !" };
+                }
             }
             catch (Exception e)
             {
@@ -73,9 +95,10 @@ namespace DijiWalk.Repositories
                     _context.Games.Remove(await _context.Games.FindAsync(id));
                     _context.SaveChanges();
                     return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
-                } else
+                }
+                else
                 {
-                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce jeu est en cours.." };
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce jeu est en cours ou a déjà été joué." };
                 }
             }
             catch (Exception e)
@@ -100,20 +123,141 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            return await _context.Games.Where(g => g.Id == id).Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).FirstOrDefaultAsync();
+            var game = await _context.Games.Where(g => g.Id == id).Include(r => r.Route).ThenInclude(r => r.RouteSteps).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
+            if (game.Organizer != null)
+            {
+                game.Organizer.Games = new HashSet<Game>();
+                game.Organizer.Messages = new HashSet<Message>();
+                game.Organizer.Players = new HashSet<Player>();
+                game.Organizer.Routes = new HashSet<Route>();
+                game.Organizer.Teams = new HashSet<Team>();
+            } else
+            {
+                game.Organizer = await _context.Organizers.FirstOrDefaultAsync(o => o.Id == game.IdOrganizer);
+            }
+            if (game.Route != null)
+            {
+                game.Route.Games = new HashSet<Game>();
+                game.Route.RouteSteps =  game.Route.RouteSteps.Select(rs =>
+                {
+                    rs.Route = null;
+                    rs.Step = null;
+                    rs.TeamRoutes = new HashSet<TeamRoute>();
+                    return rs;
+                }).ToList();
+                game.Route.RouteTags = new HashSet<RouteTag>();
+            } else
+            {
+                game.Route = await _context.Routes.FirstOrDefaultAsync(r => r.Id == game.IdRoute);
+            }
+            if (game.Transport != null)
+            {
+                game.Transport.Games = new HashSet<Game>();
+            } else
+            {
+                game.Transport = await _context.Transports.FirstOrDefaultAsync(t => t.Id == game.IdTransport);
+            }
+
+            if (game.Plays != null)
+            {
+                game.Plays = game.Plays.Select(p =>
+                {
+                    p.Game = null;
+                    p.Team.Organizer = null;
+                    p.Team.Plays = new HashSet<Play>();
+                    p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                    p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                    p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                    return p;
+                }).ToList();
+            }
+            return game;
         }
+
+        /// <summary>
+        /// Method to find an Game with his Id in the database
+        /// </summary>
+        /// <param name="id">The Id of the Game</param>
+        /// <returns>The Game with the Id researched</returns>
+        public async Task<Game> FindNoTracking(int id)
+        {
+            var game = await _context.Games.AsNoTracking().Where(g => g.Id == id).Include(r => r.Route).ThenInclude(r => r.RouteSteps).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
+            if (game.Organizer != null)
+            {
+                game.Organizer.Games = new HashSet<Game>();
+                game.Organizer.Messages = new HashSet<Message>();
+                game.Organizer.Players = new HashSet<Player>();
+                game.Organizer.Routes = new HashSet<Route>();
+                game.Organizer.Teams = new HashSet<Team>();
+            }
+            else
+            {
+                game.Organizer = await _context.Organizers.FirstOrDefaultAsync(o => o.Id == game.IdOrganizer);
+            }
+            if (game.Route != null)
+            {
+                game.Route.Games = new HashSet<Game>();
+                game.Route.RouteSteps = game.Route.RouteSteps.Select(rs =>
+                {
+                    rs.Route = null;
+                    rs.Step = null;
+                    rs.TeamRoutes = new HashSet<TeamRoute>();
+                    return rs;
+                }).ToList();
+                game.Route.RouteTags = new HashSet<RouteTag>();
+            }
+            else
+            {
+                game.Route = await _context.Routes.FirstOrDefaultAsync(r => r.Id == game.IdRoute);
+            }
+            if (game.Transport != null)
+            {
+                game.Transport.Games = new HashSet<Game>();
+            }
+            else
+            {
+                game.Transport = await _context.Transports.FirstOrDefaultAsync(t => t.Id == game.IdTransport);
+            }
+
+            if (game.Plays != null)
+            {
+                game.Plays = game.Plays.Select(p =>
+                {
+                    p.Game = null;
+                    p.Team.Organizer = null;
+                    p.Team.Plays = new HashSet<Play>();
+                    p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                    p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                    p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                    return p;
+                }).ToList();
+            }
+            return game;
+        }
+
 
         /// <summary>
         /// Method to find all Game from the database
         /// </summary>
         /// <returns>A List with all Games</returns>
-        public async Task<IEnumerable<Game>> FindAll()
+        public async Task<List<Game>> FindAll()
         {
             return await _context.Games
                 .Include(r => r.Route)
                 .Include(t => t.Transport)
                 .Include(o => o.Organizer)
                 .Include(p => p.Plays).ThenInclude(t => t.Team)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Method to find all active Game from the database
+        /// </summary>
+        /// <returns>A List with all actives Games</returns>
+        public async Task<IEnumerable<Game>> FindAllActifs()
+        {
+            return await _context.Games.Where(g => g.CreationDate != null && g.FinalTime == null)
+                .Include(g => g.Organizer)
                 .ToListAsync();
         }
 
@@ -125,35 +269,51 @@ namespace DijiWalk.Repositories
         {
             try
             {
-                _context.Games.Update(_gameBusiness.SeparatePlay(game));
-                await _context.SaveChangesAsync();
-
-                // Récupérer tous les id actuels des teams de la game dans la DB
-                var currentIdPlays = await _context.Plays.Where(p => p.IdGame == game.Id).Select(p => p.IdTeam).ToListAsync();
-
-                // Récuperer tous les id teams de la game envoyée en paramètre
-                var idPlay = game.Plays.Select(p => p.IdTeam).ToList();
-
-                // liste des id de la BDD qui ne sont pas dans les ID de l'update
-                var oldIdPlay = currentIdPlays.Where(p => !idPlay.Contains(p)).ToList();
-
-                var responseDelete = await _playBusiness.DeleteFromGame(await _context.Plays.Where(p => p.IdGame == game.Id && oldIdPlay.Contains(p.IdTeam)).ToListAsync());
-                if (responseDelete.Status == ApiStatus.Ok)
+                if (!await _teamBusiness.DuplicatePlayer(game.Plays.ToList()))
                 {
-                    var responsePlayAdd = await _playBusiness.SetUp(game.Plays.Where(p => !currentIdPlays.Contains(p.IdTeam)).ToList(), game.Id);
-                    if (responsePlayAdd.Status == ApiStatus.Ok)
+                    await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE [dbo].[GAME] SET  [Game_fk_Route_Id] = {game.IdRoute},  [Game_fk_Organizer_Id] = {game.IdOrganizer},  [Game_fk_Transport_Id] = {game.IdTransport} WHERE [Game_Id] = {game.Id}");
+                    await _context.SaveChangesAsync();
+
+                    // Récupérer tous les id actuels des teams de la game dans la DB
+                    var currentIdPlays = await _context.Plays.Where(p => p.IdGame == game.Id).Select(p => p.IdTeam).ToListAsync();
+
+                    // Récuperer tous les id teams de la game envoyée en paramètre
+                    var idPlay = game.Plays.Select(p => p.IdTeam).ToList();
+
+                    // liste des id de la BDD qui ne sont pas dans les ID de l'update
+                    var oldIdPlay = currentIdPlays.Where(p => !idPlay.Contains(p)).ToList();
+
+                    var responseDelete = await _playBusiness.DeleteFromGame(await _context.Plays.Where(p => p.IdGame == game.Id && oldIdPlay.Contains(p.IdTeam)).ToListAsync());
+                    if (responseDelete.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };
+                        var responsePlayAdd = await _playBusiness.SetUp(game.Plays.Where(p => !currentIdPlays.Contains(p.IdTeam)).ToList(), game.Id);
+                        if (responsePlayAdd.Status == ApiStatus.Ok)
+                        {
+                            var responseDeleteTeamRoutes = await _gameBusiness.DeleteAllTeamsRoute(game.Id);
+                            if (responseDeleteTeamRoutes.Status == ApiStatus.Ok)
+                            {
+                                var reponseGenerate = await _gameBusiness.GenerateTeamRoute(await this.FindNoTracking(game.Id), game.Id);
+                                if (reponseGenerate.Status == ApiStatus.Ok) 
+                                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };  
+                                else
+                                    return reponseGenerate;
+                        } else
+                                return responseDeleteTeamRoutes;
+                        }
+                        else
+                            return responsePlayAdd;
                     }
                     else
-                        return responsePlayAdd;
+                        return responseDelete;
                 }
                 else
-                    return responseDelete;
+                {
+                    return new ApiResponse { Status = ApiStatus.CantAdd, Message = "Impossible, un joueur est dans plusieurs équipes selectionnées !" };
+                }
             }
             catch (Exception e)
             {
-                throw;
+                return TranslateError.Convert(e);
             }
         }
     }

@@ -17,8 +17,8 @@ namespace DijiWalk.Common.Response
             {"MESSAGE_PLAYER", "Le message est lié à un participant !"},
             {"MISSION_STEP", "La mission est liée à une étape !"},
             {"ORGANIZER_ADMINISTRATION", "L'organisateur est liée à un administrateur !"},
-            {"PLAY_GAME", "La partie de l'équipe est liée à un jeu !"},
-            {"PLAY_TEAM", "La partie de l'équipe est liée à une équipe !"},
+            {"PLAY_GAME", "Ce jeu contient des équipes !"},
+            {"PLAY_TEAM", "Cette équipe a déjà participée à un jeu !"},
             {"PLAYER_ORGANIZER", "Le participant est lié à un organisateur !"},
             {"ROUTE_ORGANIZER", "Le parcours est lié à un organisateur !"},
             {"ROUTESTEP_ROUTE", "L'étape d'un parcours est liée à un parcours !"},
@@ -56,6 +56,9 @@ namespace DijiWalk.Common.Response
                 case string a when a.Contains("est en conflit avec la contrainte"):
                     return new ApiResponse { Status = ApiStatus.Conflict, Message = foreignKey[a.Substring(a.IndexOf("REFERENCE \"FK_") + 14, a.Substring(a.IndexOf("REFERENCE \"FK_") + 14).IndexOf("\""))] };
                 
+                case string a when a.Contains("statement conflicted with the REFERENCE constraint"):
+                    return new ApiResponse { Status = ApiStatus.Conflict, Message = foreignKey[a.Substring(a.IndexOf("REFERENCE constraint \"FK_") + 25, a.Substring(a.IndexOf("REFERENCE constraint \"FK_") + 25).IndexOf("\""))] };
+
                 case string b when b.Contains("Value cannot be null"):
                     return new ApiResponse { Status = ApiStatus.NullValue, Message = "L'élément que vous voulez supprimer est introuvable !" };
                 

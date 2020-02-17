@@ -16,10 +16,10 @@ namespace DijiWalk.Repositories.Contracts
     public interface IRouteTagRepository
     {
         /// <summary>
-        /// Definition of the function that will Add the RouteTag passed in the parameters to the database
+        /// Method to Add the RouteTag passed in the parameters to the database
         /// </summary>
         /// <param name="routeTag">Object RouteTag to Add</param>
-        void Add(RouteTag routeTag);
+        Task<ApiResponse> Add(RouteTag routeTag);
 
         /// <summary>
         /// Definition of the function that will Delete from the database the RouteTag passed in the parameters

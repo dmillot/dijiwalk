@@ -77,6 +77,9 @@ namespace DijiWalk.Entities
         [NotMapped]
         public bool ImageChanged { get; set; }
 
+        [NotMapped]
+        public bool PasswordChanged { get; set; }
+
         /// <summary>
         /// Obtient ou définit l'Organisateur ayant créé le Joueur
         /// </summary>

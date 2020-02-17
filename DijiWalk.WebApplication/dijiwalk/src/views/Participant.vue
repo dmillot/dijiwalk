@@ -7,73 +7,45 @@
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelJeu"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par jeux"
-                                          :options="jeuxOptions"
-                                          @filter="filterJeux"
-                                          style="width: 250px" />
-                            </q-item>
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelEquipe"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par équipe"
-                                          :options="equipesOptions"
-                                          @filter="filterEquipe"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
             <div class="col-xs-12 col-md-4 col-grow">
-                <q-card @click="openModalToManage(false)" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
+                <q-card @click="openModalToAdd()" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
                     <q-icon name="fas fa-plus text-white" style="font-size: 3vw;" />
                 </q-card>
             </div>
             <div v-for="participant in participants" v-bind:key="participant.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <q-img :src="participant.picture" />
 
-                    <q-card-section>
-                        <q-btn @click="openModalToDelete(participant)"
-                               fab
-                               color="negative"
-                               icon="fas fa-trash"
-                               class="absolute"
-                               style="top: 0; right: 12px; transform: translateY(-50%);" />
+                    <div @click="openModalToEdit(participant)" class="game-card">
+                        <q-img :src="participant.picture" />
 
-                        <div class="row no-wrap">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ participant.firstName }} {{ participant.lastName }} / {{ participant.Login }}
+                        <q-card-section>
+                            <q-btn v-on:click.stop="openModalToDelete(participant)"
+                                   fab
+                                   color="negative"
+                                   icon="fas fa-trash"
+                                   class="absolute"
+                                   style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
+
+                            <div class="row no-wrap">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ participant.firstName }} {{ participant.lastName }} / {{ participant.Login }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row items-center no-wrap text-grey">
-                            <q-icon name="fas fa-users" />
-                            <p class="q-ma-none q-ml-sm">{{ participant.email }}</p>
-                        </div>
-                    </q-card-section>
+                            <div class="row items-center no-wrap text-grey">
+                                <q-icon name="fas fa-users" />
+                                <p class="q-ma-none q-ml-sm">{{ participant.email }}</p>
+                            </div>
+                        </q-card-section>
+                    </div>
 
                     <q-separator />
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat @click="openModalToManage(true); fillForm(participant)" color="primary text-bold">
+                        <q-btn flat @click="openModalToGetInformations(participant)" class="dijiwalk-secondary" round icon="fas fa-info-circle" />
+                        <q-btn flat @click="openModalToGetInformations(participant)" class="dijiwalk-secondary" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -102,7 +74,7 @@
         <q-dialog v-model="manageParticipant">
             <q-card>
                 <q-card-section class="row items-center">
-                    <q-input v-model="idParticipant" type="hidden" />
+                    <q-input v-if="isEditing" v-model="idParticipant" type="hidden" />
                     <q-input ref="firstname" class="col-6 q-pr-sm  q-my-xs" label="Prénom *" color="primary" option-value="id" option-label="name" v-model="prenomParticipant" name="prenomParticipant" id="prenomParticipant" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un prénom.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-address-card" />
@@ -118,7 +90,7 @@
                             <q-icon name="fas fa-user" />
                         </template>
                     </q-input>
-                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']">
+                    <q-input class="col-12 q-my-xs" ref="password" label="Mot de passe *" v-model="passwordParticipant" :type="isPwd ? 'password' : 'text'" name="passwordParticipant" id="passwordParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe si nouveau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -128,7 +100,7 @@
                                     @click="isPwd = !isPwd" />
                         </template>
                     </q-input>
-                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe.']">
+                    <q-input ref="confirmPassword" class="col-12 q-my-xs" label="Mot de passe de confirmation *" v-model="passwordConfirmParticipant" :type="isPwd ? 'password' : 'text'" name="passwordConfirmParticipant" id="passwordConfirmParticipant" :error-message="errormessagepassword" :error="errorpassword" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez confirmer le mot de passe si nouveau participant.']">
                         <template v-slot:prepend>
                             <q-icon name="fas fa-lock" />
                         </template>
@@ -143,16 +115,33 @@
                             <q-icon name="fas fa-at" />
                         </template>
                     </q-input>
-                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire !']" clearable>
+                    <q-file class="col-12 q-my-xs" ref="picture" v-model="pictureParticipant" label="Image de profil *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire si nouveau participant !']" clearable @input="takePicture" @clear="clearPicture">
                         <template v-slot:prepend>
-                            <q-icon name="fas fa-image" />
+                            <q-avatar id="avatarSelected" v-show="!noPicture">
+
+                            </q-avatar>
+                            <q-icon v-show="noPicture" name="fas fa-image" />
                         </template>
                     </q-file>
                 </q-card-section>
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat v-if="show" label="Modifier" @click="updateParticipant" color="secondary" />
-                    <q-btn v-else label="Ajouter" @click="addedParticipant" color="secondary" />
+                    <q-btn flat v-if="isEditing" label="Modifier" @click="updateParticipant" color="secondary" />
+                    <q-btn v-if="isAdding" label="Ajouter" @click="addedParticipant" color="secondary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-if="participantSelected !== null" v-model="informations">
+            <q-card class="modal-informations">
+                <q-card-section class="items-center">
+                    <q-img :src="participantSelected.picture" class="img-radius row items-center justify-center" />
+                    <h5 class="q-my-sm">{{ participantSelected.firstName }} {{ participantSelected.lastName }}</h5>
+                    <p>{{ participantSelected.Login }} / {{ participantSelected.email }}</p>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -176,11 +165,13 @@
                 participants: null,
                 confirm: false,
 
-                show: true,
+                isEditing: false,
+                isAdding: false,
+                informations: false,
 
                 manageParticipant: false,
                 messageDeleteParticipant: null,
-                messageBonus: "Si vous supprimer un participant, cela supprimer ses liens avec les équipes !",
+                messageBonus: "Si vous supprimer un participant, cela supprimera ses liens avec les équipes !",
                 deleteParticipant: null,
 
                 participantSelected: null,
@@ -202,6 +193,8 @@
 
                 isPwd: true,
                 idParticipant: null,
+                encryptedPassword: null,
+                noPicture: true
             }
         },
         created() {
@@ -213,11 +206,52 @@
         methods: {
             fileConvert() {
                 return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(this.pictureParticipant);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
+                    if (this.pictureParticipant != null) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(this.pictureParticipant);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    } else {
+                        resolve(this.pictureParticipant);
+                    }
                 })
+            },
+            clearPicture() {
+                document.getElementById('avatarSelected').innerHTML = "";
+                this.noPicture = true;
+            },
+            takePicture() {
+                if (this.pictureParticipant != null && "name" in this.pictureParticipant) {
+                    this.noPicture = false;
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (e.target.result.indexOf("image") != -1) {
+                            document.getElementById('avatarSelected').innerHTML = ['<img style="width:35px; height: 35px;" src="', e.target.result, '" />'].join('')
+                        }
+                    };
+                    reader.readAsDataURL(this.pictureParticipant);
+                }
+            },
+            openModalToGetInformations(participant) {
+                this.isAdding = false;
+                this.isEditing = false;
+                this.participantSelected = participant;
+                this.informations = true;
+            },
+
+            openModalToAdd() {
+                this.isEditing = false;
+                this.isAdding = true;
+                this.resetInput();
+                this.manageParticipant = true;
+            },
+
+            openModalToEdit(participant) {
+                this.isEditing = true;
+                this.isAdding = false;
+                this.resetInput();
+                this.fillForm(participant);
+                this.manageParticipant = true
             },
             resetInput() {
                 this.idParticipant = null
@@ -229,11 +263,6 @@
                 this.emailParticipant = null
                 this.pictureParticipant = null
             },
-            openModalToManage(action) {
-                this.resetInput();
-                this.manageParticipant = true
-                this.show = action;
-            },
             fillForm(participant) {
                 this.participantSelected = participant
                 this.idParticipant = participant.id
@@ -244,14 +273,15 @@
                 this.passwordConfirmParticipant = null
                 this.emailParticipant = participant.email
                 this.pictureUrl = participant.picture
+                this.encryptedPassword = participant.Password
             },
             getAllParticipants() {
+                this.$q.loading.show()
                 if (this.participants === null) {
                     PlayerDataService.getAll().then(response => {
                         this.participants = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                        this.$q.loading.hide()
+                    }).catch();
                 }
             },
             onResetValidation() {
@@ -272,6 +302,7 @@
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
                         if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                this.$q.loading.show()
                                 this.fileConvert().then(response => {
                                     PlayerDataService.create({
                                         FirstName: this.prenomParticipant,
@@ -280,16 +311,14 @@
                                         Password: this.passwordParticipant,
                                         Email: this.emailParticipant,
                                         ImageBase64: response,
-                                        ImageChanged: true
+                                        ImageChanged: true,
+                                        PasswordChanged: true
                                     }).then(response => {
+                                        this.$q.loading.hide()
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();
                                             this.participants.push(response.data.response);
-
-
-                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
-
                                             this.$q.notify({
                                                 icon: 'fas fa-check-square',
                                                 color: 'secondary',
@@ -310,9 +339,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -333,27 +360,28 @@
                 }
             },
             updateParticipant() {
-                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.password.validate() && this.$refs.confirmPassword.validate() && this.$refs.email.validate()) {
+                if (this.$refs.firstname.validate() && this.$refs.lastname.validate() && this.$refs.login.validate() && this.$refs.email.validate()) {
                     if (this.passwordParticipant === this.passwordConfirmParticipant) {
-                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant)) {
+                        if (new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\/$%\/^&\/*])(?=.{8,})').test(this.passwordParticipant) || this.passwordParticipant == null) {
                             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.emailParticipant)) {
+                                this.$q.loading.show()
                                 this.fileConvert().then(response => {
                                     PlayerDataService.update(this.idParticipant, {
                                         FirstName: this.prenomParticipant,
                                         LastName: this.nomParticipant,
                                         Login: this.loginParticipant,
-                                        Password: this.passwordParticipant,
+                                        Password: this.encryptedPassword,
                                         Email: this.emailParticipant,
-                                        ImageBase64: this.$refs.picture.validate() ? response : this.pictureUrl,
-                                        ImageChanged: this.$refs.picture.validate(),
-                                        Picture: this.pictureUrl
+                                        ImageBase64: this.pictureParticipant != null ? response : this.pictureUrl,
+                                        ImageChanged: this.pictureParticipant != null ? true : false,
+                                        Picture: this.pictureUrl,
+                                        PasswordChanged: this.passwordParticipant != null ? true : false
                                     }).then(response => {
+                                       this.$q.loading.hide()
                                         if (response.data.status == 1) {
                                             this.manageParticipant = false;
                                             this.onResetValidation();
                                             this.participants[this.participants.map(e => e.id).indexOf(this.participantSelected.id)] = response.data.response
-
-                                            //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
                                             this.$q.notify({
                                                 icon: 'fas fa-check-square',
@@ -375,9 +403,7 @@
                                             })
                                             setTimeout(this.onResetValidation, 3000);
                                         }
-                                    }).catch(reason => {
-                                        console.log(reason);
-                                    });
+                                    }).catch();
                                 })
 
                             } else {
@@ -408,7 +434,9 @@
             deletedParticipant() {
                 var self = this;
                 var id = self.deleteParticipant;
+                this.$q.loading.show()
                 PlayerDataService.delete(id).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',
@@ -429,9 +457,7 @@
                         })
                     }
 
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
             filterEquipe(val, update) {
                 update(() => {

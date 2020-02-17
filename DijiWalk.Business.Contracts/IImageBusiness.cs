@@ -23,5 +23,13 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="pictureUrl">Url of the picture to delete</param>
         void DeleteImage(string pictureUrl);
+
+        /// <summary>
+        /// Method to analyze picture and add some tag
+        /// </summary>
+        /// <param name="image64">Image convert string 64</param>
+        /// <param name="fileName">Name of file</param>
+        /// <returns></returns>
+        Task<ApiResponse> Analyze(string image64, int idStep);
     }
 }

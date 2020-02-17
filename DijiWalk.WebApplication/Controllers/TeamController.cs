@@ -6,8 +6,11 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Response;
+    using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -60,7 +63,38 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(await this._repository.FindAll());
+                var teams = await this._repository.FindAll();
+                return Ok(teams.Select(t =>
+                {
+                    t.Plays = t.Plays.Select(p =>
+                    {
+                        p.Team = null;
+                        p.Game.Plays = new HashSet<Play>();
+                        p.Game.TeamAnswers = new HashSet<TeamAnswer>();
+                        p.Game.TeamRoutes = new HashSet<TeamRoute>();
+                        p.Game.Organizer = null;
+                        p.Game.Route = null;
+                        p.Game.Transport = null;
+                        return p;
+                    }).ToList();
+                    t.Captain.Messages = new HashSet<Message>();
+                    t.Captain.Teams = new HashSet<Team>();
+                    t.Captain.TeamPlayers = new HashSet<TeamPlayer>();
+                    t.Captain.Organizer = null;
+                    t.TeamAnswers = new HashSet<TeamAnswer>();
+                    t.TeamRoutes = new HashSet<TeamRoute>();
+                    t.TeamPlayers = t.TeamPlayers.Select(tp =>
+                    {
+                        tp.Player.Messages = new HashSet<Message>();
+                        tp.Player.Teams = new HashSet<Team>();
+                        tp.Player.TeamPlayers = new HashSet<TeamPlayer>();
+                        tp.Player.Organizer = null;
+                        tp.Team = null;
+                        return tp;
+                    }).ToList();
+                    t.Organizer = null;
+                    return t;
+                }).ToList());
             }
             catch (Exception e)
             {
@@ -78,6 +112,41 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to Add a team 
+        /// </summary>
+        /// <returns>Ok Object</returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Team team)
+        {
+            try
+            {
+                return this.Ok(await _repository.Add(team));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        /// <summary>
+        /// Method to Update a team 
+        /// </summary>
+        /// <returns>A team</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Team team)
+        {
+            try
+            {
+                team.Id = id;
+                return this.Ok(await _repository.Update(team));
             }
             catch (Exception e)
             {

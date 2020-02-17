@@ -28,10 +28,10 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            await NavigationService.NavigateAsync("NavigationPage/GamePage");
 
             #region Property configuration
-            Application.Current.Properties["url"] = "https://10.0.2.2:5001/api/";
+            Application.Current.Properties["url"] = "http://dijiwalktest.hopto.org/api/";
             Application.Current.Properties["APIKey"] = "AIzaSyCDgp4RQYA4bzroTJM2ltv0ef6ceuqW254";
             Application.Current.Properties["SecretKey"] = "38b87a53f6ccec0d76a91a2640f626f03b04fce6128773b7c80235b2";
             #endregion
@@ -67,6 +67,7 @@ namespace DijiWalk.Mobile
             #region Pages / Navigation
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<QuizzPage, QuizzPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<EtapePage, EtapePageViewModel>();
             containerRegistry.RegisterForNavigation<WaitingPage, WaitingPageViewModel>();
