@@ -11,6 +11,11 @@ body {
     height: 300px;
 }
 
+.image-carousel{
+    height: 150px !important;
+}
+
+
 .img-radius .q-img__image {
     border-radius: 50%;
     width: 250px;
