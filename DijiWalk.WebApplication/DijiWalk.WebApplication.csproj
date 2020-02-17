@@ -33,6 +33,12 @@
     <ProjectReference Include="..\DijiWalk.Repositories\DijiWalk.Repositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="dijiwalk\src\assets\img\spotlight-poi-dotless1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />

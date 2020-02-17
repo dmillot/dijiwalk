@@ -15,7 +15,7 @@
                 <q-toolbar-title class="text-left text-header-list q-py-md">Demande de validation (échouée pour l'automatique):</q-toolbar-title>
             </q-toolbar>
             <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                <q-item v-for="validate in toValidate" v-bind:key="validate.id" class="row q-pa-none">
+                <q-item v-if="!emptyToValidate" v-for="validate in toValidate" v-bind:key="validate.id" class="row q-pa-none">
                     <div class="col-12">
                         <div class="row q-px-md q-py-md">
                             <div class="row col-9">
@@ -54,6 +54,9 @@
                         <q-separator></q-separator>
                     </div>
                 </q-item>
+                <q-item v-if="emptyToValidate" class="row justify-center q-pa-none">
+                    <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
+                </q-item>
             </q-list>
         </div>
         <div class="row col-12">
@@ -62,7 +65,7 @@
                     <q-toolbar-title class="text-left text-header-list q-py-md">Validations accéptées:</q-toolbar-title>
                 </q-toolbar>
                 <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                    <q-item v-for="validate in isValidate" v-bind:key="validate.id" class="row q-pa-none">
+                    <q-item v-if="!emptyIsValidate" v-for="validate in isValidate" v-bind:key="validate.id" class="row q-pa-none">
                         <div class="col-12">
                             <div class="row q-px-sm q-py-sm">
                                 <div top class="row no-wrap items-center col-3">
@@ -98,6 +101,9 @@
                             <q-separator></q-separator>
                         </div>
                     </q-item>
+                    <q-item v-if="emptyIsValidate" class="row justify-center q-pa-none">
+                        <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
+                    </q-item>
                 </q-list>
             </div>
             <div class="row col-6 q-mt-lg q-pl-sm">
@@ -105,7 +111,7 @@
                     <q-toolbar-title class="text-left text-header-list q-py-md">Validations rejetées:</q-toolbar-title>
                 </q-toolbar>
                 <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                    <q-item v-for="validate in isNotValidate" v-bind:key="validate.id" class="row q-pa-none">
+                    <q-item v-if="!emptyIsNotValidate" v-for="validate in isNotValidate" v-bind:key="validate.id" class="row q-pa-none">
                         <div class="col-12">
                             <div class="row q-px-sm q-py-sm">
                                 <div top class="row no-wrap items-center col-3">
@@ -140,6 +146,9 @@
                             </div>
                             <q-separator></q-separator>
                         </div>
+                    </q-item>
+                    <q-item v-if="emptyIsNotValidate" class="row justify-center q-pa-none">
+                        <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
                     </q-item>
                 </q-list>
             </div>
@@ -183,9 +192,10 @@
 
     export default {
         name: 'validation',
+         props: ['idJeu'],
         data() {
             return {
-                idJeu: null,
+                id: null,
                 validations: null,
                 toValidate: null,
                 isValidate: null,
@@ -195,11 +205,16 @@
                 pictureStep: null,
                 pictureCaptain: null,
                 pictureAsk: null,
-                canValidate: false
+                canValidate: false,
+                emptyToValidate: false,
+                emptyIsValidate: false,
+                emptyIsNotValidate: false
             }
         },
         created() {
-            this.getAllValidations(3);
+            console.log(this.$route.params.idJeu)
+            this.id = this.$route.params.idJeu;
+            this.getAllValidations(this.id);
         },
         filters: {
             formatAgo: function (value) {
@@ -225,12 +240,21 @@
                             if (!el.validate && el.validationDate == null)
                                 return el;
                         })
+                        if (this.toValidate == null || this.toValidate.length == 0) {
+                            this.emptyToValidate = true;
+                        }
                         this.isValidate = this.validations.filter(function (el) {
                             if (el.validate && el.validationDate != null) return el;
                         })
+                        if (this.isValidate == null || this.isValidate.length == 0) {
+                            this.emptyIsValidate = true;
+                        }
                         this.isNotValidate = this.validations.filter(function (el) {
                             if (!el.validate && el.validationDate != null) return el;
                         })
+                        if (this.isNotValidate == null || this.isNotValidate.length == 0) {
+                            this.emptyIsNotValidate = true;
+                        }
                         this.$q.loading.hide()
                     }).catch();
                 }
@@ -341,4 +365,5 @@
     .text-validation-sub {
         font-size: 10px !important;
     }
+
 </style>

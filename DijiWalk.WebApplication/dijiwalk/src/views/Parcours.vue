@@ -97,10 +97,13 @@
                             </template>
                         </q-input>
 
-                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
+                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès PMR ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
+                        <GmapMap ref="mapRefManage" :center="centerManage" :zoom="12" style="width:100%;  height: 400px;">
+                            <GmapMarker :key="index" v-for="(m,index) in stepMarkers" title="m.label" :position="m.position" @click="toggleInfoWindow(m)"></GmapMarker>
+                        </GmapMap>
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !">
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !" @add="addMarkerManageByOne" @remove="removeMarkerManageByOne">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                                         <q-avatar>
@@ -173,7 +176,7 @@
                     <div class="row col-12" v-if="parcoursSelected.handicap" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
                         <q-item>
                             <q-icon size="md" class="q-mt-sm" name="fas fa-wheelchair" color="negative" />
-                            <q-item-section class="q-ml-sm">Le parcours a des accés pour les handicapés.</q-item-section>
+                            <q-item-section class="q-ml-sm">Le parcours a des accés PMR.</q-item-section>
                         </q-item>
                     </div>
                     <div class="row col-12">
@@ -256,7 +259,10 @@
                 center: null,
                 markers: [],
                 infoWindowContext: null,
-                showInfo: false
+                showInfo: false,
+
+                centerManage: null,
+                stepMarkers: []
 
             }
         },
@@ -269,8 +275,8 @@
                         self.tagSelected = null;
                     });
                 }
+            },
 
-            }
         },
         created() {
             this.getAllParcours();
@@ -293,8 +299,27 @@
                 this.center = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
                 routeSteps.forEach(e => this.addMarker(e));
             },
+            initMapManage(routeSteps) {
+                this.stepMarkers = [];
+                this.centerManage = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
+                routeSteps.forEach(e => this.addMarkerManage(e));
+            },
             addMarker(routeStep) {
-                this.markers.push({ label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
+                this.markers.push({id: routeStep.step.id, label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
+            },
+            addMarkerManageByOne(step) {
+                this.stepMarkers.push({ id: step.value.id, label: step.value.name, description: step.value.description, picture: step.value.validation, position: { lat: step.value.lat, lng: step.value.lng } });
+            },
+            removeMarkerManageByOne(step) {
+                this.stepMarkers = this.stepMarkers.filter(function (el) {
+                    if (el.id != step.value[0].id) {
+                        console.log(el)
+                        return el;
+                    }
+                })
+            },
+            addMarkerManage(routeStep) {
+                this.stepMarkers.push({id: routeStep.step.id, label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
             },
             capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
@@ -356,6 +381,7 @@
                 this.isAdding = false;
                 this.resetInput();
                 this.fillForm(parcour);
+                this.initMapManage(parcour.routeSteps);
                 this.manageParcours = true
             },
             getAllSteps() {

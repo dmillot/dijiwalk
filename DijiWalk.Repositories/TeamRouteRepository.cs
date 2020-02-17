@@ -67,7 +67,7 @@ namespace DijiWalk.Repositories
         /// <returns>The TeamRoute with the Id researched</returns>
         public async Task<List<TeamRoute>> FindInGame(int id)
         {
-            return await _context.Teamroutes.Where(t => t.IdGame == id).Include(t => t.Game).Include(t => t.Team).ThenInclude(t => t.Captain).Include(t => t.RouteStep).ThenInclude(rs => rs.Route).Include(t => t.RouteStep).ThenInclude(rs => rs.Step).ToListAsync();
+            return await _context.Teamroutes.Where(t => t.IdGame == id && t.AskValidationDate != null).Include(t => t.Game).Include(t => t.Team).ThenInclude(t => t.Captain).Include(t => t.RouteStep).ThenInclude(rs => rs.Route).Include(t => t.RouteStep).ThenInclude(rs => rs.Step).ToListAsync();
         }
 
         /// <summary>
