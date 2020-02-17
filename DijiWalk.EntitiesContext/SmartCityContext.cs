@@ -18,6 +18,7 @@ namespace DijiWalk.EntitiesContext
 
         public virtual DbSet<Administrator> Administrators { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Clue> Clues { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Mission> Missions { get; set; }
@@ -27,7 +28,9 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<RouteStep> Routesteps { get; set; }
         public virtual DbSet<RouteTag> Routetags { get; set; }
+        public virtual DbSet<StepTag> Steptags { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
+        public virtual DbSet<StepValidation> StepValidations { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamAnswer> Teamanswers { get; set; }
@@ -36,7 +39,6 @@ namespace DijiWalk.EntitiesContext
         public virtual DbSet<Transport> Transports { get; set; }
         public virtual DbSet<Trial> Trials { get; set; }
         public virtual DbSet<Entities.Type> Types { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +90,22 @@ namespace DijiWalk.EntitiesContext
                     .HasConstraintName("FK_ANSWER_TRIAL");
             });
 
+            modelBuilder.Entity<Clue>(entity =>
+            {
+                entity.ToTable("CLUE");
+
+                entity.Property(e => e.Id).HasColumnName("Clue_Id");
+
+                entity.Property(e => e.Description).HasColumnName("Clue_Description");
+
+                entity.Property(e => e.IdStep).HasColumnName("Clue_fk_Step_Id");
+
+                entity.HasOne(d => d.Step)
+                    .WithMany(p => p.Clues)
+                    .HasForeignKey(d => d.IdStep)
+                    .HasConstraintName("FK_CLUE_STEP");
+            });
+
             modelBuilder.Entity<Game>(entity =>
             {
                 entity.ToTable("GAME");
@@ -96,13 +114,13 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.CreationDate)
                     .HasColumnName("Game_CreationDate")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FinalScore).HasColumnName("Game_FinalScore");
 
                 entity.Property(e => e.FinalTime)
                     .HasColumnName("Game_FinalTime")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.IdOrganizer).HasColumnName("Game_fk_Organizer_Id");
 
@@ -115,15 +133,16 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => d.IdOrganizer)
                     .HasConstraintName("FK_GAME_ORGANIZER");
 
-                entity.HasOne(d => d.Route)
-                    .WithMany(p => p.Games)
-                    .HasForeignKey(d => d.IdRoute)
-                    .HasConstraintName("FK_GAME_ROUTE");
-
                 entity.HasOne(d => d.Transport)
                     .WithMany(p => p.Games)
                     .HasForeignKey(d => d.IdTransport)
                     .HasConstraintName("FK_GAME_TRANSPORT");
+
+
+                entity.HasOne(d => d.Route)
+                    .WithMany(p => p.Games)
+                    .HasForeignKey(d => d.IdRoute)
+                    .HasConstraintName("FK_GAME_ROUTE");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -370,6 +389,30 @@ namespace DijiWalk.EntitiesContext
                     .HasConstraintName("FK_STEPTAG_TAG");
             });
 
+            modelBuilder.Entity<StepTag>(entity =>
+            {
+                entity.HasKey(e => new { e.IdStep, e.IdTag })
+                    .HasName("PK_STEP_TAG");
+
+                entity.ToTable("STEPTAG");
+
+                entity.Property(e => e.IdStep).HasColumnName("StepTag_fk_Step_Id");
+
+                entity.Property(e => e.IdTag).HasColumnName("StepTag_fk_Tag_Id");
+
+                entity.HasOne(d => d.Step)
+                    .WithMany(p => p.StepTags)
+                    .HasForeignKey(d => d.IdStep)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_STEP_TAG_STEP");
+
+                entity.HasOne(d => d.Tag)
+                    .WithMany(p => p.StepTags)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_STEP_TAG_TAG");
+            });
+
             modelBuilder.Entity<Step>(entity =>
             {
                 entity.ToTable("STEP");
@@ -397,6 +440,26 @@ namespace DijiWalk.EntitiesContext
                     .HasMaxLength(50);
 
             });
+
+            modelBuilder.Entity<StepValidation>(entity =>
+            {
+                entity.ToTable("STEPVALIDATION");
+
+                entity.Property(e => e.Id).HasColumnName("StepValidation_Id");
+
+                entity.Property(e => e.IdStep).HasColumnName("StepValidation_fk_Step_Id");
+
+                entity.Property(e => e.Description).HasColumnName("StepValidation_Description");
+
+                entity.Property(e => e.Score).HasColumnName("StepValidation_Score");
+
+                entity.HasOne(e => e.Step)
+                   .WithMany(s => s.StepValidations)
+                   .HasForeignKey(d => d.IdStep)
+                   .HasConstraintName("FK_STEPVALIDATION_STEP");
+
+            });
+
 
             modelBuilder.Entity<Tag>(entity =>
             {
@@ -531,9 +594,15 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.IdStep).HasColumnName("TeamRoute_fk_Step_Id");
 
+                entity.Property(e => e.Validate).HasColumnName("TeamRoute_Validate");
+
+                entity.Property(e => e.Picture).HasColumnName("TeamRoute_Picture");
+
+                entity.Property(e => e.AskValidationDate).HasColumnName("TeamRoute_AskValidationDate").HasColumnType("datetime"); 
+
                 entity.Property(e => e.ValidationDate)
                     .HasColumnName("TeamRoute_ValidationDate")
-                    .HasColumnType("date");
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.TeamRoutes)
@@ -552,6 +621,7 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => new { d.IdRoute, d.IdStep })
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_TEAMROUTE_ROUTESTEP");
+               
             });
 
             modelBuilder.Entity<Transport>(entity =>
@@ -567,6 +637,7 @@ namespace DijiWalk.EntitiesContext
                 entity.Property(e => e.Libelle)
                     .HasColumnName("Transport_Libelle")
                     .HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<Trial>(entity =>
@@ -612,6 +683,7 @@ namespace DijiWalk.EntitiesContext
 
                 entity.Property(e => e.Description).HasColumnName("Type_Description");
             });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

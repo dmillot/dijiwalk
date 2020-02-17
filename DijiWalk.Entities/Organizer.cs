@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 namespace DijiWalk.Entities
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// Class definissant un Organisateur
@@ -58,6 +60,12 @@ namespace DijiWalk.Entities
         /// Obtient ou définit l'Id de l'dAdministrateur ayant aprouvé l'Organisateur
         /// </summary>
         public int? IdAdministrator { get; set; }
+
+        /// <summary>
+        /// Obtient ou définit le JWTTokens pour l'organisateur connecté
+        /// </summary>
+        [NotMapped]
+        public JWTTokens JWTTokens { get; set; }
 
         /// <summary>
         /// Obtient ou définit l'Administrateur ayant aprouvé l'Organisateur

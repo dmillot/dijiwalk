@@ -43,7 +43,7 @@ namespace DijiWalk.Business
         /// <param name="idGame">Id of the game</param>
         public async Task<ApiResponse> SetUp(List<Play> plays, int idGame)
         {
-            return await this.AddRange(plays.ToList());
+            return await this.AddRange(plays.Select(p => { p.IdGame = idGame; return p; }).ToList());
         }
 
         /// <summary>

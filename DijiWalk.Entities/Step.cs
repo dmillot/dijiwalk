@@ -22,9 +22,11 @@ namespace DijiWalk.Entities
         /// </summary>
         public Step()
         {
-            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
+            StepValidations = new HashSet<StepValidation>();
+            Clues = new HashSet<Clue>();
         }
 
         public Step(Step s)
@@ -38,9 +40,10 @@ namespace DijiWalk.Entities
             Lng = s.Lng;
             ImageBase64 = s.ImageBase64;
             ImageChanged = s.ImageChanged;
-            _additionalData = new Dictionary<string, JToken>();
             Missions = new HashSet<Mission>();
             RouteSteps = new HashSet<RouteStep>();
+            StepTags = new HashSet<StepTag>();
+            StepValidations = new HashSet<StepValidation>();
         }
 
         /// <summary>
@@ -94,16 +97,19 @@ namespace DijiWalk.Entities
         /// </summary>
         public virtual ICollection<RouteStep> RouteSteps { get; set; }
 
-        [JsonExtensionData]
-        private IDictionary<string, JToken> _additionalData;
+        /// <summary>
+        /// Obtient ou définit la liste des Tags d'une étape
+        /// </summary>
+        public virtual ICollection<StepTag> StepTags { get; set; }
 
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            Lat = Convert.ToDouble(_additionalData["Latitude"]);
-            Lng = Convert.ToDouble(_additionalData["Longitude"]);
+        /// <summary>
+        /// Obtient ou définit la liste des validations d'un étape
+        /// </summary>
+        public virtual ICollection<StepValidation> StepValidations { get; set; }
 
-
-        }
+        /// <summary>
+        /// Obtient ou définit la liste des Indices d'une Etape
+        /// </summary>
+        public virtual ICollection<Clue> Clues { get; set; }
     }
 }

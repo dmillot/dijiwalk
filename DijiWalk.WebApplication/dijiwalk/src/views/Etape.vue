@@ -7,22 +7,6 @@
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par parcours"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -38,12 +22,12 @@
                         <q-img :src="step.validation" />
 
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(step)"
+                            <q-btn v-on:click.stop="openModalToDelete(step)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
                                    class="absolute"
-                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                                   style="top: 0; right: 12px; transform: translateY(-50%); z-index: 999;" />
                             <div class="row no-wrap">
                                 <div class="col text-left text-bold text-h6 ellipsis">
                                     {{ step.name }}
@@ -89,10 +73,6 @@
 
         <q-dialog v-model="manageStep">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idStep" type="hidden" />
@@ -107,10 +87,14 @@
                             </template>
                         </q-input>
 
-                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoireque si nouvelle étape !']" clearable>
+                        <q-file color="primary" class="col-12 q-my-xs" ref="picture" v-model="pictureStep" label="Image de validation *" accept=".jpg, image/*" lazy-rules :rules="[val => !!val || 'Image obligatoire que si nouvelle étape !']" clearable hint="Peut être vide si mise à jour !" @input="takePicture" @clear="clearPicture">
                             <template v-slot:prepend>
-                                <q-icon name="fas fa-image" />
+                                <q-avatar id="avatarSelected" v-show="!noPicture">
+
+                                </q-avatar>
+                                <q-icon v-show="noPicture" name="fas fa-image" />
                             </template>
+
                         </q-file>
 
                         <q-input class="col-12 q-my-xs" ref="latitude" v-model="latitudeStep" type="text" label="Latitude *" option-value="id" option-label="name" name="latitudeStep" id="latitudeStep" :error-message="errormessagelatitude" :error="errorlatitude">
@@ -126,15 +110,15 @@
                         </q-input>
 
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" />
-                            <div v-show="!loading" class="col-1 q-ml-md">
+                            <q-select class="col-10 q-my-xs" ref="mission" clearable use-input fill-input v-model="missionSelected" multiple :options="missionsOptions" label="Missions *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une mission.']" @filter="filterMission" hint="Vous pouvez en rajouter une cliquant sur le bouton à droite !" />
+                            <div class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                     </div>
                 </q-card-section>
 
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateStep" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedStep" color="secondary" />
@@ -144,7 +128,7 @@
 
         <q-dialog v-if="stepSelected !== null" v-model="informations">
             <q-card class="modal-informations">
-                <q-card-section class="row items-center">
+                <q-card-section class="col items-center">
                     <q-img :src="stepSelected.validation" />
                     <h5 class="q-my-sm">{{ stepSelected.name }}</h5>
                     <p>{{ stepSelected.description }}</p>
@@ -180,6 +164,21 @@
                             </q-expansion-item>
                         </q-list>
                     </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-tags" label="Tags">
+                                <div class="row justify-start">
+                                    <div v-for="tag in stepSelected.stepTags" v-bind:key="tag.idTag">
+                                        <q-chip outline class="q-my-xs q-px-lg q-py-md" color="red" text-color="white" size="md" icon="fas fa-tag">
+                                            <div class="q-px-sm q-my-sm">{{ tag.tag.name }}</div>
+                                        </q-chip>
+                                    </div>
+                                </div>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+
+
                 </q-card-section>
 
                 <q-card-actions align="right">
@@ -231,8 +230,7 @@
                 errormessagelongitude: null,
                 errorlongitude: false,
                 idStep: null,
-
-                loading: false,
+                noPicture: true
             }
         },
         created() {
@@ -246,6 +244,23 @@
             }
         },
         methods: {
+            clearPicture() {
+                document.getElementById('avatarSelected').innerHTML = "";
+                this.noPicture = true;
+            },
+            takePicture() {
+                if (this.pictureStep != null) {
+                    this.noPicture = false;
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (e.target.result.indexOf("image") != -1) {
+                            document.getElementById('avatarSelected').innerHTML = ['<img style="width:35px; height: 35px;" src="', e.target.result, '" />'].join('')
+                        }
+                    };
+                    reader.readAsDataURL(this.pictureStep);
+                }
+
+            },
             fileConvert() {
                 return new Promise((resolve, reject) => {
                     if (this.pictureStep != null) {
@@ -304,27 +319,22 @@
                 this.manageStep = true
             },
             getAllSteps() {
+                this.$q.loading.show()
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
-                        console.log(response.data)
                         this.steps = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                        this.$q.loading.hide()
+                    }).catch();
                 }
             },
             getAllMissions() {
                 if (this.missions === null) {
                     MissionDataService.getAll().then(response => {
                         this.missions = response.data;
-
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             fillForm(step) {
-                console.log(step)
                 this.stepSelected = step;
                 this.idStep = step.id
                 this.nameStep = step.name;
@@ -339,27 +349,25 @@
             updateStep() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         this.fileConvert().then(response => {
                             StepDataService.update(this.idStep, {
                                 Name: this.nameStep,
                                 Description: this.descriptionStep,
                                 CreationDate: this.creationDateStep,
-                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                Lng: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Lat: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
                                 Missions: this.missionSelected,
                                 ImageBase64: this.$refs.picture.validate() ? response : this.validationUrl,
                                 ImageChanged: this.$refs.picture.validate(),
                                 Validation: this.validationUrl,
                             }).then(response => {
-                                this.loading = false;
+                                this.$q.loading.hide()
                                 if (response.data.status == 1) {
                                     this.manageStep = false;
                                     this.onResetValidation();
                                     this.getAllMissions();
                                     this.steps[this.steps.map(e => e.id).indexOf(this.stepSelected.id)] = response.data.response
-
-                                    //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
                                     this.$q.notify({
                                         icon: 'fas fa-check-square',
@@ -400,19 +408,19 @@
             addedStep() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.picture.validate() && this.$refs.latitude.validate() && this.$refs.longitude.validate() && this.$refs.mission.validate()) {
                     if (new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.longitudeStep) && new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         this.fileConvert().then(response => {
                             StepDataService.create({
                                 Name: this.nameStep,
                                 Description: this.descriptionStep,
-                                Longitude: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
-                                Latitude: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
+                                Lng: parseFloat(this.longitudeStep.toString().includes(",") ? this.longitudeStep.toString().replace(",", ".") : this.longitudeStep),
+                                Lat: parseFloat(this.latitudeStep.toString().includes(",") ? this.latitudeStep.toString().replace(",", ".") : this.latitudeStep),
                                 CreationDate: moment().format("YYYY-MM-DD hh:mm:ss"),
                                 Missions: this.missionSelected,
                                 ImageBase64: response,
                                 ImageChanged: true
                             }).then(response => {
-                                this.loading = false;
+                                this.$q.loading.hide()
                                 if (response.data.status == 1) {
                                     this.manageStep = false;
                                     this.onResetValidation();
@@ -436,9 +444,7 @@
                                     })
                                     setTimeout(this.onResetValidation, 3000);
                                 }
-                            }).catch(reason => {
-                                console.log(reason);
-                            });
+                            }).catch();
                         });
                     } else {
                         if (!new RegExp('^[0-9]{1,}\.?[0-9]{1,}$').test(this.latitudeStep)) {
@@ -461,8 +467,10 @@
             },
 
             deletedStep() {
+                this.$q.loading.show()
                 var self = this;
                 StepDataService.delete(self.deleteStep).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',
@@ -486,19 +494,6 @@
             },
 
 
-            //filterParcours(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.parcoursOptions = parcours
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.parcoursOptions = parcours.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //}
         }
     }
 </script>

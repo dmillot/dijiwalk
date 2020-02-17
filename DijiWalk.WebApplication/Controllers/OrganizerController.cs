@@ -16,7 +16,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Organizer
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class OrganizerController : Controller
     {
         /// <summary>

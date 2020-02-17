@@ -10,6 +10,7 @@ using DijiWalk.Common.Encryption;
 using DijiWalk.Common.FileExtension;
 using DijiWalk.Common.Response;
 using DijiWalk.Common.StringExtension;
+using DijiWalk.Common.Vision;
 using DijiWalk.EntitiesContext;
 using DijiWalk.Repositories;
 using DijiWalk.Repositories.Contracts;
@@ -29,6 +30,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VueCliMiddleware;
 
 namespace DijiWalk.WebApplication
@@ -43,7 +45,7 @@ namespace DijiWalk.WebApplication
         public static void AddCustomSettings(this JsonSerializerSettings settings)
         {
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            settings.FloatParseHandling = FloatParseHandling.Double;
+            settings.Formatting = Formatting.Indented;
         }
     }
 
@@ -67,10 +69,11 @@ namespace DijiWalk.WebApplication
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://localhost:5001").AllowAnyHeader().AllowAnyMethod();
                 });
             });
             services.AddControllers().AddNewtonsoftJson(option => option.SerializerSettings.AddCustomSettings());
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "DijiWalk");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "dijiwalk/dist");
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
 
             #region Services
@@ -115,6 +118,9 @@ namespace DijiWalk.WebApplication
             services.AddScoped<IImageBusiness, ImageBusiness>();
             services.AddScoped<IGameBusiness, GameBusiness>();
             services.AddScoped<IPlayBusiness, PlayBusiness>();
+            services.AddScoped<IStepAnalyseBusiness, StepAnalyseBusiness>();
+            services.AddScoped<ITagBusiness, TagBusiness>();
+            services.AddScoped<ITeamPlayerBusiness, TeamPlayerBusiness>();
             #endregion
 
             #region Common
@@ -122,6 +128,7 @@ namespace DijiWalk.WebApplication
             services.AddSingleton<ICloudStorage, CloudStorage>();
             services.AddSingleton<IFileExtension, FileExtension>();
             services.AddSingleton<IStringExtension, StringExtension>();
+            services.AddSingleton<IVision, Vision>();
             #endregion
 
             #region JWT Token
@@ -195,7 +202,7 @@ namespace DijiWalk.WebApplication
             {
                 if (env.IsDevelopment())
                 {
-                    spa.Options.SourcePath = "DijiWalk";
+                    spa.Options.SourcePath = "dijiwalk";
                     spa.UseVueCli(npmScript: "serve");
                 }
                 else

@@ -32,6 +32,14 @@ namespace DijiWalk.Common.Response
         /// </summary>
         CantDelete = 6,
         /// <summary>
+        /// Impossible de update, dépend d'un élément (manuel)
+        /// </summary>
+        CantUpdate = 7,
+        /// <summary>
+        /// Impossible de ajouter, dépend d'un élément (manuel)
+        /// </summary>
+        CantAdd = 8,
+        /// <summary>
         /// Erreur inconnu (pas encore)
         /// </summary>
         UnknownError = 99

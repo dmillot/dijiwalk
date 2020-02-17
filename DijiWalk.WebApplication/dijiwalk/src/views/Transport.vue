@@ -2,32 +2,8 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
-
-
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
-
-                <div class="q-mr-md cursor-pointer">
-                    <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <q-item>
-                                <q-select filled
-                                          use-input
-                                          use-chips
-                                          v-model="routesFilterModel"
-                                          option-id="id"
-                                          option-label="name"
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par parcours"
-                                          :options="routesFiltered"
-                                          @filter="filterParcours"
-                                          style="width: 250px" />
-                            </q-item>
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -170,9 +146,7 @@
                 if (this.transports === null) {
                     TransportDataService.getAll().then(response => {
                         this.transports = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             
@@ -180,9 +154,7 @@
                 if (this.routes === null) {
                     RouteDataService.getAll().then(response => {
                         this.routes = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
 
@@ -224,9 +196,7 @@
 
                 await TransportDataService.update(this.id, this.transport).then(response => {
                     this.transports.update(response.data);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
             },
                             
             async addedTransport() {
@@ -239,9 +209,7 @@
                 await TransportDataService.create(this.transport
                 ).then(response => {
                     this.transports.push(response.data);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
 
 
                 //this.getAllTransport();
@@ -251,16 +219,12 @@
 
                 
                 var id = this.deleteTransport;
-                TransportDataService.delete(this.deleteTransport).then(response => {
+                TransportDataService.delete(this.deleteTransport).then(() => {
 
                     this.transports = this.transports.filter(function (obj) {
                         return obj.id !== id;
                     });
-
-                    console.log(response);
-                }).catch(reason => {
-                    console.log(reason);
-                });
+                }).catch();
                                              
                 //axios.delete('api/transport/' + this.deleteTransport).then(resp => {
                 //    if (resp.status == 200) {

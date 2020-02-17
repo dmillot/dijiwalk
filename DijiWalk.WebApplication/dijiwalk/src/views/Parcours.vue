@@ -2,40 +2,8 @@
     <q-page class="q-px-xl">
         <q-header elevated>
             <q-toolbar>
-
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
-
-                <div class="q-ml-md cursor-pointer non-selectable">
-                    <q-icon name="fas fa-search" />
-                    <q-menu>
-                        <q-list bordered separator style="min-width: 100px">
-                            <!--<q-item>
-                                <q-select filled
-                                          v-model="modelJeu"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par jeux"
-                                          :options="jeuxOptions"
-                                          @filter="filterJeux"
-                                          style="width: 250px" />
-                            </q-item>
-                            <q-item>
-                                <q-select filled
-                                          v-model="modelStep"
-                                          use-input
-                                          use-chips
-                                          multiple
-                                          input-debounce="0"
-                                          label="Filtrer par étapes"
-                                          :options="stepsOptions"
-                                          @filter="filterSteps"
-                                          style="width: 250px" />
-                            </q-item>-->
-                        </q-list>
-                    </q-menu>
-                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -50,12 +18,12 @@
                         <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
 
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(parcour)"
+                            <q-btn v-on:click.stop="openModalToDelete(parcour)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
                                    class="absolute"
-                                   style="top: 0; right: 12px; transform: translateY(-50%);" />
+                                   style="top: 0; right: 12px; transform: translateY(-50%);  z-index: 999;" />
 
                             <div class="row no-wrap">
                                 <div class="col text-left text-bold text-h6 ellipsis">
@@ -102,11 +70,6 @@
 
         <q-dialog v-model="manageParcours">
             <q-card>
-                <transition name="fade">
-                    <div id="modalManage" v-show="loading"></div>
-                </transition>
-                <q-circular-progress v-show="loading" indeterminate size="100px" :thickness="0.22" color="negative" track-color="grey-3" class="absolute-center" />
-
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
                         <q-input v-if="isEditing" v-model="idParcours" type="hidden" />
@@ -134,33 +97,42 @@
                             </template>
                         </q-input>
 
-                        <q-toggle class="col-5 q-my-xs on-left" v-show="!loading" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
+                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" />
-                            <div v-show="!loading" class="col-1 q-ml-md">
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !">
+                                <template v-slot:option="scope">
+                                    <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                                        <q-avatar>
+                                            <q-img :src="scope.opt.validation" style="width:50px; height: 50px;" />
+                                        </q-avatar>
+                                        <q-item-section class="q-ml-sm">
+                                            <q-item-label v-html="scope.opt.name" />
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-select>
+                            <div class="col-1 q-ml-md">
                                 <q-btn color="primary" @click="navigateTo('/etape')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
 
+                        <div class="row items-center justify-center col-12">
+                            <q-select class="col-12 q-my-xs" ref="tags" v-model="tagSelected" clearable use-input fill-input :options="tagsOptions" label="Tags" option-value="id" option-label="name" @filter="filterTag" hint="Vous pouvez en rajouter un en l'écrivant puis touche entrer !" @new-value="createTag" />
+                        </div>
+
                         <div class="row justify-start">
                             <div v-for="tag in tagsParcours" v-bind:key="tag.idTag">
-                                <q-chip outline removable class="q-my-xs q-pa-md" size="md" icon="fas fa-tag" @remove="removeTags(tag)">
-                                    {{ tag.name }}
+                                <q-chip removable color="red" outline text-color="white" class="q-my-xs q-px-lg q-py-md" size="md" icon="fas fa-tag" @remove="removeTags(tag)">
+                                    <div class="q-px-sm q-my-sm">{{ tag.name }}</div>
                                 </q-chip>
                             </div>
                         </div>
 
-                        <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="tags" v-model="tagSelected" :options="tagsAvailable" label="Tags" option-value="id" option-label="name" />
-                            <div v-show="!loading" class="col-1 q-ml-md">
-                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
-                            </div>
-                        </div>
                     </div>
                 </q-card-section>
 
-                <q-card-actions v-show="!loading" align="right">
+                <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
                     <q-btn flat v-if="isEditing" label="Modifier" @click="updateParcours" color="secondary" />
                     <q-btn v-if="isAdding" label="Ajouter" @click="addedParcours" color="secondary" />
@@ -197,6 +169,19 @@
                                         {{ step.step.name }}
                                     </q-card-section>
                                 </q-card>
+                            </q-expansion-item>
+                        </q-list>
+                    </div>
+                    <div class="row col-12">
+                        <q-list class="custom-expansion col-12">
+                            <q-expansion-item expand-separator icon="fas fa-tags" label="Tags">
+                                <div class="row justify-start">
+                                    <div v-for="tag in parcoursSelected.routeTags" v-bind:key="tag.idTag">
+                                        <q-chip outline class="q-my-xs q-px-lg q-py-md" color="red" text-color="white" size="md" icon="fas fa-tag">
+                                            <div class="q-px-sm q-my-sm">{{ tag.tag.name }}</div>
+                                        </q-chip>
+                                    </div>
+                                </div>
                             </q-expansion-item>
                         </q-list>
                     </div>
@@ -249,9 +234,9 @@
                 tags: null,
                 tagSelected: null,
                 tagsAvailable: null,
+                tagsOptions: null,
 
-                idParcours: null,
-                loading: false
+                idParcours: null
 
             }
         },
@@ -279,6 +264,26 @@
             }
         },
         methods: {
+            capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            },
+            createTag(val) {
+                var tagsAlreadyExists = this.tags.filter(function (el) {
+                    if (el.name.toLowerCase() == val.toLowerCase()) return true;
+                });
+                if (tagsAlreadyExists.length == 0) {
+                    TagDataService.create({
+                        Id: 0,
+                        Name: this.capitalizeFirstLetter(val.toLowerCase()),
+                        Description: this.capitalizeFirstLetter(val.toLowerCase()),
+                    }).then(response => {
+                        this.tags.push(response.data.response);
+                        this.tagsParcours.push(response.data.response);
+                        this.tagSelected = null;
+                    });
+                }
+
+            },
             navigateTo(page) {
                 this.$router.push(page)
             },
@@ -324,18 +329,16 @@
                 if (this.steps === null) {
                     StepDataService.getAll().then(response => {
                         this.steps = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                    }).catch();
                 }
             },
             getAllParcours() {
+                this.$q.loading.show()
                 if (this.parcours === null) {
                     ParcoursDataService.getAll().then(response => {
                         this.parcours = response.data;
-                    }).catch(reason => {
-                        console.log(reason);
-                    });
+                        this.$q.loading.hide()
+                    }).catch();
                 }
             },
             filterTagAvailable(val) {
@@ -352,14 +355,11 @@
                         TagDataService.getAll().then(response => {
                             this.tags = response.data;
                             resolve(this.tags);
-                        }).catch(reason => {
-                            console.log(reason);
-                        });
+                        }).catch();
                     }
                 })
             },
             async fillForm(parcour) {
-                console.log(parcour)
                 this.parcoursSelected = parcour;
                 this.idParcours = parcour.id
                 this.nameParcours = parcour.name;
@@ -388,7 +388,7 @@
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
-                        this.loading = true;
+                        this.$q.loading.show()
                         var self = this;
                         var listeRouteTag = [];
                         this.tagsParcours.forEach(element => {
@@ -412,14 +412,11 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
-                            this.loading = false;
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();
                                 this.parcours[this.parcours.map(e => e.id).indexOf(this.parcoursSelected.id)] = response.data.response
-
-                                //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
-
                                 this.$q.notify({
                                     icon: 'fas fa-check-square',
                                     color: 'secondary',
@@ -448,7 +445,7 @@
             },
             addedParcours() {
                 if (this.$refs.name.validate() && this.$refs.description.validate() && this.$refs.time.validate()) {
-                    this.loading = true;
+                    this.$q.loading.show()
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
                         var listeRouteTag = [];
@@ -473,7 +470,7 @@
                             RouteTags: listeRouteTag,
                             RouteSteps: listeRouteStep
                         }).then(response => {
-                            this.loading = false;
+                            this.$q.loading.hide()
                             if (response.data.status == 1) {
                                 this.manageParcours = false;
                                 this.onResetValidation();
@@ -488,6 +485,7 @@
                                     position: 'top'
                                 })
                             } else {
+                                this.manageParcours = false;
                                 this.$q.notify({
                                     icon: 'fas fa-exclamation-triangle',
                                     color: 'negative',
@@ -495,9 +493,7 @@
                                     position: 'top'
                                 })
                             }
-                        }).catch(reason => {
-                            console.log(reason);
-                        });
+                        }).catch();
                     } else {
                         this.errortime = true;
                         this.errormessagetime = "Doit être compris entre 00:00 et 23:59";
@@ -513,7 +509,9 @@
             },
             deletedParcours() {
                 var self = this;
+                this.$q.loading.show()
                 ParcoursDataService.delete(self.deleteParcours).then(response => {
+                    this.$q.loading.hide()
                     if (response.data.status == 1) {
                         self.$q.notify({
                             icon: 'fas fa-check-square',
@@ -542,38 +540,23 @@
                     })
                     return
                 }
-
                 update(() => {
                     const needle = val.toLowerCase()
-                    this.stepsOptions = this.steps.filter(v => v.step.name.toLowerCase().indexOf(needle) > -1)
+                    this.stepsOptions = this.steps.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
                 })
             },
-            //filterJeux(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.jeuxOptions = listeJeux
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.jeuxOptions = listeJeux.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //},
-            //filterSteps(val, update) {
-            //    update(() => {
-            //        if (val === '') {
-            //            this.stepsOptions = listeEtape
-            //        }
-            //        else {
-            //            const needle = val.toLowerCase()
-            //            this.stepsOptions = listeEtape.filter(
-            //                v => v.toLowerCase().indexOf(needle) > -1
-            //            )
-            //        }
-            //    })
-            //}
+            filterTag(val, update) {
+                if (val === '') {
+                    update(() => {
+                        this.tagsOptions = this.tagsAvailable
+                    })
+                    return
+                }
+                update(() => {
+                    const needle = val.toLowerCase()
+                    this.tagsOptions = this.tagsAvailable.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+                })
+            }
         }
     }
 </script>

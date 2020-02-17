@@ -32,14 +32,14 @@
                             </div>
                         </template>
                         <div class="col-12">
-                            <q-input ref="pseudoText" color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']" :error-message="errorInfo"  :error="error">
+                            <q-input ref="pseudoText" color="red-9" v-model="name" label="Pseudonyme *" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un nom.']" :error-message="errorInfo" :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-user" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-12">
-                            <q-input ref="passwordText" color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']" :error-message="errorInfo"  :error="error">
+                            <q-input ref="passwordText" color="red-9" v-model="password" label="Mot de passe *" :type="isPwd ? 'password' : 'text'" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un mot de passe.']" :error-message="errorInfo" :error="error">
                                 <template v-slot:prepend>
                                     <q-icon name="fas fa-lock" />
                                 </template>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import LoginDataService from '@/services/LoginDataService';
 
     export default {
         data() {
@@ -83,6 +83,11 @@
                 mail: null,
                 error: false,
                 errorInfo: null
+            }
+        },
+        created() {
+            if (this.$q.sessionStorage.has("connectedOrganizer") && this.$q.cookies.has("JWTToken")) {
+                this.$router.push("/")
             }
         },
         methods: {
@@ -101,25 +106,28 @@
             },
             onSubmit() {
                 if (this.password != null && this.name != null) {
+                    this.$q.loading.show()
                     var self = this;
-                    axios.post("api/token/organizer", {
-                        "Login": this.name,
-                        "Password": this.password
-                    }).then(function (response) {
-                        if ('token' in response.data) {
-                            self.$q.cookies.set('JWTToken', response.data.token, { expries: response.data.expiration });
-                            self.$q.notify({
-                            message: "Connexion réussie !",
-                            color: 'secondary',
-                            icon: 'fas fa-check-square',
-                            position: 'top'
+                    LoginDataService.login(this.name, this.password)
+                        .then(response => {
+                            if ("id" in response.data) {
+                                self.$q.cookies.set('JWTToken', response.data.jwtTokens.token, { expires: response.data.jwtTokens.expiration });
+                                self.$q.sessionStorage.set("connectedOrganizer", response.data)
+                                self.$q.notify({
+                                    message: "Connexion réussie !",
+                                    color: 'secondary',
+                                    icon: 'fas fa-check-square',
+                                    position: 'top'
+                                })
+                                this.$q.loading.hide()
+                                self.$router.push("/")
+                            } else {
+                                 this.$q.loading.hide()
+                                self.error = true;
+                                self.errorInfo = response.data["message"];
+                                setTimeout(self.onResetValidation, 3000);
+                            }
                         })
-                        } else {
-                            self.error = true;
-                            self.errorInfo = response.data["message"];
-                            setTimeout(self.onResetValidation, 3000);
-                        }
-                    })
 
                 }
             }

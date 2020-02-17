@@ -23,6 +23,20 @@ namespace DijiWalk.Entities
             TeamRoutes = new HashSet<TeamRoute>();
         }
 
+        public Team(Team t)
+        {
+            Id = t.Id;
+            IdCaptain = t.Captain.Id;
+            IdOrganizer = t.IdOrganizer;
+            Name = t.Name;
+            Captain = null;
+            Organizer = t.Organizer;
+            Plays = new HashSet<Play>();
+            TeamAnswers = new HashSet<TeamAnswer>();
+            TeamPlayers = new HashSet<TeamPlayer>();
+            TeamRoutes = new HashSet<TeamRoute>();
+        }
+
         /// <summary>
         /// Obtient ou définit l'Id de la Team
         /// </summary>

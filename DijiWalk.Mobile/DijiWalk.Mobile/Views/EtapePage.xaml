@@ -20,7 +20,7 @@
 
         <StackLayout Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,30,0,0">
             <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
-                <Label TextColor="White" FontSize="35"  Text="Étape 1">
+                <Label TextColor="White" FontSize="35"  Text="{Binding Step.Name}">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>
@@ -32,7 +32,7 @@
                         </effects:ShadowEffect>
                     </Label.Effects>
                 </Label>
-                <Label TextColor="White" HorizontalTextAlignment="Center" Text="06/01/2020">
+                <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding Step.CreationDate}">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>
@@ -59,7 +59,7 @@
                         </effects:ShadowEffect>
                     </Label.Effects>
                 </Label>
-                <Label TextColor="White" Text="La première étape se trouve près d'une chouette !">
+                <Label TextColor="White" Text="{Binding Step.Description}">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>
@@ -134,7 +134,29 @@
                         </effects:ShadowEffect>
                     </Label.Effects>
                 </Label>
-                <Label TextColor="White" Text="Près d'une église.">
+                <ListView ItemsSource="{Binding Step.Clues}" RowHeight="150">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame VerticalOptions="Start" HorizontalOptions="Center">
+                                    <Label TextColor="White" Text="{Binding Description}">
+                                        <Label.Effects>
+                                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                                <effects:ShadowEffect.Color>
+                                                    <OnPlatform x:TypeArguments="Color">
+                                                        <On Platform="iOS" Value="Black" />
+                                                        <On Platform="Android" Value="Black" />
+                                                    </OnPlatform>
+                                                </effects:ShadowEffect.Color>
+                                            </effects:ShadowEffect>
+                                        </Label.Effects>
+                                    </Label>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Label TextColor="White" Text="{Binding Clue.Description}">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>
