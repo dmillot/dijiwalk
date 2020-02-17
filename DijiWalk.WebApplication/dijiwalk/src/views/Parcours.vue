@@ -140,10 +140,26 @@
             </q-card>
         </q-dialog>
 
+        <q-dialog v-if="showInfo" v-model="showInfo">
+            <q-card class="modal-informations" style="width: 350px;">
+                <q-card-section class="items-center">
+                    <div class="row justify-center">
+                        <q-avatar size="150px" class="q-my-md">
+                            <q-img :src="infoWindowContext.picture" style="width:150px; height: 150px;" />
+                        </q-avatar>
+                    </div>
+                    <p class="text-bold">{{ infoWindowContext.label }}</p>
+                    <p class="text-caption">{{ infoWindowContext.description }}</p>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
         <q-dialog v-if="parcoursSelected !== null" v-model="informations">
             <q-card class="modal-informations">
                 <q-card-section class="items-center">
-                    <q-img src="https://images.frandroid.com/wp-content/uploads/2016/01/google-maps.png" />
+                    <GmapMap ref="mapRef" :center="center" :zoom="12" style="width:100%;  height: 400px;">
+                        <GmapMarker :key="index" v-for="(m, index) in markers" title="m.label" :position="m.position" @click="toggleInfoWindow(m)"></GmapMarker>
+                    </GmapMap>
                     <h5 class="q-my-sm">{{ parcoursSelected.name }}</h5>
                     <p>{{ parcoursSelected.description }}</p>
                     <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
@@ -192,6 +208,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+
     </q-page>
 </template>
 
@@ -214,7 +231,6 @@
                 isAdding: false,
                 informations: false,
 
-
                 parcours: null,
                 parcoursSelected: null,
                 nameParcours: null,
@@ -236,7 +252,11 @@
                 tagsAvailable: null,
                 tagsOptions: null,
 
-                idParcours: null
+                idParcours: null,
+                center: null,
+                markers: [],
+                infoWindowContext: null,
+                showInfo: false
 
             }
         },
@@ -264,6 +284,18 @@
             }
         },
         methods: {
+            toggleInfoWindow(context) {
+                this.infoWindowContext = context;
+                this.showInfo = true;
+            },
+            initMap(routeSteps) {
+                this.markers = [];
+                this.center = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
+                routeSteps.forEach(e => this.addMarker(e));
+            },
+            addMarker(routeStep) {
+                this.markers.push({ label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
+            },
             capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
             },
@@ -308,6 +340,7 @@
                 this.isAdding = false;
                 this.isEditing = false;
                 this.parcoursSelected = parcour;
+                this.initMap(parcour.routeSteps);
                 this.informations = true;
             },
 
@@ -560,7 +593,6 @@
         }
     }
 </script>
-
 <style scoped>
     .first-card:hover {
         background-color: #cc0016 !important;

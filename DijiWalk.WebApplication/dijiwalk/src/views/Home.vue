@@ -28,7 +28,6 @@
 </template>
 
 <script>
-    // @ is an alias to /src
     import Card from '@/components/Card.vue'
 
     export default {

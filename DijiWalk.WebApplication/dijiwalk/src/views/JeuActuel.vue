@@ -33,8 +33,6 @@
                             <div class="row q-mb-lg" style="align-items:center;">
                                 <label>État de validation: </label>
 
-                                <q-icon v-if class="text-red " name="fas fa-times-circle" v-for="size in ['lg']" :key="size" :size="size"></q-iconv-if>
-
                             </div>
                         </q-carousel-slide>
                     </q-carousel>
