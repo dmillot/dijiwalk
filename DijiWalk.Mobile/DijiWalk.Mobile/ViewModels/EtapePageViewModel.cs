@@ -36,18 +36,6 @@ namespace DijiWalk.Mobile.ViewModels
             this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
             this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
-
-            this.Step = new Step()
-            {
-                Name = "Etape 1",
-                CreationDate = DateTime.Parse("2020/02/02"),
-                Description = "test decription",
-                Clues = new List<Clue>(){new Clue()
-                {
-                    Description = "test description"
-                }
-                }
-            };
         }
 
         #region NavigationFunction
@@ -107,7 +95,7 @@ namespace DijiWalk.Mobile.ViewModels
         public void OnNavigatedTo(INavigationParameters parameters)
         {
 
-            this.Step = this._stepService.GetStepById(11).Result;
+            //this.Step = _stepService.GetStepById(11).Result;
         }
 
         #endregion

@@ -33,8 +33,6 @@
                             <div class="row q-mb-lg" style="align-items:center;">
                                 <label>État de validation: </label>
 
-                                <q-icon v-if class="text-red " name="fas fa-times-circle" v-for="size in ['lg']" :key="size" :size="size"></q-iconv-if>
-
                             </div>
                         </q-carousel-slide>
                     </q-carousel>
@@ -91,7 +89,6 @@
             async getActualGames() {
                 if (this.gamesActifs === null) {
                     await GameDataService.getAllActifs().then(response => {
-                        console.log(response);
                         this.gamesActifs = response.data;
                     }).catch();
                 }
@@ -107,7 +104,6 @@
 
             transitionSlide(game) {
                 this.gameSelected = game
-                console.log(this.idGame)
             },
 
             async onRowClick(evt, row) {

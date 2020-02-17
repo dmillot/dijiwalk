@@ -97,13 +97,17 @@
 
                         </q-file>
 
-                        <q-input class="col-12 q-my-xs" ref="latitude" v-model="latitudeStep" type="text" label="Latitude *" option-value="id" option-label="name" name="latitudeStep" id="latitudeStep" :error-message="errormessagelatitude" :error="errorlatitude">
+                        <GmapMap class="q-my-sm" ref="mapRefManage" :center="centerManage" :zoom="15" style="width:100%;  height: 200px;" @click="changePosition">
+                            <GmapMarker :position="markerManageStep.position"></GmapMarker>
+                        </GmapMap>
+
+                        <q-input class="col-6 q-my-xs q-pr-sm" ref="latitude" v-model="latitudeStep" type="text" label="Latitude *" option-value="id" option-label="name" name="latitudeStep" id="latitudeStep" :error-message="errormessagelatitude" :error="errorlatitude">
                             <template v-slot:prepend>
                                 <q-icon name="fas fa-map-pin" />
                             </template>
                         </q-input>
 
-                        <q-input class="col-12 q-my-xs" ref="longitude" v-model="longitudeStep" type="text" label="Longitude *" option-value="id" option-label="name" name="longitudeStep" id="longitudeStep" :error-message="errormessagelongitude" :error="errorlongitude">
+                        <q-input class="col-6 q-my-xs q-pl-sm" ref="longitude" v-model="longitudeStep" type="text" label="Longitude *" option-value="id" option-label="name" name="longitudeStep" id="longitudeStep" :error-message="errormessagelongitude" :error="errorlongitude">
                             <template v-slot:prepend>
                                 <q-icon name="fas fa-map-pin" />
                             </template>
@@ -132,7 +136,7 @@
                     <q-img :src="stepSelected.validation" />
                     <h5 class="q-my-sm">{{ stepSelected.name }}</h5>
                     <p>{{ stepSelected.description }}</p>
-                    <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
+                    <div class="row col-12 q-my-sm" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
                         <q-item>
                             <q-item-section avatar>
                                 <q-icon color="grey" name="fas fa-calendar" />
@@ -140,6 +144,9 @@
                             <q-item-section>{{ stepSelected.creationDate | formatDate }}</q-item-section>
                         </q-item>
                     </div>
+                    <GmapMap class="q-my-sm" ref="mapRef" :center="center" :zoom="15" style="width:100%;  height: 200px;">
+                        <GmapMarker :position="markerStep.position"></GmapMarker>
+                    </GmapMap>
                     <div class="row col-12" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
                         <q-item>
                             <q-item-section avatar>
@@ -230,7 +237,12 @@
                 errormessagelongitude: null,
                 errorlongitude: false,
                 idStep: null,
-                noPicture: true
+                noPicture: true,
+
+                center: null,
+                centerManage: null,
+                markerStep: { position: { lat: 0, lng: 0 } },
+                markerManageStep: { position: { lat: 0, lng:0 }}
             }
         },
         created() {
@@ -244,9 +256,28 @@
             }
         },
         methods: {
+            initMap(step) {
+                this.center = { lat: step.lat, lng: step.lng };
+                this.addMarker(step);
+            },
+            initMapManage(step) {
+                this.centerManage = { lat: step.lat, lng: step.lng };
+                this.addMarkerManage(step);
+            },
+            addMarker(step) {
+                this.markerStep = { position: { lat: step.lat, lng: step.lng } };    
+            },
+            addMarkerManage(step) {
+                this.markerManageStep = { position: { lat: step.lat, lng: step.lng } };
+            },
             clearPicture() {
                 document.getElementById('avatarSelected').innerHTML = "";
                 this.noPicture = true;
+            },
+            changePosition(mouseArgs) {
+                this.latitudeStep = mouseArgs.latLng.lat()
+                this.longitudeStep = mouseArgs.latLng.lng()
+                this.markerManageStep.position = {lat: this.latitudeStep , lng: this.longitudeStep}
             },
             takePicture() {
                 if (this.pictureStep != null) {
@@ -301,6 +332,8 @@
                 this.isAdding = false;
                 this.isEditing = false;
                 this.stepSelected = step;
+                this.markerStep = null;
+                this.initMap(step);
                 this.informations = true;
             },
 
@@ -316,6 +349,8 @@
                 this.isAdding = false;
                 this.resetInput();
                 this.fillForm(step);
+                this.markerManageStep = null;
+                this.initMapManage(step);
                 this.manageStep = true
             },
             getAllSteps() {
