@@ -19,7 +19,8 @@ namespace DijiWalk.Mobile.Services
         /// <returns>Retourne la réponse de l'API (attente)</returns>
         public async Task<JWTTokens> Authentificate(Player login)
         {
-            return JsonConvert.DeserializeObject<JWTTokens>(await CommonService.Post(String.Concat(Application.Current.Properties["url"], "token/player"), login));
+            return JsonConvert.DeserializeObject<JWTTokens>(await CommonService.Post(String.Concat(Application.Current.Properties["url"], "player"), login));
+            //return JsonConvert.DeserializeObject<JWTTokens>(await CommonService.Post(String.Concat(Application.Current.Properties["url"], "token/player"), login));
         }
     }
 }

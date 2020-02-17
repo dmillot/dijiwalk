@@ -18,6 +18,7 @@ namespace DijiWalk.EntitiesContext
 
         public virtual DbSet<Administrator> Administrators { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Clue> Clues { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Mission> Missions { get; set; }
@@ -87,6 +88,22 @@ namespace DijiWalk.EntitiesContext
                     .HasForeignKey(d => d.IdTrial)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ANSWER_TRIAL");
+            });
+
+            modelBuilder.Entity<Clue>(entity =>
+            {
+                entity.ToTable("CLUE");
+
+                entity.Property(e => e.Id).HasColumnName("Clue_Id");
+
+                entity.Property(e => e.Description).HasColumnName("Clue_Description");
+
+                entity.Property(e => e.IdStep).HasColumnName("Clue_fk_Step_Id");
+
+                entity.HasOne(d => d.Step)
+                    .WithMany(p => p.Clues)
+                    .HasForeignKey(d => d.IdStep)
+                    .HasConstraintName("FK_CLUE_STEP");
             });
 
             modelBuilder.Entity<Game>(entity =>

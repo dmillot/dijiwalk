@@ -26,6 +26,7 @@ namespace DijiWalk.Entities
             RouteSteps = new HashSet<RouteStep>();
             StepTags = new HashSet<StepTag>();
             StepValidations = new HashSet<StepValidation>();
+            Clues = new HashSet<Clue>();
         }
 
         public Step(Step s)
@@ -106,5 +107,9 @@ namespace DijiWalk.Entities
         /// </summary>
         public virtual ICollection<StepValidation> StepValidations { get; set; }
 
+        /// <summary>
+        /// Obtient ou définit la liste des Indices d'une Etape
+        /// </summary>
+        public virtual ICollection<Clue> Clues { get; set; }
     }
 }
