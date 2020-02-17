@@ -89,7 +89,6 @@
             async getActualGames() {
                 if (this.gamesActifs === null) {
                     await GameDataService.getAllActifs().then(response => {
-                        console.log(response);
                         this.gamesActifs = response.data;
                     }).catch();
                 }
@@ -105,7 +104,6 @@
 
             transitionSlide(game) {
                 this.gameSelected = game
-                console.log(this.idGame)
             },
 
             async onRowClick(evt, row) {
