@@ -23,7 +23,7 @@ namespace DijiWalk.Mobile.ViewModels
         public INavigationService NavigationService { get; private set; }
 
         private Game _actualGame;
-        public Game ActualGame 
+        public Game ActualGame
         {
             get { return _actualGame; }
             set

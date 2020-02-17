@@ -1,4 +1,6 @@
-﻿using DijiWalk.Mobile.Views;
+﻿using DijiWalk.Mobile.Services;
+using DijiWalk.Mobile.ViewModels.ViewEntities;
+using DijiWalk.Mobile.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -11,18 +13,30 @@ namespace DijiWalk.Mobile.ViewModels
     public class EtapePageViewModel : BindableBase, INavigationAware
     {
         #region Properties
+        private readonly PlayerService _playerService;
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToQuizzPage { get; set; }
         public DelegateCommand<object> NavigateToValidationPage { get; set; }
         public DelegateCommand<object> NavigateToChatPage { get; set; }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
+
+        private ViewStep _actualStep;
+        public ViewStep ActualStep
+        {
+            get { return _actualStep; }
+            set
+            {
+                SetProperty(ref _actualStep, value);
+            }
+        }
         #endregion
 
 
-        public EtapePageViewModel(INavigationService navigationService)
+        public EtapePageViewModel(PlayerService playerService, INavigationService navigationService)
         {
-            NavigationService = navigationService;
+            this._playerService = playerService;
+            this.NavigationService = navigationService;
             this.NavigateToQuizzPage = new DelegateCommand<object>(GoToQuizz);
             this.NavigateToValidationPage = new DelegateCommand<object>(GoToValidation);
             this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
@@ -84,9 +98,15 @@ namespace DijiWalk.Mobile.ViewModels
 
         }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
+        public async void OnNavigatedTo(INavigationParameters parameters)
         {
-
+            var response = await _playerService.GetCurrentStep(App.User.Id);
+            Console.WriteLine(response);
+            //ViewStep test = new ViewStep
+            //{
+            //    Id = response.Id,
+            //    Name = response.Name
+            //};
         }
 
         #endregion

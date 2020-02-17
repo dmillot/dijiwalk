@@ -59,5 +59,12 @@ namespace DijiWalk.Repositories.Contracts
         /// <param name="id">Id of the player</param>
         /// <returns>List of previous games</returns>
         Task<IEnumerable<Game>> GetPreviousGames(int idPlayer);
+
+        /// <summary>
+        /// Method to get current step of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>Current step</returns>
+        Task<Step> GetCurrentStep(int idPlayer);
     }
 }

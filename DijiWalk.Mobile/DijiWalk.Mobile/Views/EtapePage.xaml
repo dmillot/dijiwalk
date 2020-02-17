@@ -20,19 +20,7 @@
 
         <StackLayout Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,30,0,0">
             <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
-                <Label TextColor="White" FontSize="35"  Text="Étape 1">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <Label TextColor="White" HorizontalTextAlignment="Center" Text="06/01/2020">
+                <Label TextColor="White" FontSize="35"  Text="lol">
                     <Label.Effects>
                         <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
                             <effects:ShadowEffect.Color>

@@ -37,6 +37,26 @@ namespace DijiWalk.Mobile.ViewModels
         public DelegateCommand<object> NavigateToClassementPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
+        private bool _isInGame;
+        public bool IsInGame
+        {
+            get { return _isInGame; }
+            set
+            {
+                SetProperty(ref _isInGame, value);
+            }
+        }
+
+        private Game _actualGame;
+        public Game ActualGame
+        {
+            get { return _actualGame; }
+            set
+            {
+                SetProperty(ref _actualGame, value);
+            }
+        }
+
         private ObservableCollection<Game> _previousGames;
         public ObservableCollection<Game> PreviousGames
         {
@@ -102,7 +122,10 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Id du jeu</param>
         void GoToActualGame(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(GamePage), null);
+            if (this.IsInGame == true)
+            {
+                this.NavigationService.NavigateAsync(nameof(GamePage), null);
+            }
         }
 
 
@@ -154,6 +177,13 @@ namespace DijiWalk.Mobile.ViewModels
             var games = await _playerService.GetPreviousGames(this.User.Id);
             PreviousGames = new ObservableCollection<Game>(games);
 
+            var actualGame = await _playerService.GetActualGame(App.User.Id);
+            if (actualGame == null)
+                IsInGame = false;
+            else
+            {
+                IsInGame = true;
+            }
         }
         #endregion
 

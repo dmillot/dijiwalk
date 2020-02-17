@@ -141,6 +141,11 @@ namespace DijiWalk.Repositories
             return await _playerBusiness.GetPreviousGames(idPlayer);
         }
 
+        public async Task<Step> GetCurrentStep(int idPlayer)
+        {
+            return await _playerBusiness.GetCurrentStep(idPlayer);
+        }
+
         /// <summary>
         /// Method that will Update the Player passed in the parameters to the database
         /// </summary>

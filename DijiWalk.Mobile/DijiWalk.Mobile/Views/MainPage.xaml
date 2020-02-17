@@ -74,7 +74,7 @@
                     </Grid.RowDefinitions>
 
                     <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnActualGame" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
-                    <flex:FlexButton x:Name="BtnActualGame" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="gamepad.png" IconOrientation="Left" Text="JEU ACTUEL" ForegroundColor="{StaticResource LightColor}"
+                    <flex:FlexButton x:Name="BtnActualGame" IsEnabled="{Binding IsInGame}" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="gamepad.png" IconOrientation="Left" Text="JEU ACTUEL" ForegroundColor="{StaticResource LightColor}"
                     BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnActualGame_TouchedDown" TouchedUp="BtnActualGame_TouchedUp" ClickedCommand="{Binding NavigateToActualGamePage}"/>
                 </Grid>
                 <Grid Grid.Column="1" HeightRequest="65">

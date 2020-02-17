@@ -105,6 +105,23 @@ namespace DijiWalk.WebApplication.Controllers
         }
 
         /// <summary>
+        /// Method to get current step of a player
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("step/{id}")]
+        public async Task<IActionResult> GetCurrentStep(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.GetCurrentStep(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
         /// Method to add player
         /// </summary>
         /// <returns>Success or error message</returns>

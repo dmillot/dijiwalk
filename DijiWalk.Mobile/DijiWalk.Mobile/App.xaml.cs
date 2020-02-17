@@ -15,6 +15,7 @@ namespace DijiWalk.Mobile
     public partial class App
     {
         public static ViewPlayer User;
+
         /* 
          * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
          * This imposes a limitation in which the App class must have a default constructor. 

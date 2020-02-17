@@ -38,6 +38,11 @@ namespace DijiWalk.Business
             return await _context.Players.Where(x => x.Id != player.Id).AnyAsync(x => x.Email == player.Email || x.Login == player.Login);
         }
 
+        /// <summary>
+        /// Method to get actual game of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>Actual game</returns>
         public async Task<Game> GetActualGame(int idPlayer)
         {
             var actualGame = (from game in _context.Games
@@ -53,6 +58,11 @@ namespace DijiWalk.Business
             return actualGame;
         }
 
+        /// <summary>
+        /// Method to get all previous games of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>List of previous games</returns>
         public async Task<IEnumerable<Game>> GetPreviousGames(int idPlayer)
         {
 
@@ -66,14 +76,33 @@ namespace DijiWalk.Business
                        where game.CreationDate < DateTime.Now && player.Id == idPlayer
                        select game;
 
-            //var jointure = _context.Games
-            //    .Join(_context.Plays, game => game.Id, play => play.IdGame, (game, play) => new { Game = game, Play = play })
-            //    .Where(g => g.Game.CreationDate < DateTime.Now)
-            //    .Join(_context.Teamplayers, play => play.Play.IdTeam, teamplayer => teamplayer.IdTeam, (play, teamplayer) => new { Play = play, TeamPlayer = teamplayer })
-            //    .Join(_context.Players, teamplayer => teamplayer.TeamPlayer.IdPlayer, player => player.Id, (teamplayer, player) => new { TeamPlayer = teamplayer, Player = player })
-            //    .Where(p => p.Player.Id == idPlayer).Select(g => g.TeamPlayer.Play.Game).ToListAsync();
-
             return games;
+        }
+
+        /// <summary>
+        /// Method to get current step of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>Current step</returns>
+        public async Task<Step> GetCurrentStep(int idPlayer)
+        {
+            Step currentStep = new Step();
+            var actualGame = await this.GetActualGame(idPlayer);
+            if (actualGame != null)
+            {
+                var currentTeam = await _context.Teamplayers.Where(t => t.IdPlayer == idPlayer).Select(x => x.IdTeam).FirstOrDefaultAsync();
+                var allSteps = await _context.Teamroutes.Include(rt => rt.RouteStep).ThenInclude(s => s.Step).Where(t => t.IdGame == actualGame.Id && t.IdTeam == currentTeam).OrderBy(x => x.StepOrder).ToListAsync();
+                foreach (var item in allSteps)
+                {
+                    if (item.ValidationDate == null)
+                    {
+                        currentStep = item.RouteStep.Step;
+                        break;
+                    }
+                }
+            }
+
+            return currentStep;
         }
     }
 }
