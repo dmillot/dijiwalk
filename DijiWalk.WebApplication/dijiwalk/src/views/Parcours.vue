@@ -313,7 +313,6 @@
             removeMarkerManageByOne(step) {
                 this.stepMarkers = this.stepMarkers.filter(function (el) {
                     if (el.id != step.value[0].id) {
-                        console.log(el)
                         return el;
                     }
                 })
