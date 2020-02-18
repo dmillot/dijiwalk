@@ -141,13 +141,53 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get all Game 
         /// </summary>
         /// <returns>A list of Game</returns>
-        [HttpGet]
-        [Route("actifs")]
+        [HttpGet, Route("actifs")]
         public async Task<IActionResult> GetAllActifs()
         {
             try
             {
-                return Ok(await this._repository.FindAllActifs());
+                var games = await this._repository.FindAllActifs();
+                return Ok(games.Select(g =>
+                {
+                    if (g.Organizer != null)
+                    {
+                        g.Organizer.Games = new HashSet<Game>();
+                        g.Organizer.Messages = new HashSet<Message>();
+                        g.Organizer.Players = new HashSet<Player>();
+                        g.Organizer.Routes = new HashSet<Route>();
+                        g.Organizer.Teams = new HashSet<Team>();
+                    }
+                    if (g.Route != null)
+                    {
+                        g.Route.Games = new HashSet<Game>();
+                        g.Route.RouteSteps = g.Route.RouteSteps.Select(rs =>
+                        {
+                            rs.Route = null;
+                            rs.Step.RouteSteps = new HashSet<RouteStep>();
+                            rs.Step.StepTags = new HashSet<StepTag>();
+                            rs.Step.StepTags = new HashSet<StepTag>();
+                            rs.Step.StepValidations = new HashSet<StepValidation>();
+                            rs.Step.Missions = new HashSet<Mission>();
+                            rs.Step.Clues = new HashSet<Clue>();
+                            return rs;
+                        }).ToList();
+                        g.Route.RouteTags = new HashSet<RouteTag>();
+                    }
+                    if (g.TeamRoutes != null)
+                    {
+                        g.TeamRoutes = g.TeamRoutes.Select(tr =>
+                        {
+                            tr.RouteStep = null;
+                            tr.Team = null;
+                            tr.Game = null;
+                            return tr;
+                        }).ToList();
+                        
+                    }
+
+                    return g;
+
+                }).ToList());
             }
             catch (Exception e)
             {
