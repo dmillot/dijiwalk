@@ -1,7 +1,7 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
+            <q-toolbar class="bg-toolbar">
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
             </q-toolbar>
@@ -27,7 +27,10 @@
                         <q-carousel-slide v-for="game in gamesActifs" v-bind:key="game.id" :name="game.id" class="column no-wrap flex-center" :img-src="game.route.routeSteps[0].step.validation">
                             <div class="absolute-bottom custom-caption">
                                 <div class="text-h2">Jeu {{game.id}}</div>
-                                <div class="text-h4 text-light">{{game.route.name}}</div>
+                                <div class="row justify-center">
+                                    <div class="text-h4 text-light">{{game.route.name}}</div>
+                                    <q-btn class="q-mx-md text-bold" :color="game.statusColor" size="15px" flat icon="fas fa-circle" :label="game.statusLabel" @click="toValidation" />
+                                </div>
                                 <div class="row justify-center">
                                     <div class="text-subtitle2 q-mx-sm"><b>Organisateur:</b> {{game.organizer.firstName}} {{game.organizer.lastName}}</div>
                                     <q-separator vertical color="white"/>
@@ -85,11 +88,26 @@
         },
 
         methods: {
+            toValidation() {
+               this.$router.push({ name: "validation", params: { idJeu: this.slide } });
+            },
             getActualGames() {
                 if (this.gamesActifs === null) {
                     GameDataService.getAllActifs().then(response => {
                         if (response.data != null) {
                             this.gamesActifs = response.data;
+                            this.gamesActifs.map(function (el) {
+                                el.statusColor = "secondary";
+                                el.statusLabel = "ÉQUIPES OK";
+                                for (var i = 0; i < el.teamRoutes.length; i++) {
+                                    if (el.teamRoutes[i].askValidationDate != null && el.teamRoutes[i].validate == false) {
+                                        el.statusColor = "negative";
+                                         el.statusLabel = "ÉQUIPES BLOQUÉES";
+                                        break;
+                                    }
+                                }
+                            })
+                            
                             this.slide = response.data[0].id
                         } else {
                             this.anyGame = false

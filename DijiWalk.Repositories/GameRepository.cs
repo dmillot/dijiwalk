@@ -250,7 +250,7 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all actives Games</returns>
         public async Task<IEnumerable<Game>> FindAllActifs()
         {
-            return await _context.Games.Where(g => g.CreationDate <= DateTime.Now && g.FinalTime == null).Include(r => r.Route).ThenInclude(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.Organizer)
+            return await _context.Games.Where(g => g.CreationDate <= DateTime.Now && g.FinalTime == null).Include(r => r.Route).ThenInclude(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.Organizer).Include(r => r.TeamRoutes)
                 .ToListAsync();
         }
 

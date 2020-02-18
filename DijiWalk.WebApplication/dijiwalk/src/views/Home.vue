@@ -1,17 +1,17 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
+            <q-toolbar class="bg-toolbar">
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-power-off" @click="onDisconnected" />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
             </q-toolbar>
         </q-header>
-
         <div class="row flex-center full-width justify-center q-col-gutter-xl q-mt-lg">
 
             <div class="col-12 col-grow">
-                <q-card @click="onJeuxActuels" link="/jeuActuel" class="my-card full-height cursor-pointer flex column justify-center items-center bg-negative first-card q-py-md">
-                    <p class="text-white text-bold q-ma-none text-h4">JEUX ACTUELS</p>
+                <q-card ripple="black" @click="onJeuxActuels" link="/jeuActuel" class="my-card full-height cursor-pointer row justify-center items-center first-card q-py-md">
+                    <q-icon name="fas fa-chess" style="font-size: 4em"/>
+                    <p class="text-bold q-ml-md q-ma-none text-h4">Jeux Actuels</p>
                 </q-card>
             </div>
             <Card link="/jeu" icon="fas fa-dice" title="Jeux" description="Page de gestion des jeux" />
@@ -47,3 +47,4 @@
         }
     }
 </script>
+

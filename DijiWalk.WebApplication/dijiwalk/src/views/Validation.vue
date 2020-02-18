@@ -1,8 +1,8 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
-                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
+            <q-toolbar class="bg-toolbar">
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/jeuActuel' " />
                 <q-toolbar-title>DijiWalk</q-toolbar-title>
 
                 <div class="q-ml-md cursor-pointer non-selectable">
@@ -15,7 +15,7 @@
                 <q-toolbar-title class="text-left text-header-list q-py-md">Demande de validation (échouée pour l'automatique):</q-toolbar-title>
             </q-toolbar>
             <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                <q-item v-if="!emptyToValidate" v-for="validate in toValidate" v-bind:key="validate.id" class="row q-pa-none">
+                <q-item v-for="validate in toValidate" v-bind:key="validate.id" class="row q-pa-none">
                     <div class="col-12">
                         <div class="row q-px-md q-py-md">
                             <div class="row col-9">
@@ -65,7 +65,7 @@
                     <q-toolbar-title class="text-left text-header-list q-py-md">Validations accéptées:</q-toolbar-title>
                 </q-toolbar>
                 <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                    <q-item v-if="!emptyIsValidate" v-for="validate in isValidate" v-bind:key="validate.id" class="row q-pa-none">
+                    <q-item v-for="validate in isValidate" v-bind:key="validate.id" class="row q-pa-none">
                         <div class="col-12">
                             <div class="row q-px-sm q-py-sm">
                                 <div top class="row no-wrap items-center col-3">
@@ -111,7 +111,7 @@
                     <q-toolbar-title class="text-left text-header-list q-py-md">Validations rejetées:</q-toolbar-title>
                 </q-toolbar>
                 <q-list class="qlist-toolbar col-12 bg-white shadow-8 list-overflow">
-                    <q-item v-if="!emptyIsNotValidate" v-for="validate in isNotValidate" v-bind:key="validate.id" class="row q-pa-none">
+                    <q-item v-for="validate in isNotValidate" v-bind:key="validate.id" class="row q-pa-none">
                         <div class="col-12">
                             <div class="row q-px-sm q-py-sm">
                                 <div top class="row no-wrap items-center col-3">

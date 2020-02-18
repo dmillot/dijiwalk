@@ -173,7 +173,18 @@ namespace DijiWalk.WebApplication.Controllers
                         }).ToList();
                         g.Route.RouteTags = new HashSet<RouteTag>();
                     }
-                   
+                    if (g.TeamRoutes != null)
+                    {
+                        g.TeamRoutes = g.TeamRoutes.Select(tr =>
+                        {
+                            tr.RouteStep = null;
+                            tr.Team = null;
+                            tr.Game = null;
+                            return tr;
+                        }).ToList();
+                        
+                    }
+
                     return g;
 
                 }).ToList());
