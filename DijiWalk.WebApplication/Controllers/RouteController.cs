@@ -6,6 +6,8 @@
 namespace DijiWalk.WebApplication.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
@@ -17,7 +19,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Route
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class RouteController : Controller
     {
         /// <summary>
@@ -44,7 +46,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(await this._repository.Find(id));
+                return this.Ok(await _repository.Find(id));
             }
             catch (Exception e)
             {
@@ -61,7 +63,32 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                return this.Ok(await this._repository.FindAll());
+                var routes = await this._repository.FindAll();
+                return this.Ok(
+                    routes.Select(route =>
+                    {
+                        route.RouteTags = route.RouteTags.Select(rt =>
+                        {
+                            rt.Route = null;
+                            rt.Tag.RouteTags = new HashSet<RouteTag>();
+                            rt.Tag.StepTags = new HashSet<StepTag>();
+                            return rt;
+                        }).ToList();
+                        route.RouteSteps = route.RouteSteps.Select(rs =>
+                        {
+                            rs.Route = null;
+                            rs.TeamRoutes = new HashSet<TeamRoute>();
+                            rs.Step.RouteSteps = new HashSet<RouteStep>();
+                            rs.Step.StepTags = new HashSet<StepTag>();
+                            rs.Step.StepValidations = new HashSet<StepValidation>();
+                            rs.Step.Missions = new HashSet<Mission>();
+                            rs.Step.Clues = new HashSet<Clue>();
+                            return rs;
+                        }).ToList();
+                        return route;
+                    }).ToList()
+
+                );
             }
             catch (Exception e)
             {

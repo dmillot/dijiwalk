@@ -272,12 +272,10 @@
                 this.gameSelected = game;
 
                 var teams = [];
-
                 game.plays.forEach(function (item) {
-
                     var players = [];
-
                     TeamPlayerDataService.get(item.idTeam).then(response => {
+                       
                         response.data.forEach(function (i) {
                             players.push(i.player);
                         })

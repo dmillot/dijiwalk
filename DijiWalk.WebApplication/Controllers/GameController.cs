@@ -92,44 +92,7 @@ namespace DijiWalk.WebApplication.Controllers
         {
             try
             {
-                var games = await this._repository.FindAll();
-                return Ok(games.Select(g =>
-                {
-                    if (g.Organizer != null)
-                    {
-                        g.Organizer.Games = new HashSet<Game>();
-                        g.Organizer.Messages = new HashSet<Message>();
-                        g.Organizer.Players = new HashSet<Player>();
-                        g.Organizer.Routes = new HashSet<Route>();
-                        g.Organizer.Teams = new HashSet<Team>();
-                    }
-                    if (g.Route != null)
-                    {
-                        g.Route.Games = new HashSet<Game>();
-                        g.Route.RouteSteps = new HashSet<RouteStep>();
-                        g.Route.RouteTags = new HashSet<RouteTag>();
-                    }
-                    if (g.Transport != null)
-                    {
-                        g.Transport.Games = new HashSet<Game>();
-                    }
-
-                    if (g.Plays != null)
-                    {
-                        g.Plays = g.Plays.Select(p =>
-                        {
-                            p.Game = null;
-                            p.Team.Organizer = null;
-                            p.Team.Plays = new HashSet<Play>();
-                            p.Team.TeamAnswers = new HashSet<TeamAnswer>();
-                            p.Team.TeamPlayers = new HashSet<TeamPlayer>();
-                            p.Team.TeamRoutes = new HashSet<TeamRoute>();
-                            return p;
-                        }).ToList();
-                    }
-                    return g;
-                   
-                }).ToList());
+                return Ok(await this._repository.FindAll());
             }
             catch (Exception e)
             {
