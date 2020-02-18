@@ -212,7 +212,6 @@
             }
         },
         created() {
-            console.log(this.$route.params.idJeu)
             this.id = this.$route.params.idJeu;
             this.getAllValidations(this.id);
         },
