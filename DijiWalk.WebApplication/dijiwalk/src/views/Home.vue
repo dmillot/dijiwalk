@@ -3,7 +3,10 @@
         <q-header elevated>
             <q-toolbar class="bg-toolbar">
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-power-off" @click="onDisconnected" />
-                <q-toolbar-title>DijiWalk</q-toolbar-title>
+                <div class="row full-width justify-center">
+                    <img src="https://storage.cloud.google.com/dijiwalk-test/logo-text.png" style="max-height:50px;" class="q-my-sm" />
+                </div>
+                
             </q-toolbar>
         </q-header>
         <div class="row flex-center full-width justify-center q-col-gutter-xl q-mt-lg">
