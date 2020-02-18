@@ -66,10 +66,16 @@ namespace DijiWalk.Repositories
         /// <returns>The TeamPlayer with the Id team researched</returns>
         public async Task<IEnumerable<TeamPlayer>> FindByTeam(int id)
         {
-            return await _context.Teamplayers
-                .Where(t => t.IdTeam == id)
-                .Include(p => p.Player)
-                .ToListAsync();
+            var teamPlayers = await _context.Teamplayers.Where(t => t.IdTeam == id).Include(p => p.Player).ToListAsync();
+            var teamPlayersByTeam = teamPlayers.Select(tp =>
+            {
+                tp.Team = null;
+                tp.Player.Organizer = null;
+                tp.Player.TeamPlayers = new HashSet<TeamPlayer>();
+                tp.Player.Teams = new HashSet<Team>();
+                return tp;
+            }).ToList();
+            return teamPlayersByTeam;
         }
 
         /// <summary>

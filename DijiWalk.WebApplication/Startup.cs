@@ -44,7 +44,7 @@ namespace DijiWalk.WebApplication
         /// <param name="settings"></param>
         public static void AddCustomSettings(this JsonSerializerSettings settings)
         {
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
             settings.Formatting = Formatting.Indented;
         }
     }

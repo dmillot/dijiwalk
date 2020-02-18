@@ -79,7 +79,26 @@ namespace DijiWalk.Repositories
         /// <returns>The Route with the Id researched</returns>
         public async Task<Route> Find(int id)
         {
-            return await _context.Routes.Where(r => r.Id == id).Include(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.RouteTags).ThenInclude(rt => rt.Tag).FirstOrDefaultAsync();
+            var route = await _context.Routes.Where(r => r.Id == id).Include(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.RouteTags).ThenInclude(rt => rt.Tag).FirstOrDefaultAsync();
+            route.RouteTags = route.RouteTags.Select(rt =>
+            {
+                rt.Route = null;
+                rt.Tag.RouteTags = new HashSet<RouteTag>();
+                rt.Tag.StepTags = new HashSet<StepTag>();
+                return rt;
+            }).ToList();
+            route.RouteSteps = route.RouteSteps.Select(rs =>
+            {
+                rs.Route = null;
+                rs.TeamRoutes = new HashSet<TeamRoute>();
+                rs.Step.RouteSteps = new HashSet<RouteStep>();
+                rs.Step.StepTags = new HashSet<StepTag>();
+                rs.Step.StepValidations = new HashSet<StepValidation>();
+                rs.Step.Missions = new HashSet<Mission>();
+                rs.Step.Clues = new HashSet<Clue>();
+                return rs;
+            }).ToList();
+            return route;
         }
 
         /// <summary>
@@ -113,7 +132,7 @@ namespace DijiWalk.Repositories
 
                     if (responseTags.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Routes.Where(s => s.Id == newRoute.Id).Include(s => s.RouteSteps).Include(s => s.RouteTags).FirstOrDefaultAsync() };
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await this.Find(newRoute.Id) };
                     }
                     else
                         return responseTags;

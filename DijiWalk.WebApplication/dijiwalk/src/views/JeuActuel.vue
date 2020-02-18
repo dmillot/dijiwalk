@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="row justify-center">
                                     <div class="text-subtitle2 q-mx-sm"><b>Organisateur:</b> {{game.organizer.firstName}} {{game.organizer.lastName}}</div>
-                                    <q-separator vertical color="white"/>
+                                    <q-separator vertical color="white" />
                                     <div class="text-subtitle2 q-mx-sm"><b>Date de création:</b> {{game.creationDate | formatDate}}</div>
                                 </div>
                             </div>
@@ -41,6 +41,9 @@
                     </q-carousel>
                 </div>
             </q-card-section>
+            <h4 v-if="!anyGame" class="no-margin  text-grey-5">
+                PAS DE JEU EN COURS !
+            </h4>
             <q-card-section :disabled="gameSelected===null" class="flex column flex-center">
                 <div class="row flex-center full-width justify-center q-mt-lg q-col-gutter-xl">
 
@@ -92,9 +95,11 @@
                this.$router.push({ name: "validation", params: { idJeu: this.slide } });
             },
             getActualGames() {
+                this.$q.loading.show()
                 if (this.gamesActifs === null) {
                     GameDataService.getAllActifs().then(response => {
-                        if (response.data != null) {
+                        this.$q.loading.hide()
+                        if (response.data != null && response.data.length != 0) {
                             this.gamesActifs = response.data;
                             this.gamesActifs.map(function (el) {
                                 el.statusColor = "secondary";
@@ -107,10 +112,10 @@
                                     }
                                 }
                             })
-                            
                             this.slide = response.data[0].id
                         } else {
                             this.anyGame = false
+                            this.slide = null
                         }
                     }).catch();
                 }

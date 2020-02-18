@@ -250,7 +250,6 @@
                 if (self.game === null) {
                     GameDataService.get(self.id).then(response => {
                         self.game = response.data;
-
                         self.initMap(self.game.route.routeSteps)
                         var idTeamDone = null;
                         self.game.teamRoutes.forEach(function (el) {
