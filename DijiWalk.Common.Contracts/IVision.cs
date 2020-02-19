@@ -33,7 +33,14 @@ namespace DijiWalk.Common.Contracts
         /// </summary>
         /// <param name="urlPicture">Url of the photo you want to check if face</param>
         /// <returns>List of face-id unique on the photo</returns>
-        Task<IAsyncEnumerable<Guid?>> GetFacesId(string urlPicture);
+        Task<List<Guid?>> GetFacesId(string urlPicture);
+
+        /// <summary>
+        /// Get face id of a photo of captain
+        /// </summary>
+        /// <param name="urlPicture">Url of the photo you want to check if face</param>
+        /// <returns>List of face-id unique on the photo</returns>
+        Task<Guid?> GetFacesIdCaptain(string urlPicture);
 
         /// <summary>
         /// Compare two photo / face id
@@ -41,6 +48,6 @@ namespace DijiWalk.Common.Contracts
         /// <param name="capitaineFace">Face id of the capitaine of the team</param>
         /// <param name="facesValidation">All faces id find on the validation photo</param>
         /// <returns>bool: true if similar, false if not similar</returns>
-        Task<bool> CompareFaces(List<Guid?> capitaineFace, List<Guid?> facesValidation);
+        Task<bool> CompareFaces(Guid? capitaineFace, List<Guid?> facesValidation);
     }
 }

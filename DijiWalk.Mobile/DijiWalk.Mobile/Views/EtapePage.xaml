@@ -7,176 +7,131 @@
              Title="Étape"
              BackgroundColor="#D18D28">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="50"/>
-        </Grid.ColumnDefinitions>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
 
-        <StackLayout Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,30,0,0">
-            <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
-                <Label TextColor="White" FontSize="35"  Text="test">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding Step.CreationDate}">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-            </StackLayout>
+            <StackLayout Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,30,0,0">
+                <StackLayout Margin="0,50" HorizontalOptions="Center">
+                    <Label TextColor="White" FontSize="35"  Text="{Binding ActualStep.Name}">
+                        <Label.Effects>
+                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <effects:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS" Value="Black" />
+                                        <On Platform="Android" Value="Black" />
+                                    </OnPlatform>
+                                </effects:ShadowEffect.Color>
+                            </effects:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
+                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.CreationDate}">
+                        <Label.Effects>
+                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <effects:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS" Value="Black" />
+                                        <On Platform="Android" Value="Black" />
+                                    </OnPlatform>
+                                </effects:ShadowEffect.Color>
+                            </effects:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
+                </StackLayout>
 
-            <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
-                <Label TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" Text="Enigme : ">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <Label TextColor="White" Text="{Binding Step.Description}">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-            </StackLayout>
+                <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
+                    <Label TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" Text="Enigme : ">
+                        <Label.Effects>
+                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <effects:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS" Value="Black" />
+                                        <On Platform="Android" Value="Black" />
+                                    </OnPlatform>
+                                </effects:ShadowEffect.Color>
+                            </effects:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
+                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.Description}">
+                        <Label.Effects>
+                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <effects:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS" Value="Black" />
+                                        <On Platform="Android" Value="Black" />
+                                    </OnPlatform>
+                                </effects:ShadowEffect.Color>
+                            </effects:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
+                </StackLayout>
             
-            <StackLayout  Spacing="20" Margin="10,0,10,50">
+                <StackLayout  Spacing="20" Margin="10,0,10,50">
 
-                <Grid HeightRequest="65">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="1"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="1"/>
-                    </Grid.RowDefinitions>
+                    <Button x:Name="BtnValidation" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="30" CornerRadius="3" Text="VALIDER" FontSize="20" TextColor="{StaticResource LightColor}"
+                        BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Command="{Binding NavigateToValidationPage}"/>
 
-                    <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnValidation" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
-                    <flex:FlexButton x:Name="BtnValidation" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="valider.png" IconOrientation="Left" Text="VALIDER" FontSize="20" ForegroundColor="{StaticResource LightColor}"
-                    BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnValidation_TouchedDown" TouchedUp="BtnValidation_TouchedUp" ClickedCommand="{Binding NavigateToValidationPage}"/>
-                </Grid>
+                    <Button x:Name="BtnQuizz" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="QUIZZ" FontSize="20" TextColor="{StaticResource LightColor}"
+                        BackgroundColor="{StaticResource SecondaryColor}"  FontAttributes="Bold" Command="{Binding NavigateToQuizzPage}"/>
 
-                <Grid HeightRequest="65">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="1"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="1"/>
-                    </Grid.RowDefinitions>
-
-                    <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnQuizz" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
-                    <flex:FlexButton x:Name="BtnQuizz" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="quizz.png" IconOrientation="Left" Text="QUIZZ" FontSize="20" ForegroundColor="{StaticResource LightColor}"
-                    BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnQuizz_TouchedDown" TouchedUp="BtnQuizz_TouchedUp" ClickedCommand="{Binding NavigateToQuizzPage}"/>
-                </Grid>
-
-                <Grid HeightRequest="65">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="1"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="1"/>
-                    </Grid.RowDefinitions>
-
-                    <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnChat" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
-                    <flex:FlexButton x:Name="BtnChat" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="chat.png" IconOrientation="Left" Text="CHAT" FontSize="20" ForegroundColor="{StaticResource LightColor}"
-                    BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnChat_TouchedDown" TouchedUp="BtnChat_TouchedUp" ClickedCommand="{Binding NavigateToChatPage}"/>
-                </Grid>
-            </StackLayout>
+                    <Button x:Name="BtnChat" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="CHAT" FontSize="20" TextColor="{StaticResource LightColor}"
+                        BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Command="{Binding NavigateToChatPage}" />
+                
+                </StackLayout>
             
-            <StackLayout HorizontalOptions="CenterAndExpand">
-                <Label TextColor="White" HorizontalTextAlignment="Center"  FontSize="Large"  Text="Indice: ">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <ListView ItemsSource="{Binding Step.Clues}" RowHeight="150">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Frame VerticalOptions="Start" HorizontalOptions="Center">
-                                    <Label TextColor="White" Text="{Binding Description}">
-                                        <Label.Effects>
-                                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                <effects:ShadowEffect.Color>
-                                                    <OnPlatform x:TypeArguments="Color">
-                                                        <On Platform="iOS" Value="Black" />
-                                                        <On Platform="Android" Value="Black" />
-                                                    </OnPlatform>
-                                                </effects:ShadowEffect.Color>
-                                            </effects:ShadowEffect>
-                                        </Label.Effects>
-                                    </Label>
-                                </Frame>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Label TextColor="White" Text="{Binding Clue.Description}">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
+                <StackLayout HorizontalOptions="CenterAndExpand">
+                    <Label TextColor="White" HorizontalTextAlignment="Center"  FontSize="Large"  Text="Indice: ">
+                        <Label.Effects>
+                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                <effects:ShadowEffect.Color>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="iOS" Value="Black" />
+                                        <On Platform="Android" Value="Black" />
+                                    </OnPlatform>
+                                </effects:ShadowEffect.Color>
+                            </effects:ShadowEffect>
+                        </Label.Effects>
+                    </Label>
+                    <ListView ItemsSource="{Binding ActualStep.Clues}" RowHeight="150">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame VerticalOptions="Start" HorizontalOptions="Center">
+                                        <Label TextColor="White" Text="{Binding Clue.Description}">
+                                            <Label.Effects>
+                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
+                                                    <effects:ShadowEffect.Color>
+                                                        <OnPlatform x:TypeArguments="Color">
+                                                            <On Platform="iOS" Value="Black" />
+                                                            <On Platform="Android" Value="Black" />
+                                                        </OnPlatform>
+                                                    </effects:ShadowEffect.Color>
+                                                </effects:ShadowEffect>
+                                            </Label.Effects>
+                                        </Label>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
-        <AbsoluteLayout HorizontalOptions="CenterAndExpand" Margin="0,10,0,0" TranslationX="10">
-            <BoxView x:Name="ShadowBtnBack" Color="{StaticResource SecondaryDarkColor}" HeightRequest="50" WidthRequest="50" CornerRadius="100" Margin="3,3,0,0"/>
-            <ImageButton x:Name="BtnBack" CornerRadius="100" Source="back.png" HeightRequest="50" WidthRequest="50" Padding="15" BackgroundColor="{StaticResource SecondaryColor}" Pressed="BtnBack_Pressed" Released="BtnBack_Released" Command="{Binding NavigateToGamePage}"/>
-        </AbsoluteLayout>
-        <AbsoluteLayout HorizontalOptions="CenterAndExpand" Grid.Column="2" Margin="0,10,0,0" TranslationX="-10">
-            <BoxView x:Name="ShadowBtnClose" Color="{StaticResource SecondaryDarkColor}" HeightRequest="50" WidthRequest="50" CornerRadius="100" Margin="3,3,0,0"/>
-            <ImageButton x:Name="BtnClose" CornerRadius="100" Source="iconclose.png" HeightRequest="50" WidthRequest="50" Padding="15" BackgroundColor="{StaticResource SecondaryColor}" Pressed="BtnClose_Pressed" Released="BtnClose_Released" Command="{Binding NavigateToLoginPage}"/>
-        </AbsoluteLayout>
-    </Grid>
+            <AbsoluteLayout HorizontalOptions="CenterAndExpand" Margin="0,10,0,0" TranslationX="10">
+                <BoxView x:Name="ShadowBtnBack" Color="{StaticResource SecondaryDarkColor}" HeightRequest="50" WidthRequest="50" CornerRadius="100" Margin="3,3,0,0"/>
+                <ImageButton x:Name="BtnBack" CornerRadius="100" Source="back.png" HeightRequest="50" WidthRequest="50" Padding="15" BackgroundColor="{StaticResource SecondaryColor}" Pressed="BtnBack_Pressed" Released="BtnBack_Released" Command="{Binding NavigateToGamePage}"/>
+            </AbsoluteLayout>
+            <AbsoluteLayout HorizontalOptions="CenterAndExpand" Grid.Column="2" Margin="0,10,0,0" TranslationX="-10">
+                <BoxView x:Name="ShadowBtnClose" Color="{StaticResource SecondaryDarkColor}" HeightRequest="50" WidthRequest="50" CornerRadius="100" Margin="3,3,0,0"/>
+                <ImageButton x:Name="BtnClose" CornerRadius="100" Source="iconclose.png" HeightRequest="50" WidthRequest="50" Padding="15" BackgroundColor="{StaticResource SecondaryColor}" Pressed="BtnClose_Pressed" Released="BtnClose_Released" Command="{Binding NavigateToLoginPage}"/>
+            </AbsoluteLayout>
+        </Grid>
+    </ScrollView>
 </ContentPage>

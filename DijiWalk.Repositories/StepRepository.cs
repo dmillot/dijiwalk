@@ -10,6 +10,7 @@ namespace DijiWalk.Repositories
     using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Business.Contracts;
+    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -34,12 +35,15 @@ namespace DijiWalk.Repositories
 
         private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
 
+        private readonly IVision _vision;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IVision vision IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
 
         {
+            _vision = vision;
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
@@ -180,6 +184,23 @@ namespace DijiWalk.Repositories
             catch (Exception e)
             {
                 return TranslateError.Convert(e);
+            }
+        }
+
+        public async Task<bool> Validate(Validate validate)
+        {
+            var urlPicture = await _imageBusiness.UploadImage(validate.Picture, validate.Filename);
+            var guidAllFaces = await _vision.GetFacesId(urlPicture);
+            var captain = await _context.Players.FirstOrDefaultAsync(p => p.Id == validate.IdPlayer);
+            var guidCaptain = await _vision.GetFacesIdCaptain(captain.Picture);
+
+            var result = await _vision.CompareFaces(guidCaptain, guidAllFaces);
+
+            if (result == false)
+                return false;
+            else
+            {
+                var lol = await _imageBusiness.Analyze(validate.Picture, validate.IdStep);
             }
         }
     }

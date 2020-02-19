@@ -1,4 +1,5 @@
-﻿using DijiWalk.Mobile.Resources.Utils;
+﻿using DijiWalk.Entities;
+using DijiWalk.Mobile.Resources.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,8 @@ namespace DijiWalk.Mobile.ViewModels.ViewEntities
         public Dictionary<string,string> ColorValidation { get; set; }
         public bool NotFirst { get; set; }
         public bool NotLast { get; set; }
+
+        public ICollection<Clue> Clues { get; set; }
 
         public ViewStep()
         {

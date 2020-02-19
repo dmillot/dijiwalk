@@ -155,5 +155,18 @@ namespace DijiWalk.WebApplication.Controllers
                 return this.Ok(TranslateError.Convert(e));
             }
         }
+
+        [HttpPost("validate")]
+        public async Task<IActionResult> Validate([FromBody] Validate validate)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Validate(validate));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
     }
 }

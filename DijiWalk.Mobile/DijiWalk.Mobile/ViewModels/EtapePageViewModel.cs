@@ -16,6 +16,7 @@ namespace DijiWalk.Mobile.ViewModels
     {
         #region Properties
         private readonly PlayerService _playerService;
+        private readonly StepService _stepService;
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToQuizzPage { get; set; }
         public DelegateCommand<object> NavigateToValidationPage { get; set; }
@@ -34,10 +35,9 @@ namespace DijiWalk.Mobile.ViewModels
             }
         }
         #endregion
-        private readonly StepService _stepService;
-
         public EtapePageViewModel(INavigationService navigationService, StepService stepService, PlayerService playerService)
         {
+
             this._playerService = playerService;
             this.NavigationService = navigationService;
             this._stepService = stepService;
@@ -66,7 +66,9 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToValidation(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(ValidationPage), null);
+            var navigationParams = new NavigationParameters();
+            navigationParams.Add("step", ActualStep);
+            this.NavigationService.NavigateAsync(nameof(ValidationPage), navigationParams);
         }
 
         /// <summary>
@@ -101,18 +103,20 @@ namespace DijiWalk.Mobile.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
+
         }
 
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
             var response = await _playerService.GetCurrentStep(App.User.Id);
-            Console.WriteLine(response);
-            //ViewStep test = new ViewStep
-            //{
-            //    Id = response.Id,
-            //    Name = response.Name
-            //};
-        }
+            this.ActualStep = new ViewStep
+            {
+                Id = response.Id,
+                Name = response.Name,
+                Description = response.Description,
+                CreationDate = response.CreationDate,
+                Clues = response.Clues
+            };
         }
 
         #endregion

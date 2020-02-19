@@ -52,8 +52,10 @@ namespace DijiWalk.Business
                          on play.IdTeam equals teamplayer.IdTeam
                         join player in _context.Players
                          on teamplayer.IdPlayer equals player.Id
-                        where DateTime.Now >= play.StartDate && DateTime.Now <= play.EndDate && player.Id == idPlayer
-                        select game).FirstOrDefault();
+                        where DateTime.Now >= game.CreationDate && play.EndDate == null && player.Id == idPlayer
+                        select game)
+                        .Include(tr => tr.TeamRoutes).ThenInclude(rs => rs.RouteStep).ThenInclude(s => s.Step)
+                        .FirstOrDefault();
 
             return actualGame;
         }
@@ -91,7 +93,13 @@ namespace DijiWalk.Business
             if (actualGame != null)
             {
                 var currentTeam = await _context.Teamplayers.Where(t => t.IdPlayer == idPlayer).Select(x => x.IdTeam).FirstOrDefaultAsync();
-                var allSteps = await _context.Teamroutes.Include(rt => rt.RouteStep).ThenInclude(s => s.Step).Where(t => t.IdGame == actualGame.Id && t.IdTeam == currentTeam).OrderBy(x => x.StepOrder).ToListAsync();
+
+                var allSteps = await _context.Teamroutes
+                    .Where(t => t.IdGame == actualGame.Id && t.IdTeam == currentTeam)
+                    .Include(rt => rt.RouteStep).ThenInclude(s => s.Step)
+                    .OrderBy(x => x.StepOrder)
+                    .ToListAsync();
+
                 foreach (var item in allSteps)
                 {
                     if (item.ValidationDate == null)

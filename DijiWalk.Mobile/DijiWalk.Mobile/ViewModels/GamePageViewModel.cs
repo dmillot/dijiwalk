@@ -132,11 +132,12 @@ namespace DijiWalk.Mobile.ViewModels
                 team.Captain = capitaine.Player;
                 Groupes.Add(team);
             }
+
             Dictionary<string, string> validationColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ValidationColor"]) } };
             Steps = new ObservableCollection<ViewStep>
             {
                 new ViewStep {Id = 1, Name = "Étape 1", Description="Étape 1 description !", CreationDate = DateTime.Today, ColorValidation = validationColor, NotFirst = false, Validation = true },
-                new ViewStep {Id = 2, Name = "Étape 2", Description="Étape 2 description !", CreationDate = DateTime.Today,ColorValidation = validationColor, Validation = true },
+                new ViewStep {Id = 2, Name = "Étape 2", Description="Étape 2 description !", CreationDate = DateTime.Today, ColorValidation = validationColor, Validation = true },
                 new ViewStep {Id = 3, Name = "Étape 3", Description="Étape 3 description !", CreationDate = DateTime.Today},
                 new ViewStep {Id = 4, Name = "Étape 4", Description="Étape 4 description !", CreationDate = DateTime.Today},
                 new ViewStep {Id = 5, Name = "Étape 5", Description="Étape 5 description !", CreationDate = DateTime.Today, NotLast = false}
@@ -196,9 +197,21 @@ namespace DijiWalk.Mobile.ViewModels
 
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
+            Dictionary<string, string> greenColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ValidationColor"]) } };
+            Dictionary<string, string> redColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ErrorColor"]) } };
+
+            var player = await _playerService.GetPlayerById(App.User.Id);
             this.ActualGame = await _playerService.GetActualGame(App.User.Id);
+
+            //var idTeamPlayer = ActualGame.Plays.Where(p => p.Team.TeamPlayers.);
+
+            //var test = this.ActualGame.Plays.Select(play => play.Team.TeamPlayers.Where(tp => tp.IdPlayer == player.Id).Select(x => x.IdTeam));
+            ////var idTeam = player.Teams.Where(t => t.TeamRoutes.Select(tr => tr.IdGame).ToList().Contains(ActualGame.Id)).FirstOrDefault().Id;
+
+            //this.Steps = new ObservableCollection<ViewStep>(ActualGame.TeamRoutes.Where(tr => tr.Team.Id == idTeamPlayer).Select(tr => {
+            //    return new ViewStep { Id = tr.RouteStep.Step.Id, Name = tr.RouteStep.Step.Name, Description = tr.RouteStep.Step.Description, CreationDate = tr.AskValidationDate, ColorValidation = (bool)tr.Validate ? greenColor : redColor, NotFirst = tr.StepOrder == 1 ? false : true, Validation = (bool)tr.Validate, NotLast = ActualGame.TeamRoutes.Where(trs => trs.Team.Id == idTeamPlayer).Count() == tr.StepOrder ? false : true };
+            //}).ToList());
         }
         #endregion
-
     }
 }
