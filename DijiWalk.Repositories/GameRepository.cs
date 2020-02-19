@@ -115,6 +115,14 @@ namespace DijiWalk.Repositories
         {
             return await _context.Games.AnyAsync(t => t.IdRoute == idRoute);
         }
+        /// <summary>
+        /// Method to check if transport is in a game
+        /// </summary>
+        /// <param name="idTransport">id of a team</param>
+        public async Task<bool> ContainsTransport(int idTransport)
+        {
+            return await _context.Games.AnyAsync(t => t.IdTransport == idTransport);
+        }
 
         /// <summary>
         /// Method to find an Game with his Id in the database

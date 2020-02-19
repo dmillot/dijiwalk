@@ -34,6 +34,12 @@ namespace DijiWalk.Repositories.Contracts
         Task<bool> ContainsRoute(int idRoute);
 
         /// <summary>
+        /// Method to check if transport is in a game
+        /// </summary>
+        /// <param name="idTransport">id of a team</param>
+        Task<bool> ContainsTransport(int idTransport);
+
+        /// <summary>
         /// Definition of the method to find an Game with his Id
         /// </summary>
         /// <param name="id">The Id of the Game</param>
