@@ -19,7 +19,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Route
     /// </summary>
-    [Route("api/[controller]"), ApiController]
+    [Route("api/[controller]"), ApiController, Authorize]
     public class RouteController : Controller
     {
         /// <summary>
