@@ -1,9 +1,11 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
-                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
-                <q-toolbar-title>DijiWalk</q-toolbar-title>
+            <q-toolbar class="bg-toolbar">
+                <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/jeuActuel' " />
+                <div class="row full-width justify-center">
+                    <img src="https://storage.cloud.google.com/dijiwalk-test/logo-text.png" style="max-height:50px;" class="q-my-sm" />
+                </div>
 
                 <div class="q-ml-md cursor-pointer non-selectable">
                     <q-icon name="fas fa-search" />
@@ -54,6 +56,9 @@
                         <q-separator></q-separator>
                     </div>
                 </q-item>
+                <q-item v-if="emptyToValidate" class="row justify-center q-pa-none">
+                    <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
+                </q-item>
             </q-list>
         </div>
         <div class="row col-12">
@@ -98,6 +103,9 @@
                             <q-separator></q-separator>
                         </div>
                     </q-item>
+                    <q-item v-if="emptyIsValidate" class="row justify-center q-pa-none">
+                        <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
+                    </q-item>
                 </q-list>
             </div>
             <div class="row col-6 q-mt-lg q-pl-sm">
@@ -141,6 +149,9 @@
                             <q-separator></q-separator>
                         </div>
                     </q-item>
+                    <q-item v-if="emptyIsNotValidate" class="row justify-center q-pa-none">
+                        <h5 class="text-grey-5">PAS DE DEMANDE DE VALIDATION</h5>
+                    </q-item>
                 </q-list>
             </div>
         </div>
@@ -183,9 +194,10 @@
 
     export default {
         name: 'validation',
+         props: ['idJeu'],
         data() {
             return {
-                idJeu: null,
+                id: null,
                 validations: null,
                 toValidate: null,
                 isValidate: null,
@@ -195,11 +207,15 @@
                 pictureStep: null,
                 pictureCaptain: null,
                 pictureAsk: null,
-                canValidate: false
+                canValidate: false,
+                emptyToValidate: false,
+                emptyIsValidate: false,
+                emptyIsNotValidate: false
             }
         },
         created() {
-            this.getAllValidations(3);
+            this.id = this.$route.params.idJeu;
+            this.getAllValidations(this.id);
         },
         filters: {
             formatAgo: function (value) {
@@ -225,12 +241,21 @@
                             if (!el.validate && el.validationDate == null)
                                 return el;
                         })
+                        if (this.toValidate == null || this.toValidate.length == 0) {
+                            this.emptyToValidate = true;
+                        }
                         this.isValidate = this.validations.filter(function (el) {
                             if (el.validate && el.validationDate != null) return el;
                         })
+                        if (this.isValidate == null || this.isValidate.length == 0) {
+                            this.emptyIsValidate = true;
+                        }
                         this.isNotValidate = this.validations.filter(function (el) {
                             if (!el.validate && el.validationDate != null) return el;
                         })
+                        if (this.isNotValidate == null || this.isNotValidate.length == 0) {
+                            this.emptyIsNotValidate = true;
+                        }
                         this.$q.loading.hide()
                     }).catch();
                 }
@@ -341,4 +366,5 @@
     .text-validation-sub {
         font-size: 10px !important;
     }
+
 </style>

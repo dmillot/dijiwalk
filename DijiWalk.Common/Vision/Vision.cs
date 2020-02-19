@@ -23,13 +23,15 @@ namespace DijiWalk.Common.Vision
         private readonly StorageClient storageClient;
         private readonly ImageAnnotatorClient clientGoogle;
         private readonly FaceClient clientAzure;
+        private readonly IStringExtension _stringExtension;
 
-        public Vision(IConfiguration configuration)
+        public Vision(IConfiguration configuration, IStringExtension stringExtension)
         {
             googleCredential = GoogleCredential.FromFile(configuration["GoogleCredentialFile"]);
             storageClient = StorageClient.Create(googleCredential);
             clientGoogle = ImageAnnotatorClient.Create();
             clientAzure = new FaceClient(new ApiKeyServiceClientCredentials(configuration["AzureKey"])) { Endpoint = configuration["FaceDetectURL"] };
+            _stringExtension = stringExtension;
         }
 
         /// <summary>
@@ -68,6 +70,27 @@ namespace DijiWalk.Common.Vision
         }
 
         /// <summary>
+        /// Compare two landmarks
+        /// </summary>
+        /// <param name="Step">Id of the step to compare</param>
+        /// <param name="landmarksAnalyze">List of StepValidation landmarks</param>
+        /// <param name="tagsAnalyze">List of tags analyze</param>
+        /// <returns>bool: true if ok, false if not ok</returns>
+        public bool CompareLandMarks(Step stepToCompare, List<StepValidation> landmarksAnalyze, List<EntityAnnotation> tagsAnalyze)
+        {
+            var listLandmarksStep = stepToCompare.StepValidations.Select(sv => _stringExtension.RemoveDiacriticsAndWhiteSpace(sv.Description));
+            var listLandmarksAnalyze = landmarksAnalyze.Select(sv => _stringExtension.RemoveDiacriticsAndWhiteSpace(sv.Description));
+            if (!listLandmarksStep.SequenceEqual(listLandmarksAnalyze))
+            {
+                var listLabelsTags = stepToCompare.StepTags.Select(ta => _stringExtension.RemoveDiacriticsAndWhiteSpace(ta.Tag.Name)).ToList();
+                var listLabelsAnalyze = tagsAnalyze.Select(ta => _stringExtension.RemoveDiacriticsAndWhiteSpace(ta.Description)).ToList();
+                var sameTagsList = listLabelsTags.Select(ls => listLabelsAnalyze.Contains(ls));
+                return (sameTagsList.Where(stl => stl).Count() * 100 / stepToCompare.StepTags.Count() >= 60) ? true : false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Get all tag for this picture
         /// </summary>
         /// <param name="imageFile">Picture</param>
@@ -79,6 +102,8 @@ namespace DijiWalk.Common.Vision
             return labels.Where(l => l.Score * 100 >= 70).ToList();
 
         }
+
+    
 
         public void GetWeb(string imageFile, string extension)
         {

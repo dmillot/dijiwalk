@@ -1,9 +1,11 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
+            <q-toolbar class="bg-toolbar">
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
-                <q-toolbar-title>DijiWalk</q-toolbar-title>
+                <div class="row full-width justify-center">
+                    <img src="https://storage.cloud.google.com/dijiwalk-test/logo-text.png" style="max-height:50px;" class="q-my-sm" />
+                </div>
             </q-toolbar>
         </q-header>
         <div class="row full-width justify-center q-pr-xl q-my-md q-col-gutter-xl">
@@ -97,10 +99,13 @@
                             </template>
                         </q-input>
 
-                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès handicapé ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
+                        <q-toggle class="col-5 q-my-xs on-left" ref="handicap" v-model="handicapParcours" color="primary" icon="fas fa-wheelchair" label="Accès PMR ?" option-value="id" option-label="name" name="handicapParcours" id="handicapParcours" />
 
+                        <GmapMap ref="mapRefManage" :center="centerManage" :zoom="12" style="width:100%;  height: 400px;">
+                            <GmapMarker :key="index" v-for="(m,index) in stepMarkers" title="m.label" :position="m.position" @click="toggleInfoWindow(m)"></GmapMarker>
+                        </GmapMap>
                         <div class="row items-center justify-center col-12">
-                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !">
+                            <q-select class="col-10 q-my-xs" ref="steps" clearable use-input fill-input v-model="stepSelected" multiple :options="stepsOptions" label="Étapes *" option-value="id" option-label="name" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez choisir une étape.']" @filter="filterStep" hint="Vous pouvez en rajouter une si elle n'existe pas (bouton à droite) !" @add="addMarkerManageByOne" @remove="removeMarkerManageByOne">
                                 <template v-slot:option="scope">
                                     <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                                         <q-avatar>
@@ -173,10 +178,10 @@
                     <div class="row col-12" v-if="parcoursSelected.handicap" style="border-bottom: 1px rgba(0,0,0,0.12) solid;">
                         <q-item>
                             <q-icon size="md" class="q-mt-sm" name="fas fa-wheelchair" color="negative" />
-                            <q-item-section class="q-ml-sm">Le parcours a des accés pour les handicapés.</q-item-section>
+                            <q-item-section class="q-ml-sm">Le parcours a des accés PMR.</q-item-section>
                         </q-item>
                     </div>
-                    <div class="row col-12">
+                    <div class="row col-12" v-if="parcoursSelected.routeSteps !== null && parcoursSelected.routeSteps.length != 0">
                         <q-list class="custom-expansion col-12">
                             <q-expansion-item expand-separator icon="fas fa-shoe-prints" label="Étapes">
                                 <q-card class="card-expansion">
@@ -237,7 +242,7 @@
                 descriptionParcours: null,
                 handicapParcours: null,
                 timeParcours: null,
-                tagsParcours: null,
+                tagsParcours: [],
 
                 steps: null,
                 stepSelected: null,
@@ -249,14 +254,17 @@
 
                 tags: null,
                 tagSelected: null,
-                tagsAvailable: null,
-                tagsOptions: null,
+                tagsAvailable: [],
+                tagsOptions: [],
 
                 idParcours: null,
                 center: null,
                 markers: [],
                 infoWindowContext: null,
-                showInfo: false
+                showInfo: false,
+
+                centerManage: null,
+                stepMarkers: []
 
             }
         },
@@ -269,8 +277,8 @@
                         self.tagSelected = null;
                     });
                 }
+            },
 
-            }
         },
         created() {
             this.getAllParcours();
@@ -290,11 +298,37 @@
             },
             initMap(routeSteps) {
                 this.markers = [];
-                this.center = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
-                routeSteps.forEach(e => this.addMarker(e));
+                if (routeSteps != null && routeSteps.length != 0) {
+                    this.center = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
+                    routeSteps.forEach(e => this.addMarker(e));
+                } else {
+                    this.center = { lat: 47.327209, lng: 5.044040 };
+                }
+            },
+            initMapManage(routeSteps) {
+                this.stepMarkers = [];
+                if (routeSteps != null && routeSteps.length != 0) {
+                    this.centerManage = { lat: routeSteps[0].step.lat, lng: routeSteps[0].step.lng };
+                    routeSteps.forEach(e => this.addMarkerManage(e));
+                } else {
+                    this.centerManage = { lat: 47.327209, lng: 5.044040 };
+                }
             },
             addMarker(routeStep) {
-                this.markers.push({ label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
+                this.markers.push({ id: routeStep.step.id, label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
+            },
+            addMarkerManageByOne(step) {
+                this.stepMarkers.push({ id: step.value.id, label: step.value.name, description: step.value.description, picture: step.value.validation, position: { lat: step.value.lat, lng: step.value.lng } });
+            },
+            removeMarkerManageByOne(step) {
+                this.stepMarkers = this.stepMarkers.filter(function (el) {
+                    if (el.id != step.value[0].id) {
+                        return el;
+                    }
+                })
+            },
+            addMarkerManage(routeStep) {
+                this.stepMarkers.push({ id: routeStep.step.id, label: routeStep.step.name, description: routeStep.step.description, picture: routeStep.step.validation, position: { lat: routeStep.step.lat, lng: routeStep.step.lng } });
             },
             capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
@@ -331,10 +365,11 @@
                 this.descriptionParcours = null
                 this.handicapParcours = null
                 this.timeParcours = null
-                this.tagsParcours = null
-                this.tagsAvailable = null
-                this.tags = null
+                this.tagsParcours = []
+                this.tagsAvailable = []
+                this.tags = []
                 this.stepSelected = null
+                this.stepMarkers = [];
             },
             openModalToGetInformations(parcour) {
                 this.isAdding = false;
@@ -348,7 +383,12 @@
                 this.isEditing = false;
                 this.isAdding = true;
                 this.resetInput();
+                this.initMapManage([]);
                 this.manageParcours = true;
+                this.tagsAvailable = [];
+                this.getAllTags().then(response => {
+                    this.tagsAvailable = response;
+                });
             },
 
             openModalToEdit(parcour) {
@@ -356,6 +396,7 @@
                 this.isAdding = false;
                 this.resetInput();
                 this.fillForm(parcour);
+                this.initMapManage(parcour.routeSteps);
                 this.manageParcours = true
             },
             getAllSteps() {
@@ -384,7 +425,7 @@
             },
             getAllTags() {
                 return new Promise((resolve) => {
-                    if (this.tags === null) {
+                    if (this.tags === null || this.tags.length === 0) {
                         TagDataService.getAll().then(response => {
                             this.tags = response.data;
                             resolve(this.tags);
@@ -392,25 +433,34 @@
                     }
                 })
             },
-            async fillForm(parcour) {
+            fillForm(parcour) {
                 this.parcoursSelected = parcour;
                 this.idParcours = parcour.id
                 this.nameParcours = parcour.name;
                 this.descriptionParcours = parcour.description;
                 this.handicapParcours = parcour.handicap;
                 this.timeParcours = parcour.time;
-                this.stepSelected = parcour.routeSteps.map(function (t) {
-                    return t.step;
-                });
-                this.tagsParcours = parcour.routeTags.map(function (t) {
-                    return t.tag;
-                });
-                this.getAllTags().then(response => {
-                    var tagParcours = this.tagsParcours.map(function (t) {
-                        return t.id;
+                if (parcour.routeSteps != null && parcour.routeSteps.length != 0) {
+                    this.stepSelected = parcour.routeSteps.map(function (t) {
+                        return t.step;
                     });
-                    this.tagsAvailable = response.filter(function (el) {
+                }
+                if (parcour.routeTags != null && parcour.routeTags.length != 0) {
+                    this.tagsParcours = parcour.routeTags.map(function (t) {
+                        return t.tag;
+                    });
+                } else {
+                    this.tagsParcours = [];
+                }
 
+                this.getAllTags().then(response => {
+                    var tagParcours = [];
+                    if (this.tagsParcours != null && this.tagsParcours.length != 0) {
+                        tagParcours = this.tagsParcours.map(function (t) {
+                            return t.id;
+                        });
+                    }
+                    this.tagsAvailable = response.filter(function (el) {
                         if (!tagParcours.includes(el.id)) return el;
                     });
                 });
@@ -424,19 +474,23 @@
                         this.$q.loading.show()
                         var self = this;
                         var listeRouteTag = [];
-                        this.tagsParcours.forEach(element => {
-                            listeRouteTag.push({
-                                idTag: element.id,
-                                idRoute: self.idParcours
+                        if (this.tagsParcours != null && this.tagsParcours.length != 0) {
+                            this.tagsParcours.forEach(element => {
+                                listeRouteTag.push({
+                                    idTag: element.id,
+                                    idRoute: self.idParcours
+                                });
                             });
-                        });
+                        }
                         var listeRouteStep = [];
-                        this.stepSelected.forEach(element => {
-                            listeRouteStep.push({
-                                idStep: element.id,
-                                idRoute: self.idParcours
+                        if (this.stepSelected != null && this.stepSelected.length != 0) {
+                            this.stepSelected.forEach(element => {
+                                listeRouteStep.push({
+                                    idStep: element.id,
+                                    idRoute: self.idParcours
+                                });
                             });
-                        });
+                        }
                         ParcoursDataService.update(this.idParcours, {
                             Name: this.nameParcours,
                             Description: this.descriptionParcours,
@@ -482,19 +536,23 @@
                     var timeSplit = this.timeParcours.split(":");
                     if (parseInt(timeSplit[0]) >= 0 && parseInt(timeSplit[0]) < 24 && parseInt(timeSplit[1]) >= 0 && parseInt(timeSplit[1]) < 59) {
                         var listeRouteTag = [];
-                        this.tagsParcours.forEach(element => {
-                            listeRouteTag.push({
-                                idTag: element.id,
-                                idRoute: 0
+                        if (this.tagsParcours != null && this.tagsParcours.length != 0) {
+                            this.tagsParcours.forEach(element => {
+                                listeRouteTag.push({
+                                    idTag: element.id,
+                                    idRoute: 0
+                                });
                             });
-                        });
+                        }
                         var listeRouteStep = [];
-                        this.stepSelected.forEach(element => {
-                            listeRouteStep.push({
-                                idStep: element.id,
-                                idRoute: self.idParcours
+                        if (this.stepSelected != null && this.stepSelected.length != 0) {
+                            this.stepSelected.forEach(element => {
+                                listeRouteStep.push({
+                                    idStep: element.id,
+                                    idRoute: self.idParcours
+                                });
                             });
-                        });
+                        }
                         ParcoursDataService.create({
                             Name: this.nameParcours,
                             Description: this.descriptionParcours,
@@ -508,8 +566,6 @@
                                 this.manageParcours = false;
                                 this.onResetValidation();
                                 this.parcours.push(response.data.response);
-
-                                //STORE IMAGE TO THE CLOUD OF GOOGLE (AND THEN PASS THE URL AFTER THAT)
 
                                 this.$q.notify({
                                     icon: 'fas fa-check-square',

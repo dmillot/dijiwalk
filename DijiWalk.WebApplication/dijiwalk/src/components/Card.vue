@@ -1,6 +1,6 @@
 <template>
     <div class="col-xs-12 col-md-4 col-grow">
-        <q-card @click="navigateToLink()" class="my-card full-height cursor-pointer">
+        <q-card ripple="black" @click="navigateToLink()" class="my-card full-height cursor-pointer">
             <q-card-section class="flex column flex-center">
                 <q-icon :name="icon" class="q-mt-lg" style="font-size: 4em" />
                 <h5 class="text-bold q-ma-none q-mt-lg">{{ title }}</h5>

@@ -123,7 +123,7 @@ namespace DijiWalk.Repositories
         /// <returns>The Game with the Id researched</returns>
         public async Task<Game> Find(int id)
         {
-            var game = await _context.Games.Where(g => g.Id == id).Include(r => r.Route).ThenInclude(r => r.RouteSteps).Include(t => t.Transport).Include(o => o.Organizer).Include(p => p.Plays).ThenInclude(t => t.Team).ThenInclude(m => m.TeamPlayers).ThenInclude(p => p.Player).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
+            var game = await _context.Games.Where(g => g.Id == id).Include(p => p.Plays).ThenInclude(p => p.Team).ThenInclude(t => t.TeamPlayers).ThenInclude(tp => tp.Player).Include(r => r.Route).ThenInclude(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(t => t.Transport).Include(o => o.Organizer).Include(g => g.TeamRoutes).ThenInclude(tr => tr.RouteStep).ThenInclude(rt => rt.Step).FirstOrDefaultAsync();
             if (game.Organizer != null)
             {
                 game.Organizer.Games = new HashSet<Game>();
@@ -131,46 +131,76 @@ namespace DijiWalk.Repositories
                 game.Organizer.Players = new HashSet<Player>();
                 game.Organizer.Routes = new HashSet<Route>();
                 game.Organizer.Teams = new HashSet<Team>();
-            } else
+            }
+            else
             {
                 game.Organizer = await _context.Organizers.FirstOrDefaultAsync(o => o.Id == game.IdOrganizer);
             }
             if (game.Route != null)
             {
                 game.Route.Games = new HashSet<Game>();
-                game.Route.RouteSteps =  game.Route.RouteSteps.Select(rs =>
-                {
-                    rs.Route = null;
-                    rs.Step = null;
-                    rs.TeamRoutes = new HashSet<TeamRoute>();
-                    return rs;
-                }).ToList();
+                game.Route.RouteSteps = game.Route.RouteSteps.Select(rs =>
+               {
+                   rs.Route = null;
+                   rs.Step.Missions = new HashSet<Mission>();
+                   rs.Step.RouteSteps = new HashSet<RouteStep>();
+                   rs.Step.StepTags = new HashSet<StepTag>();
+                   rs.Step.StepValidations = new HashSet<StepValidation>();
+                   rs.TeamRoutes = new HashSet<TeamRoute>();
+                   return rs;
+               }).ToList();
                 game.Route.RouteTags = new HashSet<RouteTag>();
-            } else
+            }
+            else
             {
                 game.Route = await _context.Routes.FirstOrDefaultAsync(r => r.Id == game.IdRoute);
             }
             if (game.Transport != null)
             {
                 game.Transport.Games = new HashSet<Game>();
-            } else
+            }
+            else
             {
                 game.Transport = await _context.Transports.FirstOrDefaultAsync(t => t.Id == game.IdTransport);
             }
-
-            if (game.Plays != null)
+            game.Plays = await _context.Plays.Where(p => p.IdGame == id).Include(p => p.Team).ThenInclude(t => t.TeamPlayers).ThenInclude(tp => tp.Player).ToListAsync();
+            game.Plays = game.Plays.Select(p =>
+           {
+               p.Game = null;
+               p.Team.TeamPlayers = p.Team.TeamPlayers.Select(tp =>
+               {
+                   tp.Team = null;
+                   tp.Player.Organizer = null;
+                   tp.Player.TeamPlayers = new HashSet<TeamPlayer>();
+                   tp.Player.Teams = new HashSet<Team>();
+                   return tp;
+               }).ToList();
+               p.Team.Organizer = null;
+               p.Team.Plays = new HashSet<Play>();
+               p.Team.TeamRoutes = new HashSet<TeamRoute>();
+               p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+               if(p.Team.Captain != null)
+               {
+                   p.Team.Captain.Organizer = null;
+                   p.Team.Captain.TeamPlayers = new HashSet<TeamPlayer>();
+                   p.Team.Captain.Teams = new HashSet<Team>();
+               }
+               return p;
+           }).ToList();
+            game.TeamRoutes = game.TeamRoutes.OrderBy(x => x.IdTeam).ThenBy(x => x.StepOrder).ToList();
+            game.TeamRoutes = game.TeamRoutes.Select(tr =>
             {
-                game.Plays = game.Plays.Select(p =>
-                {
-                    p.Game = null;
-                    p.Team.Organizer = null;
-                    p.Team.Plays = new HashSet<Play>();
-                    p.Team.TeamAnswers = new HashSet<TeamAnswer>();
-                    p.Team.TeamPlayers = new HashSet<TeamPlayer>();
-                    p.Team.TeamRoutes = new HashSet<TeamRoute>();
-                    return p;
-                }).ToList();
-            }
+                tr.Game = null;
+                tr.Team = null;
+                tr.RouteStep.Route = null;
+                tr.RouteStep.TeamRoutes = new HashSet<TeamRoute>();
+                tr.RouteStep.Step.Clues = new HashSet<Clue>();
+                tr.RouteStep.Step.Missions = new HashSet<Mission>();
+                tr.RouteStep.Step.RouteSteps = new HashSet<RouteStep>();
+                tr.RouteStep.Step.StepTags = new HashSet<StepTag>();
+                tr.RouteStep.Step.StepValidations = new HashSet<StepValidation>();
+                return tr;
+            }).ToList();
             return game;
         }
 
@@ -242,12 +272,56 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all Games</returns>
         public async Task<List<Game>> FindAll()
         {
-            return await _context.Games
-                .Include(r => r.Route)
-                .Include(t => t.Transport)
-                .Include(o => o.Organizer)
-                .Include(p => p.Plays).ThenInclude(t => t.Team)
-                .ToListAsync();
+           var games = await _context.Games.Include(r => r.Route).Include(t => t.Transport).Include(o => o.Organizer).Include(g => g.Plays).ThenInclude(p => p.Team).ThenInclude(t => t.Captain).ToListAsync();
+            return games.Select(game =>
+            {
+                if (game.Organizer != null)
+                {
+                    game.Organizer.Games = new HashSet<Game>();
+                    game.Organizer.Messages = new HashSet<Message>();
+                    game.Organizer.Players = new HashSet<Player>();
+                    game.Organizer.Routes = new HashSet<Route>();
+                    game.Organizer.Teams = new HashSet<Team>();
+                }
+                if (game.Route != null)
+                {
+                    game.Route.Games = new HashSet<Game>();
+                    game.Route.RouteSteps = game.Route.RouteSteps.Select(rs =>
+                    {
+                        rs.Route = null;
+                        rs.Step.Missions = new HashSet<Mission>();
+                        rs.Step.RouteSteps = new HashSet<RouteStep>();
+                        rs.Step.StepTags = new HashSet<StepTag>();
+                        rs.Step.StepValidations = new HashSet<StepValidation>();
+                        rs.TeamRoutes = new HashSet<TeamRoute>();
+                        return rs;
+                    }).ToList();
+                    game.Route.RouteTags = new HashSet<RouteTag>();
+                }
+                if (game.Transport != null)
+                {
+                    game.Transport.Games = new HashSet<Game>();
+                }
+                if(game.Plays != null)
+                {
+                    game.Plays = game.Plays.Select(p =>
+                    {
+                        p.Game = null;
+                        p.Team.Plays = new HashSet<Play>();
+                        p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                        p.Team.Organizer = null;
+                        p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                        p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                        p.Team.Captain.TeamPlayers = new HashSet<TeamPlayer>();
+                        p.Team.Captain.Teams = new HashSet<Team>();
+                        p.Team.Captain.Organizer = null;
+                        p.Team.Captain.Messages = new HashSet<Message>();
+                        return p;
+                    }).ToList();
+                }
+                return game;
+            }).ToList();
+           
         }
 
         /// <summary>
@@ -256,9 +330,49 @@ namespace DijiWalk.Repositories
         /// <returns>A List with all actives Games</returns>
         public async Task<IEnumerable<Game>> FindAllActifs()
         {
-            return await _context.Games.Where(g => g.CreationDate != null && g.FinalTime == null)
-                .Include(g => g.Organizer)
-                .ToListAsync();
+            var games = await _context.Games.Where(g => g.CreationDate <= DateTime.Now && g.FinalTime == null).Include(r => r.Route).ThenInclude(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.Organizer).Include(r => r.TeamRoutes).ToListAsync();
+            return games.Select(g =>
+            {
+                if (g.Organizer != null)
+                {
+                    g.Organizer.Games = new HashSet<Game>();
+                    g.Organizer.Messages = new HashSet<Message>();
+                    g.Organizer.Players = new HashSet<Player>();
+                    g.Organizer.Routes = new HashSet<Route>();
+                    g.Organizer.Teams = new HashSet<Team>();
+                }
+                if (g.Route != null)
+                {
+                    g.Route.Games = new HashSet<Game>();
+                    g.Route.RouteSteps = g.Route.RouteSteps.Select(rs =>
+                    {
+                        rs.Route = null;
+                        rs.Step.RouteSteps = new HashSet<RouteStep>();
+                        rs.Step.StepTags = new HashSet<StepTag>();
+                        rs.Step.StepTags = new HashSet<StepTag>();
+                        rs.Step.StepValidations = new HashSet<StepValidation>();
+                        rs.Step.Missions = new HashSet<Mission>();
+                        rs.Step.Clues = new HashSet<Clue>();
+                        return rs;
+                    }).ToList();
+                    g.Route.RouteTags = new HashSet<RouteTag>();
+                }
+                if (g.TeamRoutes != null)
+                {
+                    g.TeamRoutes = g.TeamRoutes.Select(tr =>
+                    {
+                        tr.RouteStep = null;
+                        tr.Team = null;
+                        tr.Game = null;
+                        return tr;
+                    }).ToList();
+
+                }
+
+                return g;
+
+            }).ToList();
+           
         }
 
         /// <summary>
@@ -293,11 +407,12 @@ namespace DijiWalk.Repositories
                             if (responseDeleteTeamRoutes.Status == ApiStatus.Ok)
                             {
                                 var reponseGenerate = await _gameBusiness.GenerateTeamRoute(await this.FindNoTracking(game.Id), game.Id);
-                                if (reponseGenerate.Status == ApiStatus.Ok) 
-                                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };  
+                                if (reponseGenerate.Status == ApiStatus.Ok)
+                                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(game.Id) };
                                 else
                                     return reponseGenerate;
-                        } else
+                            }
+                            else
                                 return responseDeleteTeamRoutes;
                         }
                         else

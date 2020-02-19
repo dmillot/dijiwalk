@@ -79,7 +79,26 @@ namespace DijiWalk.Repositories
         /// <returns>The Route with the Id researched</returns>
         public async Task<Route> Find(int id)
         {
-            return await _context.Routes.Where(r => r.Id == id).Include(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.RouteTags).ThenInclude(rt => rt.Tag).FirstOrDefaultAsync();
+            var route = await _context.Routes.Where(r => r.Id == id).Include(r => r.RouteSteps).ThenInclude(rs => rs.Step).Include(r => r.RouteTags).ThenInclude(rt => rt.Tag).FirstOrDefaultAsync();
+            route.RouteTags = route.RouteTags.Select(rt =>
+            {
+                rt.Route = null;
+                rt.Tag.RouteTags = new HashSet<RouteTag>();
+                rt.Tag.StepTags = new HashSet<StepTag>();
+                return rt;
+            }).ToList();
+            route.RouteSteps = route.RouteSteps.Select(rs =>
+            {
+                rs.Route = null;
+                rs.TeamRoutes = new HashSet<TeamRoute>();
+                rs.Step.RouteSteps = new HashSet<RouteStep>();
+                rs.Step.StepTags = new HashSet<StepTag>();
+                rs.Step.StepValidations = new HashSet<StepValidation>();
+                rs.Step.Missions = new HashSet<Mission>();
+                rs.Step.Clues = new HashSet<Clue>();
+                return rs;
+            }).ToList();
+            return route;
         }
 
         /// <summary>
@@ -113,7 +132,7 @@ namespace DijiWalk.Repositories
 
                     if (responseTags.Status == ApiStatus.Ok)
                     {
-                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await _context.Routes.Where(s => s.Id == newRoute.Id).Include(s => s.RouteSteps).Include(s => s.RouteTags).FirstOrDefaultAsync() };
+                        return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Add, Response = await this.Find(newRoute.Id) };
                     }
                     else
                         return responseTags;
@@ -135,40 +154,44 @@ namespace DijiWalk.Repositories
         {
             try
             {
-
-                _context.Routes.Update(_routeBusiness.SeparateStep(route));
-                await _context.SaveChangesAsync();
-                var currentIdRouteStep = await _context.Routesteps.Where(r => r.IdRoute == route.Id).Select(r => r.IdStep).ToListAsync();
-                var idRouteStep = route.RouteSteps.Select(r => r.IdStep).ToList();
-                var oldIdRouteStep = currentIdRouteStep.Where(r => !idRouteStep.Contains(r)).ToList();
-                var responseRouteStepDelete = await _routeStepBusiness.DeleteFromRoute(await _context.Routesteps.Where(m => m.IdRoute == route.Id && oldIdRouteStep.Contains(m.IdStep)).Include(rs => rs.TeamRoutes).ToListAsync());
-                if (responseRouteStepDelete.Status == ApiStatus.Ok)
+                if (!await _gameRepository.ContainsRoute(route.Id))
                 {
-                    var currentIdRouteTag = await _context.Routetags.Where(r => r.IdRoute == route.Id).Select(r => r.IdTag).ToListAsync();
-                    var idRouteTag = route.RouteTags.Select(r => r.IdTag).ToList();
-                    var oldIdRouteTag = currentIdRouteTag.Where(r => !idRouteTag.Contains(r)).ToList();
-                    var responseRouteTagDelete = await _routeTagBusiness.DeleteFromRoute(await _context.Routetags.Where(m => m.IdRoute == route.Id && oldIdRouteTag.Contains(m.IdTag)).ToListAsync());
-                    if (responseRouteTagDelete.Status == ApiStatus.Ok)
+                    _context.Routes.Update(_routeBusiness.SeparateStep(route));
+                    await _context.SaveChangesAsync();
+                    var currentIdRouteStep = await _context.Routesteps.Where(r => r.IdRoute == route.Id).Select(r => r.IdStep).ToListAsync();
+                    var idRouteStep = route.RouteSteps.Select(r => r.IdStep).ToList();
+                    var oldIdRouteStep = currentIdRouteStep.Where(r => !idRouteStep.Contains(r)).ToList();
+                    var responseRouteStepDelete = await _routeStepBusiness.DeleteFromRoute(await _context.Routesteps.Where(m => m.IdRoute == route.Id && oldIdRouteStep.Contains(m.IdStep)).Include(rs => rs.TeamRoutes).ToListAsync());
+                    if (responseRouteStepDelete.Status == ApiStatus.Ok)
                     {
-                        var responseRouteStepAdd = await _routeStepBusiness.SetUp(route.RouteSteps.Where(m => !currentIdRouteStep.Contains(m.IdStep)).ToList(), route.Id);
-                        if (responseRouteStepAdd.Status == ApiStatus.Ok)
+                        var currentIdRouteTag = await _context.Routetags.Where(r => r.IdRoute == route.Id).Select(r => r.IdTag).ToListAsync();
+                        var idRouteTag = route.RouteTags.Select(r => r.IdTag).ToList();
+                        var oldIdRouteTag = currentIdRouteTag.Where(r => !idRouteTag.Contains(r)).ToList();
+                        var responseRouteTagDelete = await _routeTagBusiness.DeleteFromRoute(await _context.Routetags.Where(m => m.IdRoute == route.Id && oldIdRouteTag.Contains(m.IdTag)).ToListAsync());
+                        if (responseRouteTagDelete.Status == ApiStatus.Ok)
                         {
-                            var responseRouteTagAdd = await _routeTagBusiness.SetUp(route.RouteTags.Where(m => !currentIdRouteTag.Contains(m.IdTag)).ToList(), route.Id);
-                            if (responseRouteTagAdd.Status == ApiStatus.Ok)
+                            var responseRouteStepAdd = await _routeStepBusiness.SetUp(route.RouteSteps.Where(m => !currentIdRouteStep.Contains(m.IdStep)).ToList(), route.Id);
+                            if (responseRouteStepAdd.Status == ApiStatus.Ok)
                             {
-                                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(route.Id) };
+                                var responseRouteTagAdd = await _routeTagBusiness.SetUp(route.RouteTags.Where(m => !currentIdRouteTag.Contains(m.IdTag)).ToList(), route.Id);
+                                if (responseRouteTagAdd.Status == ApiStatus.Ok)
+                                {
+                                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = await this.Find(route.Id) };
+                                }
+                                else
+                                    return responseRouteTagAdd;
                             }
                             else
-                                return responseRouteTagAdd;
+                                return responseRouteStepAdd;
                         }
                         else
-                            return responseRouteStepAdd;
+                            return responseRouteTagDelete;
                     }
                     else
-                        return responseRouteTagDelete;
+                        return responseRouteStepDelete;
                 }
                 else
-                    return responseRouteStepDelete;
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Impossible de modifier ce parcours, il est déjà utilisé dans un jeu !"};
             }
             catch (Exception e)
             {

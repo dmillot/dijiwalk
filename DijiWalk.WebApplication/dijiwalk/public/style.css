@@ -1,5 +1,9 @@
 body {
-    background-color: #D18D28;
+    background-color: #009D3D !important;
+}
+
+.bg-toolbar {
+    background-color: #005721 !important;
 }
 
 .dijiwalk-secondary .fa-icon, .dijiwalk-secondary .q-btn__content {
@@ -79,7 +83,6 @@ body {
     text-shadow: 1px 0 lightgray, 0 2px lightgray;
     z-index: 5;
 }
-
 
 @keyframes expand {
     0% {

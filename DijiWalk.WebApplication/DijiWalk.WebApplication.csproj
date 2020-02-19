@@ -6,6 +6,7 @@
     <SpaRoot>dijiwalk\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,18 @@
     <ProjectReference Include="..\DijiWalk.EntitiesContext\DijiWalk.EntitiesContext.csproj" />
     <ProjectReference Include="..\DijiWalk.Repositories.Contracts\DijiWalk.Repositories.Contracts.csproj" />
     <ProjectReference Include="..\DijiWalk.Repositories\DijiWalk.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="dijiwalk\src\assets\img\pattern-01.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="dijiwalk\src\assets\img\spotlight-poi-dotless1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="dijiwalk\src\assets\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">

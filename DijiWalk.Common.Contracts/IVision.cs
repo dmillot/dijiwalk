@@ -49,5 +49,14 @@ namespace DijiWalk.Common.Contracts
         /// <param name="facesValidation">All faces id find on the validation photo</param>
         /// <returns>bool: true if similar, false if not similar</returns>
         Task<bool> CompareFaces(Guid? capitaineFace, List<Guid?> facesValidation);
+
+        /// <summary>
+        /// Compare two landmarks
+        /// </summary>
+        /// <param name="Step">Id of the step to compare</param>
+        /// <param name="landmarksAnalyze">List of StepValidation landmarks</param>
+        /// <param name="tagsAnalyze">List of tags analyze</param>
+        /// <returns>bool: true if ok, false if not ok</returns>
+        bool CompareLandMarks(Step stepToCompare, List<StepValidation> landmarksAnalyze, List<EntityAnnotation> tagsAnalyze);
     }
 }

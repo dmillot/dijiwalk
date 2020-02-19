@@ -1,10 +1,12 @@
 <template>
     <q-page class="q-px-xl">
         <q-header elevated>
-            <q-toolbar>
+            <q-toolbar class="bg-toolbar">
 
                 <q-btn flat round color="white" class="q-ml-md cursor-pointer" icon="fas fa-arrow-left" v-go-back=" '/' " />
-                <q-toolbar-title>DijiWalk</q-toolbar-title>
+                <div class="row full-width justify-center">
+                    <img src="https://storage.cloud.google.com/dijiwalk-test/logo-text.png" style="max-height:50px;" class="q-my-sm" />
+                </div>
 
             </q-toolbar>
         </q-header>
