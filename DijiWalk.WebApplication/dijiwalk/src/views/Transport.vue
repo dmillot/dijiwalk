@@ -15,9 +15,9 @@
 
             <div v-for="transport in transports" v-bind:key="transport.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <div @click="openModalToEdit(transport)" class="game-card">
+                    <div @click="openModalToEdit(transport)" >
                         <q-card-section>
-                            <q-btn @click="openModalToDelete(transport)"
+                            <q-btn v-on:click.stop="openModalToDelete(transport)"
                                    fab
                                    color="negative"
                                    icon="fas fa-trash"
@@ -127,6 +127,7 @@
                 confirm: false,
                 deleteTransport: null,
                 transports: null,
+                transport: null,
                 description: '',
                 show: false,
                 libelle: '',
@@ -209,7 +210,7 @@
                     Libelle: this.nomTransport,
                     Id: this.idTransport
                 };
-
+                console.log(transport);
                 TransportDataService.update(this.idTransport, this.transport).then(response => {
                     this.$q.loading.hide()
                     if (response.data.status == 1) {
