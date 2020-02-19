@@ -74,7 +74,7 @@
             <q-card>
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
-                        <q-input v-if="isEditing" v-model="idTransport" type="hidden" />
+                        <q-input v-if="isEditing" v-model="idTransport" name="" type="hidden" />
                         <q-input ref="libelle" class="col-6 q-pl-sm q-my-xs" label="Libelle *" color="primary" option-value="id" option-label="name" v-model="nomTransport" name="nomTransport" id="nomTransport" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un libelle.']">
                             <template v-slot:prepend>
                                 <q-icon name="fas fa-address-card" />
@@ -99,7 +99,6 @@
         <q-dialog v-if="transportSelected !== null" v-model="informations">
             <q-card class="modal-informations">
                 <q-card-section class="items-center">
-                    <q-img :src="transportSelected.picture" class="img-radius row items-center justify-center" />
                     <h5 class="q-my-sm">{{ transportSelected.libelle }}</h5>
                     <p>{{ transportSelected.description }}</p>
                 </q-card-section>
@@ -131,7 +130,6 @@
                 description: '',
                 show: false,
                 libelle: '',
-                id: 0,
                 manageTransport: null,
                 nomTransport: null,
                 descriptionTransport: null,
@@ -190,6 +188,7 @@
 
                 this.nomTransport = transport.libelle
                 this.descriptionTransport = transport.description
+                this.idTransport = transport.id
             },
             onResetValidation() {
                 this.errorlibelle = false
@@ -203,22 +202,19 @@
             },
 
             updateTransport() {
-                this.$q.loading.show()
+                this.$q.loading.show();
 
                 this.transport = {
                     Description: this.descriptionTransport,
                     Libelle: this.nomTransport,
                     Id: this.idTransport
                 };
-                console.log(transport);
                 TransportDataService.update(this.idTransport, this.transport).then(response => {
                     this.$q.loading.hide()
                     if (response.data.status == 1) {
                         this.manageTransport = false;
                         this.onResetValidation();
-                        this.transports[this.transports.map(e => e.id).indexOf(this.transportSelected.id)] = response.data;
-                        console.log(this.transports);
-
+                        this.transports[this.transports.map(e => e.id).indexOf(this.transportSelected.id)] = response.data.response;
                         this.$q.notify({
                             icon: 'fas fa-check-square',
                             color: 'secondary',

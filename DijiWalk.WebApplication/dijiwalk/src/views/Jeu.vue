@@ -107,7 +107,7 @@
                                 <q-select use-input ref="transport" v-model="transportGame" option-value="id" option-label="libelle" :options="transports" label="Transport" id="transportGame" name="transportGame" lazy-rules :rules="[val => !!val || 'Veuillez renseigner un transport']" />
                             </div>
                             <div v-if="!getInformations" class="col-2 row justify-center items-center">
-                                <q-btn color="primary" @click="navigateTo('/')" rounded icon="fas fa-plus" />
+                                <q-btn color="primary" @click="navigateTo('/transport')" rounded icon="fas fa-plus" />
                             </div>
                         </div>
                         <div class="row col-12">

@@ -65,8 +65,12 @@ namespace DijiWalk.Repositories
                 {
                     _context.Transports.Remove(await _context.Transports.Where(t => t.Id == idTransport).FirstOrDefaultAsync());
                     await _context.SaveChangesAsync();
+                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
                 }
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+                else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce transport est déjà utilisé dans un jeu !" };
+                }
 
             }
             catch (Exception e)
@@ -105,7 +109,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Transports.Update(transport);
                 await _context.SaveChangesAsync();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response= transport };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = transport };
             }
             catch (Exception e)
             {
