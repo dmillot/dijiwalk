@@ -45,7 +45,7 @@ namespace DijiWalk.Business
         /// <returns>Actual game</returns>
         public async Task<Game> GetActualGame(int idPlayer)
         {
-            var actualGame = (from game in _context.Games
+            var actualGame = await (from game in _context.Games
                         join play in _context.Plays
                          on game.Id equals play.IdGame
                         join teamplayer in _context.Teamplayers
@@ -55,7 +55,32 @@ namespace DijiWalk.Business
                         where DateTime.Now >= game.CreationDate && play.EndDate == null && player.Id == idPlayer
                         select game)
                         .Include(tr => tr.TeamRoutes).ThenInclude(rs => rs.RouteStep).ThenInclude(s => s.Step)
-                        .FirstOrDefault();
+                        .Include(p => p.Plays).ThenInclude(t => t.Team)
+                        .FirstOrDefaultAsync();
+
+            actualGame.TeamRoutes = actualGame.TeamRoutes.Select(t => {
+                t.Game = null;
+                t.Team = null;
+                t.RouteStep.Step.Clues = new HashSet<Clue>();
+                t.RouteStep.Step.StepTags = new HashSet<StepTag>();
+                t.RouteStep.Step.RouteSteps = new HashSet<RouteStep>();
+                t.RouteStep.Step.StepValidations = new HashSet<StepValidation>();
+                t.RouteStep.Step.Missions = new HashSet<Mission>();
+                t.RouteStep.TeamRoutes = new HashSet<TeamRoute>();
+                t.RouteStep.Route = null;
+                return t;
+            }).ToList();
+
+            actualGame.Plays = actualGame.Plays.Select(p => {
+                p.Game = null;
+                p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                p.Team.Organizer = null;
+                p.Team.Plays = new HashSet<Play>();
+                p.Team.Captain = null;
+                return p;
+            }).ToList();
 
             return actualGame;
         }

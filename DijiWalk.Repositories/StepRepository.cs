@@ -29,8 +29,6 @@ namespace DijiWalk.Repositories
 
         private readonly IMissionBusiness _missionBusiness;
 
-        private readonly IMissionRepository _missionRepository;
-
         private readonly IImageBusiness _imageBusiness;
 
         private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
@@ -40,14 +38,13 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IVision vision, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+        public StepRepository(SmartCityContext context, IVision vision, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
 
         {
             _vision = vision;
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
-            _missionRepository = missionRepository;
             _imageBusiness = imageBusiness;
             _stepAnalyseBusiness = stepAnalyseBusiness;
         }

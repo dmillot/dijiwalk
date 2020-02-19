@@ -15,8 +15,8 @@ namespace DijiWalk.Mobile.ViewModels
     public class EtapePageViewModel : BindableBase, INavigationAware
     {
         #region Properties
-        private readonly PlayerService _playerService;
-        private readonly StepService _stepService;
+        private readonly IPlayerService _playerService;
+        private readonly IStepService _stepService;
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToQuizzPage { get; set; }
         public DelegateCommand<object> NavigateToValidationPage { get; set; }
@@ -35,7 +35,7 @@ namespace DijiWalk.Mobile.ViewModels
             }
         }
         #endregion
-        public EtapePageViewModel(INavigationService navigationService, StepService stepService, PlayerService playerService)
+        public EtapePageViewModel(INavigationService navigationService, IStepService stepService, IPlayerService playerService)
         {
 
             this._playerService = playerService;
@@ -66,8 +66,11 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToValidation(object parameters)
         {
-            var navigationParams = new NavigationParameters();
-            navigationParams.Add("step", ActualStep);
+            var navigationParams = new NavigationParameters
+            {
+                { "step", ActualStep }
+            };
+
             this.NavigationService.NavigateAsync(nameof(ValidationPage), navigationParams);
         }
 

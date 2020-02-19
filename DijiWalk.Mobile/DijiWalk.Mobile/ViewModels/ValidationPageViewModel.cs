@@ -8,6 +8,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -19,7 +21,7 @@ namespace DijiWalk.Mobile.ViewModels
         public DelegateCommand<object> NavigateToStepPage { get; set; }
         public DelegateCommand<object> NavigateToChatPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
-        public DelegateCommand ValidatePhoto { get; set; }
+        public DelegateCommand<object> ValidatePhoto { get; set; }
 
         private readonly IValidationService _validationService;
         private readonly IPlayerService _playerService;
@@ -46,7 +48,7 @@ namespace DijiWalk.Mobile.ViewModels
             this.NavigateToStepPage = new DelegateCommand<object>(GoToStep);
             this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
-            this.ValidatePhoto = new DelegateCommand(Validate);
+            this.ValidatePhoto = new DelegateCommand<object>(Validate);
         }
 
         #region NavigationFunction
@@ -65,7 +67,7 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToChat(object parameters)
         {
-            //this.NavigationService.NavigateAsync(nameof(ChatPage), null); TO DO /////////////////////////////////////////////////////////////
+            
         }
 
         /// <summary>
@@ -78,16 +80,37 @@ namespace DijiWalk.Mobile.ViewModels
         }
         #endregion
 
-        public async void Validate()
+
+        public Game Game { get; set; }
+        public Player Player { get; set; }
+        public Step Step { get; set; }
+
+        public async void Validate(object parameters)
         {
-            var game = await _playerService.GetActualGame(App.User.Id);
 
+            //var test = 1;
 
-            var filename = _stringExtension.RemoveDiacriticsAndWhiteSpace(ActualStep.Name + "-jeu" + game.Id + DateTime.Now);
+            //var idTeamsOfPlayer = Player.TeamPlayers.Select(t => t.IdTeam).ToList();
 
-            byte[] imageArray = System.IO.File.ReadAllBytes(Photo.Path);
-            string base64ImageRepresentation = Convert.ToBase64String(imageArray);
-            var uploadedImage = await _validationService.UploadImage(base64ImageRepresentation, filename);
+            //var test1 = Step.Name;
+            //var test2 = Game.Id;
+
+            //var filename = _stringExtension.RemoveDiacriticsAndWhiteSpace(Step.Name + "-jeu" + Game.Id + DateTime.Now);
+
+            //byte[] imageArray = System.IO.File.ReadAllBytes(Photo.Path);
+            //string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+
+            //Validate validate = new Validate
+            //{
+            //    IdGame = Game.Id,
+            //    IdPlayer = App.User.Id,
+            //    Filename = filename,
+            //    Picture = base64ImageRepresentation,
+            //    IdStep = Step.Id,
+            //    IdTeam = Game.Plays.Where(g => idTeamsOfPlayer.Contains(g.IdTeam)).FirstOrDefault().IdTeam
+            //};
+
+            //var uploadedImage = await _validationService.ValidationImage(validate);
         }
 
         #region OnNavigatedFunction
@@ -98,15 +121,6 @@ namespace DijiWalk.Mobile.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
-            var response = parameters.GetValue<Step>("step");
-            this.ActualStep = new ViewStep
-            {
-                Id = response.Id,
-                Name = response.Name,
-                Description = response.Description,
-                CreationDate = response.CreationDate,
-                Clues = response.Clues
-            };
         }
         #endregion
     }
