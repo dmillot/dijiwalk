@@ -22,7 +22,7 @@
             <Card link="/etape" icon="fas fa-map-marker-alt" title="Etapes" description="Page de gestion des etapes" />
             <Card link="/equipe" icon="fas fa-users" title="Equipes" description="Page de gestion des equipes ainsi que la definition du leader du groupe" />
             <Card link="/participant" icon="fas fa-user" title="Participants" description="Page de gestion des participants" />
-            <Card link="/" :disabled="true" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
+            <Card link="/transport" icon="fas fa-bus" title="Moyens de transport" description="Page de gestion des moyens de transport" />
 
 
         </div>
