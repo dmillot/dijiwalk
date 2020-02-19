@@ -42,5 +42,30 @@ namespace DijiWalk.Business
             return new Step(step);
         }
 
+        /// <summary>
+        /// Method to get validation of step 
+        /// </summary>
+        /// <param name="idStep">id of the step to compare</param>
+        public async Task<Step> GetAnalyzeStep(int idStep)
+        {
+            var step = await _context.Steps.Where(s => s.Id == idStep).Include(s => s.StepTags).ThenInclude(st => st.Tag).Include(s => s.StepValidations).FirstOrDefaultAsync();
+            step.RouteSteps = new HashSet<RouteStep>();
+            step.Missions = new HashSet<Mission>();
+            step.Clues = new HashSet<Clue>();
+            step.StepTags = step.StepTags.Select(st =>
+            {
+                st.Step = null;
+                st.Tag.RouteTags = new HashSet<RouteTag>();
+                st.Tag.StepTags = new HashSet<StepTag>();
+                return st;
+            }).ToList();
+            step.StepValidations = step.StepValidations.Select(sv =>
+            {
+                sv.Step = null;
+                return sv;
+            }).ToList();
+            return step;
+        }
+
     }
 }
