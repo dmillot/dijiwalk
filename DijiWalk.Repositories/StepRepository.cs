@@ -40,7 +40,7 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IVision vision IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IVision vision, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
 
         {
             _vision = vision;
@@ -196,12 +196,12 @@ namespace DijiWalk.Repositories
 
             var result = await _vision.CompareFaces(guidCaptain, guidAllFaces);
 
-            if (result == false)
-                return false;
-            else
+            if (result == true)
             {
-                var lol = await _imageBusiness.Analyze(validate.Picture, validate.IdStep);
+                return _vision.CompareLandMarks(await _stepBusiness.GetAnalyzeStep(validate.IdStep), await _vision.GetWhat(validate.Picture, "jpg", validate.IdStep), await _vision.GetTags(validate.Picture, "jpg"));
             }
+            else
+                return false;
         }
     }
 }

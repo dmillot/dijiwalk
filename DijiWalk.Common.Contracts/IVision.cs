@@ -14,7 +14,7 @@ namespace DijiWalk.Common.Contracts
         /// <summary>
         /// Get all tag for this picture
         /// </summary>
-        /// <param name="imageFile">Picture</param>
+        /// <param name="imageFile">Picture base 64</param>
         /// <param name="extension">Extension picture</param>
         /// <returns>All tag with over 70% of prediction</returns>
         Task<List<EntityAnnotation>> GetTags(string imageFile, string extension);
@@ -23,7 +23,7 @@ namespace DijiWalk.Common.Contracts
         /// <summary>
         /// Get all landmarks for this picture
         /// </summary>
-        /// <param name="imageFile">Picture</param>
+        /// <param name="imageFile">Picture base 64</param>
         /// <param name="extension">Extension picture</param>
         /// <returns>All landmarks with over 70% of prediction</returns>
         Task<List<StepValidation>> GetWhat(string imageFile, string extension, int idStep);
