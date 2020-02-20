@@ -1,16 +1,20 @@
-﻿using DijiWalk.Mobile.Resources.Utils;
+﻿using DijiWalk.Entities;
+using DijiWalk.Mobile.Resources.Utils;
+using DijiWalk.Mobile.Services;
 using DijiWalk.Mobile.ViewModels.ViewEntities;
 using DijiWalk.Mobile.Views;
 using DijiWalk.Mobile.Views.PopUp;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Navigation.Xaml;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.ViewModels
@@ -19,34 +23,47 @@ namespace DijiWalk.Mobile.ViewModels
     {
         #region Properties
         public INavigationService NavigationService { get; private set; }
+        private ViewPlayer _user;
+
+        private ViewStep _actualStep;
+        public ViewStep ActualStep
+        {
+            get { return _actualStep; }
+            set
+            {
+                SetProperty(ref _actualStep, value);
+            }
+        }
+
+        private Game _actualGame;
+        public Game ActualGame
+        {
+            get { return _actualGame; }
+            set
+            {
+                SetProperty(ref _actualGame, value);
+            }
+        }
+
+        public ViewPlayer User
+        {
+            get { return _user; }
+            set
+            {
+                SetProperty(ref _user, value);
+            }
+        }
+
+        private Dictionary<string, string> _greenColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ValidationColor"]) } };
+
+        private Dictionary<string, string> _redColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ErrorColor"]) } };
+
+        private readonly PlayerService _playerService;
         public DelegateCommand<object> NavigateToMainPage { get; set; }
         public DelegateCommand<object> NavigateToStepPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
         public DelegateCommand<object> PopUpStep { get; set; }
 
-        public Dictionary<string, string>  ColorValidation = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color) Application.Current.Resources["ValidationColor"]) }};
-
-
-private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewTeam>();
-        public ObservableCollection<ViewTeam> Groupes
-        {
-            get { return _groupes; }
-            set { SetProperty(ref _groupes, value); }
-        }
-
-        private ObservableCollection<ViewPlayer> _participants = new ObservableCollection<ViewPlayer>();
-        public ObservableCollection<ViewPlayer> Participants
-        {
-            get { return _participants; }
-            set { SetProperty(ref _participants, value); }
-        }
-
-        private ViewTeam _teamSelected;
-        public ViewTeam TeamSelected
-        {
-            get { return _teamSelected; }
-            set { SetProperty(ref _teamSelected, value); }
-        }
 
         private ObservableCollection<ViewStep> _steps = new ObservableCollection<ViewStep>();
         public ObservableCollection<ViewStep> Steps
@@ -56,78 +73,11 @@ private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewT
         }
         #endregion
 
-        public GamePageViewModel(INavigationService navigationService)
+        public GamePageViewModel(PlayerService playerService, INavigationService navigationService)
         {
+            _playerService = playerService;
             NavigationService = navigationService;
-            Random rnd = new Random();
-            List<string> namePrenoms = new List<string>
-            {
-                "Nathan GAGNIARRE",
-                "Damien MILLOT",
-                "Clément HUGON",
-                "Éric SCHALKE",
-                "Kim DOLE",
-                "Valentin VIROT",
-                "Martin BALME",
-                "Mathis ESPANEL",
-                "Raphaël DELCROIX",
-                "Loïc POPULIER",
-                "Baptiste ROUILLON",
-                "Geoffrey LIOTE",
-                "Charlélie BOURDREUX",
-                "Benjamin SORRIAUX",
-                "Charly DARCEAUX",
-                "Nicolas CIVADE"
-            };
-            int idPlayer = 1;
-            foreach (var namePrenom in namePrenoms)
-            {
-                string[] names = namePrenom.Split(Convert.ToChar(" "));
-                Participants.Add(new ViewPlayer
-                {
-                    Id = idPlayer,
-                    FirstName = names[0],
-                    LastName = names[1],
-                    Picture = String.Concat("https://i.picsum.photos/id/", idPlayer, "/5616/3744.jpg")
-                });
-                idPlayer++;
-            }
-
-            Groupes = new ObservableCollection<ViewTeam>();
-            for (int i = 0; i < 4; i++)
-            {
-                var team = new ViewTeam { Id = i + 1, Name = String.Concat("Groupe ", i + 1) };
-                List<ViewPlayer> participants = new List<ViewPlayer>(Participants).GetRange(i * 4, 4);
-                team.TeamPlayers = new List<ViewTeamPlayer>();
-                foreach (var participant in participants)
-                {
-
-                    team.TeamPlayers.Add(new ViewTeamPlayer
-                    {
-                        IdPlayer = participant.Id,
-                        IdTeam = team.Id,
-                        Player = participant,
-                        Team = team,
-                        IsCapitaine = false
-                    });
-                }
-                ViewTeamPlayer capitaine = team.TeamPlayers.ElementAt(rnd.Next(0, 3));
-                capitaine.IsCapitaine = true;
-                team.IdCaptain = capitaine.Player.Id;
-                team.Captain = capitaine.Player;
-                Groupes.Add(team);
-            }
-            Dictionary<string, string> validationColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFromColor.GetRGBFill((Color)Application.Current.Resources["ValidationColor"]) } };
-            Steps = new ObservableCollection<ViewStep>
-            {
-                new ViewStep {Id = 1, Name = "Étape 1", Description="Étape 1 description !", CreationDate = DateTime.Today, ColorValidation = validationColor, NotFirst = false, Validation = true },
-                new ViewStep {Id = 2, Name = "Étape 2", Description="Étape 2 description !", CreationDate = DateTime.Today,ColorValidation = validationColor, Validation = true },
-                new ViewStep {Id = 3, Name = "Étape 3", Description="Étape 3 description !", CreationDate = DateTime.Today},
-                new ViewStep {Id = 4, Name = "Étape 4", Description="Étape 4 description !", CreationDate = DateTime.Today},
-                new ViewStep {Id = 5, Name = "Étape 5", Description="Étape 5 description !", CreationDate = DateTime.Today, NotLast = false}
-            };
-
-            this.NavigateToMainPage = new DelegateCommand<object>(GoToMain);
+            this.NavigateToMainPage = new DelegateCommand<object>(GoToBack);
             this.NavigateToStepPage = new DelegateCommand<object>(GoToStep);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
             this.PopUpStep = new DelegateCommand<object>(GotToPopUpStep);
@@ -138,7 +88,7 @@ private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewT
         /// Fonction appelée quand l'utilisateur veut retourner sur la page d'accueil.
         /// </summary>
         /// <param name="parameters">Command parameter</param>
-        void GoToMain(object parameters)
+        void GoToBack(object parameters)
         {
             this.NavigationService.NavigateAsync(nameof(MainPage), null);
         }
@@ -149,7 +99,13 @@ private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewT
         /// <param name="parameters">Command parameter</param>
         void GoToStep(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(EtapePage), null);
+            var navigationParams = new NavigationParameters
+            {
+                { "user", User },
+                { "allInfo", ActualGame },
+                { "step", ActualStep }
+            };
+            this.NavigationService.NavigateAsync(nameof(EtapePage), navigationParams);
         }
 
         /// <summary>
@@ -158,6 +114,7 @@ private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewT
         /// <param name="parameters">Command parameter</param>
         void GoToLogin(object parameters)
         {
+            App.User = null;
             this.NavigationService.NavigateAsync(nameof(LoginPage), null);
         }
 
@@ -179,11 +136,28 @@ private ObservableCollection<ViewTeam> _groupes = new ObservableCollection<ViewT
 
         }
 
+        public void InitializePage()
+        {
+            var newObservable = new ObservableCollection<ViewStep>();
+            ActualGame.TeamRoutes.Select(tr =>
+            {
+                var stepCorresponding = ActualGame.Route.RouteSteps.FirstOrDefault(rs => rs.IdStep == tr.IdStep).Step;
+                if (ActualStep == null && !(bool)tr.Validate)
+                {
+                    ActualStep = new ViewStep { Id = tr.StepOrder, Name = stepCorresponding.Name, Description = stepCorresponding.Description, ColorValidation = (bool)tr.Validate ? _greenColor : _redColor, NotFirst = tr.StepOrder == 1 ? false : true, Validation = (bool)tr.Validate, NotLast = ActualGame.TeamRoutes.Last().StepOrder == tr.StepOrder ? false : true };
+                }
+                newObservable.Add(new ViewStep { Id = tr.StepOrder, Name = stepCorresponding.Name, Description = stepCorresponding.Description, ColorValidation = (bool)tr.Validate ? _greenColor : _redColor, NotFirst = tr.StepOrder == 1 ? false : true, Validation = (bool)tr.Validate, NotLast = ActualGame.TeamRoutes.Last().StepOrder == tr.StepOrder ? false : true });
+                return true;
+            }).ToList();
+            Steps = newObservable;
+        }
+
         public void OnNavigatedTo(INavigationParameters parameters)
         {
-
+            ActualGame = parameters.GetValue<Game>("allInfo");
+            User = parameters.GetValue<ViewPlayer>("user");
+            InitializePage(); ;
+            #endregion
         }
-        #endregion
-
     }
 }

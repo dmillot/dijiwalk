@@ -7,12 +7,17 @@ using Xamarin.Forms.Xaml;
 using DijiWalk.Mobile.Services.Interfaces;
 using DijiWalk.Mobile.Services;
 using Rg.Plugins.Popup.Contracts;
+using DijiWalk.Mobile.ViewModels.ViewEntities;
+using DijiWalk.Common.Contracts;
+using DijiWalk.Common.StringExtension;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DijiWalk.Mobile
 {
     public partial class App
     {
+        public static ViewPlayer User;
+
         /* 
          * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
          * This imposes a limitation in which the App class must have a default constructor. 
@@ -25,10 +30,11 @@ namespace DijiWalk.Mobile
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/GamePage");
+            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
 
             #region Property configuration
-            Application.Current.Properties["url"] = "http://dijiwalktest.hopto.org/api/";
+            //Application.Current.Properties["url"] = "http://dijiwalktest.hopto.org/api/";
+            Application.Current.Properties["url"] = "https://10.0.2.2:5001/api/";
             Application.Current.Properties["APIKey"] = "AIzaSyCDgp4RQYA4bzroTJM2ltv0ef6ceuqW254";
             Application.Current.Properties["SecretKey"] = "38b87a53f6ccec0d76a91a2640f626f03b04fce6128773b7c80235b2";
             #endregion
@@ -59,6 +65,7 @@ namespace DijiWalk.Mobile
             containerRegistry.RegisterSingleton<ITransportService, TransportService>();
             containerRegistry.RegisterSingleton<ITrialService, TrialService>();
             containerRegistry.RegisterSingleton<ITypeService, TypeService>();
+            containerRegistry.RegisterSingleton<IValidationService, ValidationService>();
             #endregion
 
             #region Pages / Navigation
@@ -70,6 +77,10 @@ namespace DijiWalk.Mobile
             containerRegistry.RegisterForNavigation<WaitingPage, WaitingPageViewModel>();
             containerRegistry.RegisterForNavigation<ValidationPage, ValidationPageViewModel>();
             containerRegistry.RegisterForNavigation<GamePage, GamePageViewModel>();
+            #endregion
+
+            #region common
+            containerRegistry.RegisterSingleton<IStringExtension, StringExtension>();
             #endregion
         }
     }

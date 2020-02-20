@@ -20,16 +20,6 @@ namespace DijiWalk.Mobile.Views
             InitializeComponent();
         }
 
-        private void BtnActualStep_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
-
-        private void BtnActualStep_TouchedUp(object sender, EventArgs e)
-        {
-            
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
 
         private void BtnBack_Pressed(object sender, EventArgs e)
         {
@@ -55,19 +45,6 @@ namespace DijiWalk.Mobile.Views
             (sender as ImageButton).Margin = new Thickness(3, 3, 0, 0);
         }
 
-        private void ListViewGroupes_ItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            if (((sender as ListView).SelectedItem as ViewTeam).IsSelected)
-                ((sender as ListView).SelectedItem as ViewTeam).IsSelected = false;
-            else
-            {
-                foreach (var groupe in ((GamePageViewModel)BindingContext).Groupes)
-                {
-                    groupe.IsSelected = false;
-                }
-                ((sender as ListView).SelectedItem as ViewTeam).IsSelected = true;
-            }
-        }
 
     }
 }

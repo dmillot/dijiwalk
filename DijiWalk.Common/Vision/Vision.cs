@@ -39,10 +39,22 @@ namespace DijiWalk.Common.Vision
         /// </summary>
         /// <param name="urlPicture">Url of the photo you want to check if face</param>
         /// <returns>List of face-id unique on the photo</returns>
-        public async Task<IAsyncEnumerable<Guid?>> GetFacesId(string urlPicture)
+        public async Task<List<Guid?>> GetFacesId(string urlPicture)
         {
             var faces = await clientAzure.Face.DetectWithUrlAsync($"{urlPicture}", recognitionModel: RecognitionModel.Recognition01);
-            return faces.Select(f => f.FaceId).ToAsyncEnumerable();
+            return faces.Select(f => f.FaceId).ToList();
+        }
+
+
+        /// <summary>
+        /// Get face id of a photo
+        /// </summary>
+        /// <param name="urlPicture">Url of the photo you want to check if face</param>
+        /// <returns>List of face-id unique on the photo</returns>
+        public async Task<Guid?> GetFacesIdCaptain(string urlPicture)
+        {
+            var faces = await clientAzure.Face.DetectWithUrlAsync($"{urlPicture}", recognitionModel: RecognitionModel.Recognition01);
+            return faces.Select(f => f.FaceId).FirstOrDefault();
         }
 
         /// <summary>
@@ -51,9 +63,9 @@ namespace DijiWalk.Common.Vision
         /// <param name="capitaineFace">Face id of the capitaine of the team</param>
         /// <param name="facesValidation">All faces id find on the validation photo</param>
         /// <returns>bool: true if similar, false if not similar</returns>
-        public async Task<bool> CompareFaces(List<Guid?> capitaineFace, List<Guid?> facesValidation)
+        public async Task<bool> CompareFaces(Guid? capitaineFace, List<Guid?> facesValidation)
         {
-            IList<SimilarFace> similarResults = await clientAzure.Face.FindSimilarAsync(capitaineFace.Select(t => (Guid)t).First(),faceIds: facesValidation, maxNumOfCandidatesReturned: 10, mode: FindSimilarMatchMode.MatchPerson);
+            IList<SimilarFace> similarResults = await clientAzure.Face.FindSimilarAsync((Guid)capitaineFace, faceIds: facesValidation, maxNumOfCandidatesReturned: 10, mode: FindSimilarMatchMode.MatchPerson);
             return similarResults.Count != 0 ? true : false;
         }
 
@@ -81,7 +93,7 @@ namespace DijiWalk.Common.Vision
         /// <summary>
         /// Get all tag for this picture
         /// </summary>
-        /// <param name="imageFile">Picture</param>
+        /// <param name="imageFile">Picture base 64</param>
         /// <param name="extension">Extension picture</param>
         /// <returns>All tag with over 70% of prediction</returns>
         public async Task<List<EntityAnnotation>> GetTags(string imageFile, string extension)
@@ -105,7 +117,7 @@ namespace DijiWalk.Common.Vision
         /// <summary>
         /// Get all landmarks for this picture
         /// </summary>
-        /// <param name="imageFile">Picture</param>
+        /// <param name="imageFile">Picture base 64</param>
         /// <param name="extension">Extension picture</param>
         /// <returns>All landmarks with over 70% of prediction</returns>
         public async Task<List<StepValidation>> GetWhat(string imageFile, string extension, int idStep)

@@ -19,7 +19,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Step
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class StepController : Controller
     {
         /// <summary>
@@ -149,6 +149,19 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 return this.Ok(await this._repository.Delete(id));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        [HttpPost("validate")]
+        public async Task<IActionResult> Validate([FromBody] Validate validate)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Validate(validate));
             }
             catch (Exception e)
             {

@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DijiWalk.Business", "DijiWa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DijiWalk.Business.Contracts", "DijiWalk.Business.Contracts\DijiWalk.Business.Contracts.csproj", "{D581CDA5-3D68-4F19-BFA8-C79A84DE1AB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijiWalk.Common.Contracts", "DijiWalk.Common.Contracts\DijiWalk.Common.Contracts.csproj", "{E40C1724-1AB2-47E2-A394-75ACECC016A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DijiWalk.Common.Contracts", "DijiWalk.Common.Contracts\DijiWalk.Common.Contracts.csproj", "{E40C1724-1AB2-47E2-A394-75ACECC016A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

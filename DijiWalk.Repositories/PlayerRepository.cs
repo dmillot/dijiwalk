@@ -7,6 +7,7 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Business;
     using DijiWalk.Business.Contracts;
@@ -121,7 +122,15 @@ namespace DijiWalk.Repositories
         /// <returns>The Player with the Id researched</returns>
         public async Task<Player> Find(int id)
         {
-            return await _context.Players.FindAsync(id);
+            var player = await _context.Players.Where(p => p.Id == id).Include(tp => tp.TeamPlayers).FirstOrDefaultAsync();
+            player.TeamPlayers = player.TeamPlayers.Select(t =>
+            {
+                t.Team = null;
+                t.Player = null;
+                return t;
+            }).ToList();
+
+            return player;
         }
 
         /// <summary>
@@ -131,6 +140,22 @@ namespace DijiWalk.Repositories
         public async Task<IEnumerable<Player>> FindAll()
         {
             return await _context.Players.ToListAsync();
+        }
+
+
+        public async Task<List<Game>> GetMobileInfo(int idPlayer)
+        {
+            return await _playerBusiness.GetMobileInfo(idPlayer);
+        }
+
+        public async Task<IEnumerable<Game>> GetPreviousGames(int idPlayer)
+        {
+            return await _playerBusiness.GetPreviousGames(idPlayer);
+        }
+
+        public async Task<Step> GetCurrentStep(int idPlayer)
+        {
+            return await _playerBusiness.GetCurrentStep(idPlayer);
         }
 
         /// <summary>

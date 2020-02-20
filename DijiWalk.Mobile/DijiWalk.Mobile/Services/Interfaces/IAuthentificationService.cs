@@ -12,7 +12,7 @@ namespace DijiWalk.Mobile.Services.Interfaces
         /// Envoi à l'API les informations de connexion en POST
         /// </summary>
         /// <returns>Retourne la réponse de l'API (attente)</returns>
-        Task<JWTTokens> Authentificate(Player login);
+        Task<Player> Authentificate(Player login);
 
     }
 }

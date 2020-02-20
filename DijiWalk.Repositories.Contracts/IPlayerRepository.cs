@@ -45,5 +45,26 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="player">Object Player to Update</param>
         Task<ApiResponse> Update(Player player);
+
+        /// <summary>
+        /// Method to get actual game of a player.
+        /// </summary>
+        /// <param name="id">Id of the player</param>
+        /// <returns>Actual game</returns>
+        Task<List<Game>> GetMobileInfo(int idPlayer);
+
+        /// <summary>
+        /// Method to get all previous games of a player.
+        /// </summary>
+        /// <param name="id">Id of the player</param>
+        /// <returns>List of previous games</returns>
+        Task<IEnumerable<Game>> GetPreviousGames(int idPlayer);
+
+        /// <summary>
+        /// Method to get current step of a player.
+        /// </summary>
+        /// <param name="player">Id of the player</param>
+        /// <returns>Current step</returns>
+        Task<Step> GetCurrentStep(int idPlayer);
     }
 }

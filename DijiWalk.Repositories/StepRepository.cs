@@ -10,6 +10,7 @@ namespace DijiWalk.Repositories
     using System.Linq;
     using System.Threading.Tasks;
     using DijiWalk.Business.Contracts;
+    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.EntitiesContext;
@@ -28,22 +29,22 @@ namespace DijiWalk.Repositories
 
         private readonly IMissionBusiness _missionBusiness;
 
-        private readonly IMissionRepository _missionRepository;
-
         private readonly IImageBusiness _imageBusiness;
 
         private readonly IStepAnalyseBusiness _stepAnalyseBusiness;
 
+        private readonly IVision _vision;
+
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public StepRepository(SmartCityContext context, IMissionRepository missionRepository, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
+        public StepRepository(SmartCityContext context, IVision vision, IStepBusiness stepBusiness, IMissionBusiness missionBusiness, IImageBusiness imageBusiness, IStepAnalyseBusiness stepAnalyseBusiness)
 
         {
+            _vision = vision;
             _context = context;
             _stepBusiness = stepBusiness;
             _missionBusiness = missionBusiness;
-            _missionRepository = missionRepository;
             _imageBusiness = imageBusiness;
             _stepAnalyseBusiness = stepAnalyseBusiness;
         }
@@ -181,6 +182,23 @@ namespace DijiWalk.Repositories
             {
                 return TranslateError.Convert(e);
             }
+        }
+
+        public async Task<bool> Validate(Validate validate)
+        {
+            var urlPicture = await _imageBusiness.UploadImage(validate.Picture, validate.Filename);
+            var guidAllFaces = await _vision.GetFacesId(urlPicture);
+            var captain = await _context.Players.FirstOrDefaultAsync(p => p.Id == validate.IdPlayer);
+            var guidCaptain = await _vision.GetFacesIdCaptain(captain.Picture);
+
+            var result = await _vision.CompareFaces(guidCaptain, guidAllFaces);
+
+            if (result == true)
+            {
+                return _vision.CompareLandMarks(await _stepBusiness.GetAnalyzeStep(validate.IdStep), await _vision.GetWhat(validate.Picture, "jpg", validate.IdStep), await _vision.GetTags(validate.Picture, "jpg"));
+            }
+            else
+                return false;
         }
     }
 }
