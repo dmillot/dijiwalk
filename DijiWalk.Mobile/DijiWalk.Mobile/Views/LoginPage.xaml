@@ -8,83 +8,42 @@
              Title="Connexion"
              BackgroundColor="#D18D28">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="60*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-       
-        <StackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-            <Image Aspect="AspectFit" Source="logo.png" HeightRequest="200" WidthRequest="200"></Image>
-            <Label Padding="10" TextColor="White" Text="DijiWalk est une application qui permet de visiter la ville de Dijon. Découvre-la à l'aide de différents parcours culturels, gastronomiques et touristiques au sein de votre équipe. Le but, avoir le plus de points gagnés lors d'étapes.">
-                <Label.Effects>
-                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                        <effects:ShadowEffect.Color>
-                            <OnPlatform x:TypeArguments="Color">
-                                <On Platform="iOS" Value="Black" />
-                                <On Platform="Android" Value="Black" />
-                            </OnPlatform>
-                        </effects:ShadowEffect.Color>
-                    </effects:ShadowEffect>
-                </Label.Effects>
-            </Label>
-            <StackLayout Margin="10,0">
-                <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Pseudo :">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <Entry TextColor="White" Text="{Binding Path=Login.Pseudo.Value, Mode=TwoWay}">
-
-                </Entry>
-                <Label Text="{Binding Login.PseudoError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
-
-            </StackLayout>
-            <StackLayout Margin="10,0">
-                <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Mot de passe :">
-                    <Label.Effects>
-                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                            <effects:ShadowEffect.Color>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="iOS" Value="Black" />
-                                    <On Platform="Android" Value="Black" />
-                                </OnPlatform>
-                            </effects:ShadowEffect.Color>
-                        </effects:ShadowEffect>
-                    </Label.Effects>
-                </Label>
-                <Entry IsPassword="True" TextColor="White" Text="{Binding Path=Login.Password.Value, Mode=TwoWay}">
- 
-                </Entry>
-                <Label Text="{Binding Login.PasswordError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
-            </StackLayout>
-
-
-            <Grid HeightRequest="65" Margin="75,20,75,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="1"/>
-                </Grid.ColumnDefinitions>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="60*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ContentView x:Name="actIndBackground" Grid.RowSpan="2"  BackgroundColor="#222222" Opacity="0.5" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" IsVisible="{Binding IsLoading}">
+            </ContentView>
+            <Grid Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnConnexion"  Color="{StaticResource SecondaryDarkColor}" CornerRadius="3" Margin="3,3,0,0"/>
-                <flex:FlexButton x:Name="BtnConnexion" Grid.RowSpan="1" Grid.ColumnSpan="1" Padding="10" VerticalOptions="Fill" HorizontalOptions="Fill" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="signin.png" IconOrientation="Left" Text="CONNEXION" ForegroundColor="{StaticResource LightColor}"
-                    BackgroundColor="{StaticResource SecondaryColor}"  HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" FontSize="20" TouchedUp="BtnConnexion_TouchedUp" TouchedDown="BtnConnexion_TouchedDown"  ClickedCommand="{Binding NavigateToMainPage}"/>
+                <ActivityIndicator x:Name="actInd" Grid.Row="1" HeightRequest="150" WidthRequest="150" Color="White" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
             </Grid>
-        </StackLayout>
-    </Grid>
+            <StackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Image Aspect="AspectFit" Source="logo.png" HeightRequest="200" WidthRequest="200"></Image>
+                <Label Padding="10" TextColor="White" Text="DijiWalk est une application qui permet de visiter la ville de Dijon. Découvre-la à l'aide de différents parcours culturels, gastronomiques et touristiques au sein de votre équipe. Le but, avoir le plus de points gagnés lors d'étapes."/>
+                <StackLayout Margin="10,0">
+                    <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Pseudo :"/>
+                    <Entry TextColor="White" Text="{Binding Path=Login.Pseudo.Value, Mode=TwoWay}"/>
+                    <Label Text="{Binding Login.PseudoError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
+                </StackLayout>
+                <StackLayout Margin="10,0">
+                    <Label HorizontalTextAlignment="Center" FontSize="Large" TextColor="White" Text="Mot de passe :"/>
+                    <Entry IsPassword="True" TextColor="White" Text="{Binding Path=Login.Password.Value, Mode=TwoWay}"/>
+                    <Label Text="{Binding Login.PasswordError}" TextColor="{StaticResource ErrorColor}" FontAttributes="Bold" FontSize="Medium"/>
+                </StackLayout>
+                <Button x:Name="BtnConnexion" Grid.RowSpan="1" Margin="20,0,20,0" Grid.ColumnSpan="1" Padding="10" VerticalOptions="Fill" HorizontalOptions="Fill" CornerRadius="3" Text="CONNEXION" TextColor="{StaticResource LightColor}"
+                        BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="20"  Command="{Binding NavigateToMainPage}"/>
+            </StackLayout>
+        </Grid>
+    </ScrollView>
 
 </ContentPage>

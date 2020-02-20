@@ -7,7 +7,9 @@ namespace DijiWalk.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using DijiWalk.Business.Contracts;
     using DijiWalk.Common;
     using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
@@ -22,13 +24,15 @@ namespace DijiWalk.Repositories
     public class TransportRepository : ITransportRepository
     {
         private readonly SmartCityContext _context;
+        private readonly IGameRepository _gameRepository;
 
         /// <summary>
         /// Parameter that serve to connect to the database
         /// </summary>
-        public TransportRepository(SmartCityContext context)
+        public TransportRepository(SmartCityContext context, IGameRepository gameRepository)
         {
             _context = context;
+            _gameRepository = gameRepository;
         }
 
         /// <summary>
@@ -52,20 +56,27 @@ namespace DijiWalk.Repositories
         /// <summary>
         /// Method to Delete from the database the Transport passed in the parameters
         /// </summary>
-        /// <param name="transport">Object Transport to Delete</param>
+        /// <param name="idTransport">Object Transport to Delete</param>
         public async Task<ApiResponse> Delete(int idTransport)
         {
             try
             {
-                _context.Transports.Remove(await _context.Transports.FindAsync(idTransport));
-                await _context.SaveChangesAsync();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+                if (!(await _context.Games.AnyAsync(t => t.IdTransport == idTransport)))
+                {
+                    _context.Transports.Remove(await _context.Transports.Where(t => t.Id == idTransport).FirstOrDefaultAsync());
+                    await _context.SaveChangesAsync();
+                    return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Delete };
+                }
+                else
+                {
+                    return new ApiResponse { Status = ApiStatus.CantDelete, Message = "Ce transport est déjà utilisé dans un jeu !" };
+                }
+
             }
             catch (Exception e)
             {
                 return TranslateError.Convert(e);
             }
-
         }
 
         /// <summary>
@@ -98,7 +109,7 @@ namespace DijiWalk.Repositories
             {
                 _context.Transports.Update(transport);
                 await _context.SaveChangesAsync();
-                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update };
+                return new ApiResponse { Status = ApiStatus.Ok, Message = ApiAction.Update, Response = transport };
             }
             catch (Exception e)
             {

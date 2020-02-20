@@ -18,7 +18,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Player
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class PlayerController : Controller
     {
         /// <summary>
@@ -63,6 +63,57 @@ namespace DijiWalk.WebApplication.Controllers
             try
             {
                 return this.Ok(await this._repository.FindAll());
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to get actual game of a player
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("mobile/{id}")]
+        public async Task<IActionResult> GetMobileInfo(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.GetMobileInfo(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to get all previous games of a player
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("previous/{id}")]
+        public async Task<IActionResult> GetPreviousGames(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.GetPreviousGames(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(500, e);
+            }
+        }
+
+        /// <summary>
+        /// Method to get current step of a player
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("step/{id}")]
+        public async Task<IActionResult> GetCurrentStep(int id)
+        {
+            try
+            {
+                return this.Ok(await this._repository.GetCurrentStep(id));
             }
             catch (Exception e)
             {

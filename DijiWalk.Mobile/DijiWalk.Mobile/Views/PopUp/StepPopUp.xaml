@@ -16,7 +16,6 @@
         <StackLayout Padding="10">
             <Label x:Name="StepName" HorizontalOptions="Start" Text="{Binding Step.Name}" FontSize="Large" FontAttributes="Bold"/>
             <Label HorizontalOptions="Start" Text="{Binding Step.Description}" FontSize="Medium" TextColor="{StaticResource GrayColor}" />
-            <Label HorizontalOptions="Start" Text="{Binding Step.CreationDate, StringFormat='{0:MMMM dd, yyyy}'}" FontSize="Small" TextColor="{StaticResource GrayColor}" FontAttributes="Bold" />
         </StackLayout>
     </xe:BorderView>
 </pages:PopupPage>

@@ -9,6 +9,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.ViewModels
@@ -33,6 +34,16 @@ namespace DijiWalk.Mobile.ViewModels
         private readonly GameService _gameService;
         private readonly AuthentificationService _authentificationService;
 
+        private bool _isLoading = false;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                SetProperty(ref _isLoading, value);
+            }
+        }
+
         #endregion
 
         public LoginPageViewModel(GameService gameService, AuthentificationService authentificationService, INavigationService navigationService)
@@ -51,10 +62,18 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         public async void GoToMain(object parameters)
         {
+            IsLoading = true;
             if (Login.Validate())
             {
-                var test = (JWTTokens)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
-                await this.NavigationService.NavigateAsync(nameof(MainPage), null);
+                var user = (Player)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
+                if (user.JwtToken != null)
+                {
+                    var navigationParams = new NavigationParameters();
+                    navigationParams.Add("player", user);
+                    IsLoading = false;
+                    App.User = new ViewPlayer { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Login = user.Login, Picture = user.Picture, TeamPlayers = user.TeamPlayers.Select(tp => new ViewTeamPlayer { IdPlayer = tp.IdPlayer, IdTeam = tp.IdTeam}).ToList() };
+                    await this.NavigationService.NavigateAsync(nameof(MainPage), navigationParams);
+                }
             }
         }
 

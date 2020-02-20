@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DijiWalk.Business.Contracts\DijiWalk.Business.Contracts.csproj" />
     <ProjectReference Include="..\DijiWalk.Business\DijiWalk.Business.csproj" />
     <ProjectReference Include="..\DijiWalk.Common\DijiWalk.Common.csproj" />

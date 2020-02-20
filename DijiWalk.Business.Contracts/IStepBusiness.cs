@@ -20,5 +20,11 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="step">Object step</param>
         Step SeparateStep(Step step);
+
+        /// <summary>
+        /// Method to get validation of step 
+        /// </summary>
+        /// <param name="idStep">id of the step to compare</param>
+        Task<Step> GetAnalyzeStep(int idStep);
     }
 }

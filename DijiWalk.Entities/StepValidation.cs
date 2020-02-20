@@ -38,7 +38,7 @@ namespace DijiWalk.Entities
         /// <summary>
         /// Obtient ou définit le score
         /// </summary>
-        public float Score { get; set; }
+        public double Score { get; set; }
 
         /// <summary>
         /// Obtient ou définit l'étape

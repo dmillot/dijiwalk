@@ -1,8 +1,10 @@
 ﻿using DijiWalk.Common.Animations;
+using DijiWalk.Mobile.ViewModels;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace DijiWalk.Mobile.Views
 {
     public partial class ValidationPage : ContentPage
     {
+
         public ValidationPage()
         {
             InitializeComponent();
@@ -36,6 +39,7 @@ namespace DijiWalk.Mobile.Views
 
                 if (file == null)
                     return;
+
                 await DisplayAlert("Photo prise :", file.Path, "Ok");
 
                 MyImage.Source = ImageSource.FromStream(() =>
@@ -45,29 +49,13 @@ namespace DijiWalk.Mobile.Views
 
                 });
 
+                var vm = BindingContext as ValidationPageViewModel;
+                vm.Photo = file;
+
 
             }
-        }
-        private async void Valider_Clicked(object sender, EventArgs e)
-        {
-            await DisplayAlert("Veuillez patienter", "Merci de bien vouloir patienter le temps que nos système analyse l'authenticité de votre photo.", "Attendre");
-            BtnTakePhoto.IsEnabled = false;
-            BtnValider.IsEnabled = false;
-            BtnBack.IsEnabled = false;
-            BtnClose.IsEnabled = false;
-
-            Device.StartTimer(TimeSpan.FromSeconds(10), () =>
-            {
-                BtnTakePhoto.IsEnabled = true;
-                BtnValider.IsEnabled = true;
-                BtnBack.IsEnabled = true;
-                BtnClose.IsEnabled = true;
-                return true;
-            });
-
 
         }
-
         private void BtnBack_Pressed(object sender, EventArgs e)
         {
             ShadowBtnBack.IsVisible = false;
@@ -80,46 +68,18 @@ namespace DijiWalk.Mobile.Views
             (sender as ImageButton).Margin = new Thickness(0);
         }
 
-        private void BtnClose_Pressed(object sender, EventArgs e)
-        {
-            ShadowBtnClose.IsVisible = false;
-            (sender as ImageButton).Margin = new Thickness(3, 3, 0, 0);
-        }
-
         private void BtnClose_Released(object sender, EventArgs e)
         {
             ShadowBtnClose.IsVisible = true;
             (sender as ImageButton).Margin = new Thickness(0);
         }
 
-        private void BtnChat_TouchedDown(object sender, EventArgs e)
+        private void BtnClose_Pressed(object sender, EventArgs e)
         {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
+            ShadowBtnClose.IsVisible = false;
+            (sender as ImageButton).Margin = new Thickness(3, 3, 0, 0);
         }
 
-        private void BtnChat_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
 
-        private void BtnValider_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
-
-        private void BtnValider_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
-
-        private void BtnTakePhoto_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
-
-        private void BtnTakePhoto_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
     }
 }

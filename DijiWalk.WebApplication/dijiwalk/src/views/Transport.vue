@@ -15,33 +15,33 @@
 
             <div v-for="transport in transports" v-bind:key="transport.id" class="col-xs-12 col-md-4 col-grow">
                 <q-card class="my-card">
-                    <!--<q-img><i class={{image[transport.id - 1]}}></i></q-img>-->
-                    
-                    <q-card-section>
-                        <q-btn @click="openModalToDelete(transport)"
-                               fab
-                               color="negative"
-                               icon="fas fa-trash"
-                               class="absolute"
-                               style="top: 0; right: 12px; transform: translateY(+50%);" />
+                    <div @click="openModalToEdit(transport)" >
+                        <q-card-section>
+                            <q-btn v-on:click.stop="openModalToDelete(transport)"
+                                   fab
+                                   color="negative"
+                                   icon="fas fa-trash"
+                                   class="absolute"
+                                   style="top: 0; right: 12px; transform: translateY(+50%); z-index: 999;" />
 
-                        <div class="row no-wrap">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ transport.libelle }}
+                            <div class="row no-wrap">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ transport.libelle }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="row items-center no-wrap text-grey">
-                            <div class="col text-left text-bold text-h6 ellipsis">
-                                {{ transport.description }}
+                            <div class="row items-center no-wrap text-grey">
+                                <div class="col text-left text-bold text-h6 ellipsis">
+                                    {{ transport.description }}
+                                </div>
                             </div>
-                        </div>
-                    </q-card-section>
+                        </q-card-section>
+                    </div>
 
                     <q-separator />
 
                     <q-card-actions>
-                        <q-btn flat round icon="fas fa-info-circle" />
-                        <q-btn flat @click="addTransport = true; show=true; fillForm(transport)" color="primary text-bold">
+                        <q-btn flat @click="openModalToGetInformations(transport)" class="dijiwalk-secondary" round icon="fas fa-info-circle" />
+                        <q-btn flat @click="openModalToGetInformations(transport)" class="dijiwalk-secondary" color="primary text-bold">
                             Informations
                         </q-btn>
                     </q-card-actions>
@@ -52,8 +52,12 @@
         <q-dialog v-model="confirm">
             <q-card>
                 <q-card-section class="row items-center">
-                    <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" />
-                    <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer le transport {{ messageDeleteTransport }} ?</span>
+                    <div class="col-2">
+                        <q-avatar icon="fas fa-exclamation-triangle" color="negative" text-color="white" />
+                    </div>
+                    <div class="row col-10">
+                        <span class="q-ml-sm">Êtes-vous sûr de vouloir supprimer le transport {{ messageDeleteTransport }} ?</span>
+                    </div>
                 </q-card-section>
 
                 <q-card-actions align="right">
@@ -66,26 +70,41 @@
 
 
 
-        <q-dialog v-model="addTransport">
+        <q-dialog v-model="manageTransport">
             <q-card>
                 <q-card-section class="row items-center">
                     <div class="row justify-between">
-                        <div style="visibility:hidden" class="col-12">
-                            <q-input v-model="id" label="id" />
-                        </div>
-                        <div class="col-12">
-                            <q-input v-model="description" label="Description" />
-                        </div>
-                        <div class="col-12">
-                            <q-input v-model="libelle" label="Libelle" />
-                        </div>
+                        <q-input v-if="isEditing" v-model="idTransport" name="" type="hidden" />
+                        <q-input ref="libelle" class="col-6 q-pl-sm q-my-xs" label="Libelle *" color="primary" option-value="id" option-label="name" v-model="nomTransport" name="nomTransport" id="nomTransport" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner un libelle.']">
+                            <template v-slot:prepend>
+                                <q-icon name="fas fa-address-card" />
+                            </template>
+                        </q-input>
+                        <q-input ref="description" class="col-6 q-pl-sm q-my-xs" label="Description *" color="primary" option-value="id" option-label="name" v-model="descriptionTransport" name="descriptionTransport" id="descriptionTransport" lazy-rules :rules="[ val => val && val.length > 0 || 'Veuillez renseigner une description.']">
+                            <template v-slot:prepend>
+                                <q-icon name="fas fa-address-card" />
+                            </template>
+                        </q-input>
                     </div>
                 </q-card-section>
 
                 <q-card-actions align="right">
                     <q-btn flat label="Annuler" color="primary" v-close-popup />
-                    <q-btn flat v-if="show" label="Modifier" @click="updateTransport" color="primary" v-close-popup />
-                        <q-btn flat v-else label="Ajouter" @click="addedTransport" color="primary" v-close-popup />
+                    <q-btn flat v-if="isEditing" label="Modifier" @click="updateTransport" color="secondary" />
+                    <q-btn v-if="isAdding" label="Ajouter" @click="addedTransport" color="secondary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
+        <q-dialog v-if="transportSelected !== null" v-model="informations">
+            <q-card class="modal-informations">
+                <q-card-section class="items-center">
+                    <h5 class="q-my-sm">{{ transportSelected.libelle }}</h5>
+                    <p>{{ transportSelected.description }}</p>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Annuler" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -94,91 +113,86 @@
 </template>
 
 
-
-
-
-
-
-
 <script>
-
-    const parcours = [
-        'Parcours 1', 'Parcours 2', 'Parcours 3', 'Parcours 4', 'Parcours 5'
-    ]
-    
-    const icons = [
-        "fas fa-walking", "fas fa-subway", "fas fa-biking", "fas fa-bus", "fas fa-transporter" , "fas fa-skating", "fas fa-dolly-flatbed-empty", "fas fa-taxi", "fas fa-dolly-empty" 
-    ]
-    
-
     //import axios from 'axios'
     import TransportDataService from "@/services/TransportDataService";
-    import RouteDataService from "@/services/RouteDataService";
-
-
+    
     export default {
         name: 'transport',
         data() {
             return {
                 addTransport: false,
                 messageDeleteTransport: null,
-                routesFiltered: null,
-                routes: null,
-                routesFilterModel: null,
                 confirm: false,
-                transport: null,
                 deleteTransport: null,
                 transports: null,
+                transport: null,
                 description: '',
+                show: false,
                 libelle: '',
-                image: icons,
-                id: 0
+                manageTransport: null,
+                nomTransport: null,
+                descriptionTransport: null,
+                transportSelected: null,
+                isEditing: false,
+                isAdding: false,
+                informations: false,
+                idTransport: null
             }
         },
-        created: function () {
-            this.getAllRoutes();
+        created: function () { 
             this.getAllTransport();
         },
 
         methods: {
-            
-            getAllTransport () {
+
+            getAllTransport() {
+                this.$q.loading.show()
                 if (this.transports === null) {
                     TransportDataService.getAll().then(response => {
                         this.transports = response.data;
-                    }).catch();
-                }
-            },
-            
-            getAllRoutes () {
-                if (this.routes === null) {
-                    RouteDataService.getAll().then(response => {
-                        this.routes = response.data;
+                        this.$q.loading.hide()
                     }).catch();
                 }
             },
 
-            fillForm(transport) {
-                this.description = transport.description;
-                this.libelle = transport.libelle;
-                this.id = transport.id;
-            },
 
-            
+            openModalToGetInformations(transport) {
+                this.isAdding = false;
+                this.isEditing = false;
+                this.transportSelected = transport;
+                this.informations = true;
+            },
 
             openModalToAdd() {
-                this.show = false;
-                this.addTransport = true;
+                this.isEditing = false;
+                this.isAdding = true;
+                this.resetInput();
+                this.manageTransport = true;
             },
-            
-            openModalToUpdate() {
-                this.show = false;
-                this.addTransport = true;
-                
-                this.transport = {
-                    Description: this.description,
-                    Libelle: this.libelle,
-                };
+
+            openModalToEdit(transport) {
+                this.isEditing = true;
+                this.isAdding = false;
+                this.resetInput();
+                this.fillForm(transport);
+                this.manageTransport = true
+            },
+            resetInput() {
+                this.nomTransport = null
+                this.descriptionTransport = null
+
+            },
+            fillForm(transport) {
+                this.transportSelected = transport
+
+                this.nomTransport = transport.libelle
+                this.descriptionTransport = transport.description
+                this.idTransport = transport.id
+            },
+            onResetValidation() {
+                this.errorlibelle = false
+                this.errordescription= false
             },
 
             openModalToDelete(transport) {
@@ -187,67 +201,104 @@
                 this.deleteTransport = transport.id;
             },
 
-            async updateTransport() {
+            updateTransport() {
+                this.$q.loading.show();
 
                 this.transport = {
-                    Description: this.description,
-                    Libelle: this.libelle
+                    Description: this.descriptionTransport,
+                    Libelle: this.nomTransport,
+                    Id: this.idTransport
                 };
-
-                await TransportDataService.update(this.id, this.transport).then(response => {
-                    this.transports.update(response.data);
+                TransportDataService.update(this.idTransport, this.transport).then(response => {
+                    this.$q.loading.hide()
+                    if (response.data.status == 1) {
+                        this.manageTransport = false;
+                        this.onResetValidation();
+                        this.transports[this.transports.map(e => e.id).indexOf(this.transportSelected.id)] = response.data.response;
+                        this.$q.notify({
+                            icon: 'fas fa-check-square',
+                            color: 'secondary',
+                            message: response.data.message,
+                            position: 'top'
+                        })
+                    } else {
+                        var message = response.data.message;
+                        this.$q.notify({
+                            icon: 'fas fa-exclamation-triangle',
+                            color: 'negative',
+                            message: message,
+                            position: 'top'
+                        })
+                        setTimeout(this.onResetValidation, 3000);
+                    }
                 }).catch();
             },
-                            
-            async addedTransport() {
-                
-                this.transport = {
-                    Description: this.description,
-                    Libelle: this.libelle,
-                };
 
-                await TransportDataService.create(this.transport
-                ).then(response => {
-                    this.transports.push(response.data);
-                }).catch();
+            addedTransport() {
+                if (this.$refs.libelle.validate() && this.$refs.description.validate()) {
 
+                    this.$q.loading.show()
+                    this.transport = {
+                        Description: this.descriptionTransport,
+                        Libelle: this.nomTransport,
+                    };
 
-                //this.getAllTransport();
+                    TransportDataService.create(this.transport
+                    ).then(response => {
+                        this.$q.loading.hide()
+                        if (response.data.status == 1) {
+                            this.manageTransport = false;
+                            this.onResetValidation();
+                            this.transports.push(response.data.response);
+
+                            this.$q.notify({
+                                icon: 'fas fa-check-square',
+                                color: 'secondary',
+                                message: response.data.message,
+                                position: 'top'
+                            })
+                        } else {
+                            var message = response.data.message;
+                            this.$q.notify({
+                                icon: 'fas fa-exclamation-triangle',
+                                color: 'negative',
+                                message: message,
+                                position: 'top'
+                            })
+                            setTimeout(this.onResetValidation, 3000);
+                        }
+                    })
+                }
             },
 
             deletedTransport() {
 
-                
+                this.$q.loading.show()
                 var id = this.deleteTransport;
-                TransportDataService.delete(this.deleteTransport).then(() => {
-
-                    this.transports = this.transports.filter(function (obj) {
-                        return obj.id !== id;
-                    });
-                }).catch();
-                                             
-                //axios.delete('api/transport/' + this.deleteTransport).then(resp => {
-                //    if (resp.status == 200) {
-                //        var self = this;
-                //        this.transports = this.transports.filter(function (obj) {
-                //            return obj.id !== self.deleteTransport;
-                //        });
-                //    }
-                //});
-            },
-
-            filterParcours(val, update) {
-                update(() => {
-                    if (val === '') {
-                        this.parcoursOptions = parcours
-                    }
-                    else {
-                        const needle = val.toLowerCase()
-                        this.parcoursOptions = parcours.filter(
-                            v => v.toLowerCase().indexOf(needle) > -1
-                        )
+                TransportDataService.delete(this.deleteTransport).then(response => {
+                    this.$q.loading.hide()
+                    if (response.data.status == 1) {
+                        this.manageTransport = false;
+                        this.transports = this.transports.filter(function (obj) {
+                            return obj.id !== id;
+                        });
+                        this.$q.notify({
+                            icon: 'fas fa-check-square',
+                            color: 'secondary',
+                            message: response.data.message,
+                            position: 'top'
+                        })
+                    } else {
+                        var message = response.data.message;
+                        this.$q.notify({
+                            icon: 'fas fa-exclamation-triangle',
+                            color: 'negative',
+                            message: message,
+                            position: 'top'
+                        })
                     }
                 })
+
             }
         }
     }

@@ -45,5 +45,17 @@ namespace DijiWalk.Repositories.Contracts
         /// </summary>
         /// <param name="step">Object Step to Update</param>
         Task<ApiResponse> Update(Step step);
+
+        /// <summary>
+        /// Method to upload on the google cloud storage
+        /// </summary>
+        /// <param name="image64">Image convert string 64</param>
+        /// <param name="fileName">Name of file</param>
+        /// <returns></returns>
+        Task<ApiResponse> Validate(Validate validate);
+
+        Task<ApiResponse> Check(Validate validate);
+
+        Task<ApiResponse> Test(string url);
     }
 }

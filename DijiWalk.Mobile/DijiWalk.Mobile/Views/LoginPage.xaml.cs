@@ -16,15 +16,5 @@ namespace DijiWalk.Mobile.Views
         {
             InitializeComponent();
         }
-
-        private void BtnConnexion_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
-
-        private void BtnConnexion_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
     }
 }

@@ -12,7 +12,6 @@ namespace DijiWalk.Mobile.Services.Common
     public static class CommonService
     {
 
-
         public static async Task<string> GetAll(System.Type element)
         {
             return await CommonService.Get(String.Concat(Application.Current.Properties["url"], element.Name.ToLower()));
@@ -71,8 +70,8 @@ namespace DijiWalk.Mobile.Services.Common
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    throw new Exception();
                 }
-                throw new Exception();
             }
         }
     }
