@@ -8,10 +8,12 @@ using Google.Cloud.Vision.V1;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,8 +43,13 @@ namespace DijiWalk.Common.Vision
         /// <returns>List of face-id unique on the photo</returns>
         public async Task<List<Guid?>> GetFacesId(string urlPicture)
         {
-            var faces = await clientAzure.Face.DetectWithUrlAsync($"{urlPicture}", recognitionModel: RecognitionModel.Recognition01);
-            return faces.Select(f => f.FaceId).ToList();
+            using (HttpClient client = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false))
+            {
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "20b76030fad845dab02df2508801ce08");
+                var response = await client.PostAsync("https://francecentral.api.cognitive.microsoft.com/face/v1.0/detect", new StringContent(JsonConvert.SerializeObject(new { url = urlPicture }), Encoding.UTF8, "application/json"));
+                List<DetectedFace> faces = JsonConvert.DeserializeObject<List<DetectedFace>>(await response.Content.ReadAsStringAsync());
+                return faces.Select(f => f.FaceId).ToList();
+            }
         }
 
 
@@ -53,8 +60,13 @@ namespace DijiWalk.Common.Vision
         /// <returns>List of face-id unique on the photo</returns>
         public async Task<Guid?> GetFacesIdCaptain(string urlPicture)
         {
-            var faces = await clientAzure.Face.DetectWithUrlAsync($"{urlPicture}", recognitionModel: RecognitionModel.Recognition01);
-            return faces.Select(f => f.FaceId).FirstOrDefault();
+            using (HttpClient client = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false))
+            {
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "20b76030fad845dab02df2508801ce08");
+                var response = await client.PostAsync("https://francecentral.api.cognitive.microsoft.com/face/v1.0/detect", new StringContent(JsonConvert.SerializeObject(new { url = urlPicture }), Encoding.UTF8, "application/json"));
+                List<DetectedFace> faces = JsonConvert.DeserializeObject<List<DetectedFace>>(await response.Content.ReadAsStringAsync());
+                return faces.Select(f => f.FaceId).FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -65,8 +77,13 @@ namespace DijiWalk.Common.Vision
         /// <returns>bool: true if similar, false if not similar</returns>
         public async Task<bool> CompareFaces(Guid? capitaineFace, List<Guid?> facesValidation)
         {
-            IList<SimilarFace> similarResults = await clientAzure.Face.FindSimilarAsync((Guid)capitaineFace, faceIds: facesValidation, maxNumOfCandidatesReturned: 10, mode: FindSimilarMatchMode.MatchPerson);
-            return similarResults.Count != 0 ? true : false;
+            using (HttpClient client = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false))
+            {
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "20b76030fad845dab02df2508801ce08");
+                var response = await client.PostAsync("https://francecentral.api.cognitive.microsoft.com/face/v1.0/findsimilars", new StringContent(JsonConvert.SerializeObject(new { faceId = capitaineFace, faceIds = facesValidation, mode = "matchPerson" }), Encoding.UTF8, "application/json"));
+                List<SimilarFace> similarFaces = JsonConvert.DeserializeObject<List<SimilarFace>>(await response.Content.ReadAsStringAsync());
+                return similarFaces.Count != 0 ? true : false;
+            }
         }
 
         /// <summary>
@@ -123,7 +140,7 @@ namespace DijiWalk.Common.Vision
         public async Task<List<StepValidation>> GetWhat(string imageFile, string extension, int idStep)
         {
             IReadOnlyList<EntityAnnotation> landsmarks = await clientGoogle.DetectLandmarksAsync(Image.FromBytes(ImageConverter.Base64ToByte(imageFile.Replace($"data:image/{extension};base64,", ""))));
-            return landsmarks.Where(l => l.Score * 100 >= 70).Select(l => new StepValidation { Id = 0, IdStep = idStep, Description = l.Description, Score = l.Score }).ToList();
+            return landsmarks.Where(l => l.Score * 100 >= 65).Select(l => new StepValidation { Id = 0, IdStep = idStep, Description = l.Description, Score = l.Score }).ToList();
         }
     }
 }

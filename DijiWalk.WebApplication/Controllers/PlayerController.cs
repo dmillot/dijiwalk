@@ -18,7 +18,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Player
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class PlayerController : Controller
     {
         /// <summary>

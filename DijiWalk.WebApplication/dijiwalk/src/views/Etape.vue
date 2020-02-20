@@ -244,7 +244,7 @@
                 center: null,
                 centerManage: null,
                 markerStep: { position: { lat: 0, lng: 0 } },
-                markerManageStep: { position: { lat: 0, lng:0 }}
+                markerManageStep: { position: { lat: 0, lng: 0 } }
             }
         },
         created() {
@@ -263,11 +263,15 @@
                 this.addMarker(step);
             },
             initMapManage(step) {
-                this.centerManage = { lat: step.lat, lng: step.lng };
-                this.addMarkerManage(step);
+                if (step != null) {
+                    this.centerManage = { lat: step.lat, lng: step.lng };
+                    this.addMarkerManage(step);
+                } else {
+                    this.centerManage = { lat: 47.31667, lng: 5.01667 };
+                }
             },
             addMarker(step) {
-                this.markerStep = { position: { lat: step.lat, lng: step.lng } };    
+                this.markerStep = { position: { lat: step.lat, lng: step.lng } };
             },
             addMarkerManage(step) {
                 this.markerManageStep = { position: { lat: step.lat, lng: step.lng } };
@@ -279,7 +283,7 @@
             changePosition(mouseArgs) {
                 this.latitudeStep = mouseArgs.latLng.lat()
                 this.longitudeStep = mouseArgs.latLng.lng()
-                this.markerManageStep.position = {lat: this.latitudeStep , lng: this.longitudeStep}
+                this.markerManageStep.position = { lat: this.latitudeStep, lng: this.longitudeStep }
             },
             takePicture() {
                 if (this.pictureStep != null) {
@@ -343,6 +347,7 @@
                 this.isEditing = false;
                 this.isAdding = true;
                 this.resetInput();
+                this.initMapManage(null);
                 this.manageStep = true;
             },
 

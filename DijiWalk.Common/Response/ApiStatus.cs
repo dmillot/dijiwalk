@@ -40,6 +40,14 @@ namespace DijiWalk.Common.Response
         /// </summary>
         CantAdd = 8,
         /// <summary>
+        /// Validation automatique refusée
+        /// </summary>
+        NotValidate = 9,
+        /// <summary>
+        /// Validation manuelle refusée
+        /// </summary>
+        NotManualValidate = 10,
+        /// <summary>
         /// Erreur inconnu (pas encore)
         /// </summary>
         UnknownError = 99

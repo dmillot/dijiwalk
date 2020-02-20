@@ -9,6 +9,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.ViewModels
@@ -70,6 +71,7 @@ namespace DijiWalk.Mobile.ViewModels
                     var navigationParams = new NavigationParameters();
                     navigationParams.Add("player", user);
                     IsLoading = false;
+                    App.User = new ViewPlayer { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Login = user.Login, Picture = user.Picture, TeamPlayers = user.TeamPlayers.Select(tp => new ViewTeamPlayer { IdPlayer = tp.IdPlayer, IdTeam = tp.IdTeam}).ToList() };
                     await this.NavigationService.NavigateAsync(nameof(MainPage), navigationParams);
                 }
             }

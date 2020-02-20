@@ -26,7 +26,10 @@
             <StackLayout  Spacing="20" Margin="10,0,10,50">
 
                 <Button x:Name="BtnTakePhoto" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="PRENDRE UNE PHOTO" FontSize="20" TextColor="{StaticResource LightColor}"
-                    BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Clicked="TakePhoto_Clicked" />
+                    BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Clicked="TakePhoto_Clicked" IsVisible="{Binding NotLoading}"/>
+                
+                <Button x:Name="BtnCheckPhoto" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="VERIFIER RÉPONSE" FontSize="20" TextColor="{StaticResource LightColor}"
+                    BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" IsVisible="{Binding InLoading}" Command="{Binding CheckCommand}"/>
 
 
                 <Button x:Name="BtnValider" Grid.RowSpan="1" Grid.ColumnSpan="1" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="VALIDER" FontSize="20" TextColor="{StaticResource LightColor}"

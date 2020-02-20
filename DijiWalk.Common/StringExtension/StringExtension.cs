@@ -20,8 +20,8 @@ namespace DijiWalk.Common.StringExtension
 
             var withoutWhiteSpace = Regex.Replace(text, @"\s+", "");
             var withoutGuillementSpace = Regex.Replace(withoutWhiteSpace, "\"", "");
-            var withoutComaSpace = Regex.Replace(withoutWhiteSpace, ",", "");
-            var normalizedString = withoutGuillementSpace.Normalize(NormalizationForm.FormD);
+            var withoutComaSpace = Regex.Replace(withoutGuillementSpace, ",", "");
+            var normalizedString = withoutComaSpace.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
 
             foreach (var c in normalizedString)

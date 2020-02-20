@@ -52,6 +52,10 @@ namespace DijiWalk.Repositories.Contracts
         /// <param name="image64">Image convert string 64</param>
         /// <param name="fileName">Name of file</param>
         /// <returns></returns>
-        Task<bool> Validate(Validate validate);
+        Task<ApiResponse> Validate(Validate validate);
+
+        Task<ApiResponse> Check(Validate validate);
+
+        Task<ApiResponse> Test(string url);
     }
 }

@@ -40,5 +40,38 @@ namespace DijiWalk.Common.Response
                 return "Suppression effectuée avec succés !";
             }
         }
+
+        /// <summary>
+        /// Action delete avec le message de validation de suppression
+        /// </summary>
+        public static string Validate
+        {
+            get
+            {
+                return "Votre image est validée !";
+            }
+        }
+
+        /// <summary>
+        /// Action delete avec le message de validation de suppression
+        /// </summary>
+        public static string WaitingValidation
+        {
+            get
+            {
+                return "Votre image est en attente de la validation de l'organisateur !";
+            }
+        }
+
+        /// <summary>
+        /// Action delete avec le message de validation de suppression
+        /// </summary>
+        public static string NotValidation
+        {
+            get
+            {
+                return "Votre image n'a pas été validée par l'organisateur !";
+            }
+        }
     }
 }

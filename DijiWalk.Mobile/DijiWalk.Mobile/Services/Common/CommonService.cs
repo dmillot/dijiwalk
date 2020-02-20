@@ -70,8 +70,8 @@ namespace DijiWalk.Mobile.Services.Common
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    throw new Exception();
                 }
-                throw new Exception();
             }
         }
     }

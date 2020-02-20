@@ -1,4 +1,5 @@
-﻿using DijiWalk.Entities;
+﻿using DijiWalk.Common.Response;
+using DijiWalk.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,12 @@ namespace DijiWalk.Mobile.Services.Interfaces
         /// </summary>
         /// <param name="validate">object validate</param>
         /// <returns></returns>
-        Task<bool> ValidationImage(Validate validate);
+        Task<ApiResponse> ValidationImage(Validate validate);
+
+        /// <summary>
+        /// Method to check if organisateur answer
+        /// </summary>
+        /// <param name="validate">Validate</param>
+        Task<ApiResponse> CheckValidation(Validate validate);
     }
 }

@@ -9,6 +9,7 @@ namespace DijiWalk.WebApplication.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DijiWalk.Common.Contracts;
     using DijiWalk.Common.Response;
     using DijiWalk.Entities;
     using DijiWalk.Repositories.Contracts;
@@ -27,13 +28,16 @@ namespace DijiWalk.WebApplication.Controllers
         /// </summary>
         private readonly IStepRepository _repository;
 
+        private readonly IVision _vision;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StepController" /> class.
         /// </summary>
         /// <param name="repository">the repository that will interact with the data</param>
-        public StepController(IStepRepository repository)
+        public StepController(IStepRepository repository, IVision vision)
         {
             this._repository = repository;
+            _vision = vision;
         }
 
         /// <summary>
@@ -168,5 +172,39 @@ namespace DijiWalk.WebApplication.Controllers
                 return this.Ok(TranslateError.Convert(e));
             }
         }
+
+        [HttpPost("check")]
+        public async Task<IActionResult> Check([FromBody] Validate validate)
+        {
+            try
+            {
+                return this.Ok(await this._repository.Check(validate));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+        [HttpGet, Route("test")]
+        public async Task<IActionResult> test()
+        {
+            try
+            {
+
+                return this.Ok(await this._repository.Test("https://00e9e64bacf823a5e9fa6c8c8892d4084caa844c0aac596752-apidata.googleusercontent.com/download/storage/v1/b/dijiwalk-test/o/MicrosoftTeams-image.png?qk=AD5uMEu6C7GAVBlOKnJNU6K9RXnO2G8PR3ImoTnf0NMLjtMuIIraanKKz63_vzyr0AB9mb8YRoPt193f2IyggFlrViVAJpupVYirHSbDwBO9nRFGRR0VfBes8uDv1RlKu8d4ZKylFlhuBNwXYOLfYJzZvUCaPqegK3p0o0pM-dBa2tAWcaCzjSX21fJPZr1BDByaJDeJUX7pirTQExsYRmUzTAwU3QrXvLXfyb71Pz7iK1WJ1JKNMPUzIUnL2gYqi1TbbZIbTHMSJg_SZGQdBvcn2SOwYwhksOZ5rko_zzKsT2RGiNPxxZ1tlWqqHqtvbzxiIFstRe6uycoVm3gxuBi3t7AeEDtjyhTofmzGc1AiDUCMCbLC4XQM_3wdYV4IOB8iMJXII8D1HKZrSHvGDNlrYYgq4FX6ezqrE-FSDHII-fWy6EJKZ-ILipXd2jAH1144EDg5UTdCvVlL-WBe6-u0C4FwYffb9o5cbiFZxmVVue6tG-4w-aVnqOFB0m169mtbd3foXfXxP55U6r7kBBI3t0Qnt6hdSWguYpwLIy7jCVUL05-4cayIErL39o-1oeL-fVp9z2fCKWn1E0fYpgK4oR3gEofpXJQrF76khFJpsqBgC7yCdeOZuvinTLUO5pf-hEcUUl4_x1L5in4MyWuabNlVLTkvlu-gXrgJrd9F7yYJbR-zQiRyZsPIeZUrjHwI7nP9cO41syEmY7drTCd9QwREStyi-zete2lC-JDVaeLL8M7SD2gbLQ_MWsPMkOm1lbcF-WekWf8zc1i7K6uKxrs05tXTcYwWg3mUDQbYu6JXFNnAsNA"));
+            }
+            catch (Exception e)
+            {
+                return this.Ok(TranslateError.Convert(e));
+            }
+        }
+
+
+
     }
+
+
+
+
 }
