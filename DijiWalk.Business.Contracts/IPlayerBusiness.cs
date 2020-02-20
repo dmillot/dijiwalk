@@ -27,7 +27,7 @@ namespace DijiWalk.Business.Contracts
         /// </summary>
         /// <param name="player">Id of the player</param>
         /// <returns>Actual game</returns>
-        Task<Game> GetActualGame(int idPlayer);
+        Task<List<Game>> GetMobileInfo(int idPlayer);
 
         /// <summary>
         /// Method to get all previous games of a player.

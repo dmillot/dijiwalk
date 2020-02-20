@@ -33,6 +33,16 @@ namespace DijiWalk.Mobile.ViewModels
         private readonly GameService _gameService;
         private readonly AuthentificationService _authentificationService;
 
+        private bool _isLoading = false;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                SetProperty(ref _isLoading, value);
+            }
+        }
+
         #endregion
 
         public LoginPageViewModel(GameService gameService, AuthentificationService authentificationService, INavigationService navigationService)
@@ -51,6 +61,7 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         public async void GoToMain(object parameters)
         {
+            IsLoading = true;
             if (Login.Validate())
             {
                 var user = (Player)await _authentificationService.Authentificate(new Player { Login = Login.Pseudo.Value, Password = Login.Password.Value });
@@ -58,6 +69,7 @@ namespace DijiWalk.Mobile.ViewModels
                 {
                     var navigationParams = new NavigationParameters();
                     navigationParams.Add("player", user);
+                    IsLoading = false;
                     await this.NavigationService.NavigateAsync(nameof(MainPage), navigationParams);
                 }
             }

@@ -13,17 +13,25 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DijiWalk.Mobile.ViewModels
 {
     public class MainPageViewModel : BindableBase, INavigationAware
     {
-        //ChangeColor = new Dictionary<string, string>() { { "fill=\"\"", GetRGBFill(Color.Blue) } }; EXEMPLE REPLACESTRINGMAP SVG
 
         #region Properties
         public INavigationService NavigationService { get; private set; }
         private ViewPlayer _user;
+        private List<Game> _allInfo;
         private readonly PlayerService _playerService;
+
+        private List<Game> AllInfo
+        {
+            get { return _allInfo; }
+            set { _allInfo = value; }
+        }
+
         public ViewPlayer User 
         { 
             get { return _user; } 
@@ -32,9 +40,8 @@ namespace DijiWalk.Mobile.ViewModels
                 SetProperty(ref _user, value);
             } 
         }
-        public DelegateCommand<object> NavigateToGamePage { get; set; }
+
         public DelegateCommand<object> NavigateToActualGamePage { get; set; }
-        public DelegateCommand<object> NavigateToClassementPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
 
         private bool _isInGame;
@@ -67,54 +74,19 @@ namespace DijiWalk.Mobile.ViewModels
             }
         }
 
-        private ObservableCollection<Game> _anciensJeux;
-
-        public ObservableCollection<Game> AnciensJeux
-        {
-            get { return _anciensJeux; }
-            set 
-            {
-                SetProperty(ref _anciensJeux, value);
-            }
-        }
         #endregion
 
         public MainPageViewModel(PlayerService playerService, INavigationService navigationService)
         {
             NavigationService = navigationService;
             _playerService = playerService;
-
-            AnciensJeux = new ObservableCollection<Game>
-            {
-                new Game {Id = 1, CreationDate = DateTime.Now.Date},
-                new Game {Id = 2, CreationDate = DateTime.Now.Date},
-                new Game {Id = 3, CreationDate = DateTime.Now.Date},
-                new Game {Id = 4, CreationDate = DateTime.Now.Date},
-                new Game {Id = 5, CreationDate = DateTime.Now.Date},
-                new Game {Id = 6, CreationDate = DateTime.Now.Date},
-                new Game {Id = 7, CreationDate = DateTime.Now.Date},
-                new Game {Id = 8, CreationDate = DateTime.Now.Date},
-                new Game {Id = 9, CreationDate = DateTime.Now.Date},
-                new Game {Id = 10, CreationDate = DateTime.Now.Date},
-            };
-
-            this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
             this.NavigateToActualGamePage = new DelegateCommand<object>(GoToActualGame);
-            this.NavigateToClassementPage = new DelegateCommand<object>(GoToClassement);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
         }
 
 
 
         #region NavigationFunction
-        /// <summary>
-        /// Fonction appelée quand l'utilisateur veut aller sur la page des classement.
-        /// </summary>
-        /// <param name="parameters">Command parameter</param>
-        void GoToClassement(object parameters)
-        {
-            //this.NavigationService.NavigateAsync(nameof(MainPage), null); TO DO //////////////////////////////////////////////////////////
-        }
 
         /// <summary>
         /// Fonction appelée quand l'utilisateur veut aller sur la page du jeu actuel.
@@ -124,19 +96,16 @@ namespace DijiWalk.Mobile.ViewModels
         {
             if (this.IsInGame == true)
             {
-                this.NavigationService.NavigateAsync(nameof(GamePage), null);
+                var navigationParams = new NavigationParameters
+                {
+                    { "user", User },
+                    { "allInfo", AllInfo.FirstOrDefault() }
+                };
+                this.NavigationService.NavigateAsync(nameof(GamePage), navigationParams);
             }
         }
 
 
-        /// <summary>
-        /// Fonction appelée quand l'utilisateur veut aller sur la page d'un jeu (pas forcément actuel).
-        /// </summary>
-        /// <param name="parameters">Id du jeu</param>
-        void GoToGame(object parameters)
-        {
-            this.NavigationService.NavigateAsync(nameof(GamePage), null);
-        }
 
         /// <summary>
         /// Fonction appelée quand l'utilisateur veut se déconnecter.
@@ -144,6 +113,8 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToLogin(object parameters)
         {
+            AllInfo = new List<Game>();
+            App.User = null;
             this.NavigationService.NavigateAsync(nameof(LoginPage), null);
         }
         #endregion
@@ -173,12 +144,10 @@ namespace DijiWalk.Mobile.ViewModels
             }
 
             this.User = App.User;
-
-            var games = await _playerService.GetPreviousGames(this.User.Id);
-            PreviousGames = new ObservableCollection<Game>(games);
-
-            var actualGame = await _playerService.GetActualGame(App.User.Id);
-            if (actualGame == null)
+            AllInfo = await _playerService.GetMobileInfo(this.User.Id);
+            PreviousGames = new ObservableCollection<Game>(AllInfo.Where(g => AllInfo.IndexOf(g) != 0));
+            var actualGame = AllInfo.Where(g => DateTime.Now >= g.CreationDate && g.FinalTime == null).ToList();
+            if (actualGame == null && !actualGame.Any())
                 IsInGame = false;
             else
             {

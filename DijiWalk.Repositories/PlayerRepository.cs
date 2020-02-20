@@ -143,9 +143,9 @@ namespace DijiWalk.Repositories
         }
 
 
-        public async Task<Game> GetActualGame(int idPlayer)
+        public async Task<List<Game>> GetMobileInfo(int idPlayer)
         {
-            return await _playerBusiness.GetActualGame(idPlayer);
+            return await _playerBusiness.GetMobileInfo(idPlayer);
         }
 
         public async Task<IEnumerable<Game>> GetPreviousGames(int idPlayer)

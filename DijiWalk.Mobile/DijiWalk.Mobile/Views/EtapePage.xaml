@@ -20,58 +20,15 @@
             </Grid.ColumnDefinitions>
 
             <StackLayout Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,30,0,0">
-                <StackLayout Margin="0,50" HorizontalOptions="Center">
-                    <Label TextColor="White" FontSize="35"  Text="{Binding ActualStep.Name}">
-                        <Label.Effects>
-                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                <effects:ShadowEffect.Color>
-                                    <OnPlatform x:TypeArguments="Color">
-                                        <On Platform="iOS" Value="Black" />
-                                        <On Platform="Android" Value="Black" />
-                                    </OnPlatform>
-                                </effects:ShadowEffect.Color>
-                            </effects:ShadowEffect>
-                        </Label.Effects>
-                    </Label>
-                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.CreationDate}">
-                        <Label.Effects>
-                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                <effects:ShadowEffect.Color>
-                                    <OnPlatform x:TypeArguments="Color">
-                                        <On Platform="iOS" Value="Black" />
-                                        <On Platform="Android" Value="Black" />
-                                    </OnPlatform>
-                                </effects:ShadowEffect.Color>
-                            </effects:ShadowEffect>
-                        </Label.Effects>
-                    </Label>
+                <StackLayout Margin="20,50" HorizontalOptions="Center">
+                    <Label TextColor="White" FontSize="35"  Text="{Binding ActualStep.Name}"/>
+                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.CreationDate}"/>
+
                 </StackLayout>
 
                 <StackLayout Margin="0,0,0,50" HorizontalOptions="Center">
-                    <Label TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" Text="Enigme : ">
-                        <Label.Effects>
-                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                <effects:ShadowEffect.Color>
-                                    <OnPlatform x:TypeArguments="Color">
-                                        <On Platform="iOS" Value="Black" />
-                                        <On Platform="Android" Value="Black" />
-                                    </OnPlatform>
-                                </effects:ShadowEffect.Color>
-                            </effects:ShadowEffect>
-                        </Label.Effects>
-                    </Label>
-                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.Description}">
-                        <Label.Effects>
-                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                <effects:ShadowEffect.Color>
-                                    <OnPlatform x:TypeArguments="Color">
-                                        <On Platform="iOS" Value="Black" />
-                                        <On Platform="Android" Value="Black" />
-                                    </OnPlatform>
-                                </effects:ShadowEffect.Color>
-                            </effects:ShadowEffect>
-                        </Label.Effects>
-                    </Label>
+                    <Label TextColor="White" FontSize="Large" HorizontalTextAlignment="Center" Text="Enigme : " Margin="20,0,20,0"/>
+                    <Label TextColor="White" HorizontalTextAlignment="Center" Text="{Binding ActualStep.Description}" Margin="20,0,20,0"/>
                 </StackLayout>
             
                 <StackLayout  Spacing="20" Margin="10,0,10,50">
@@ -79,44 +36,20 @@
                     <Button x:Name="BtnValidation" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="30" CornerRadius="3" Text="VALIDER" FontSize="20" TextColor="{StaticResource LightColor}"
                         BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Command="{Binding NavigateToValidationPage}"/>
 
-                    <Button x:Name="BtnQuizz" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="QUIZZ" FontSize="20" TextColor="{StaticResource LightColor}"
+                    <Button x:Name="BtnQuizz" IsEnabled="{Binding Path=ActualStep.Validation}" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="QUIZZ" FontSize="20" TextColor="{StaticResource LightColor}"
                         BackgroundColor="{StaticResource SecondaryColor}"  FontAttributes="Bold" Command="{Binding NavigateToQuizzPage}"/>
 
-                    <Button x:Name="BtnChat" VerticalOptions="Fill" HorizontalOptions="Fill" Padding="10" CornerRadius="3" Text="CHAT" FontSize="20" TextColor="{StaticResource LightColor}"
-                        BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold" Command="{Binding NavigateToChatPage}" />
-                
                 </StackLayout>
             
                 <StackLayout HorizontalOptions="CenterAndExpand">
-                    <Label TextColor="White" HorizontalTextAlignment="Center"  FontSize="Large"  Text="Indice: ">
-                        <Label.Effects>
-                            <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                <effects:ShadowEffect.Color>
-                                    <OnPlatform x:TypeArguments="Color">
-                                        <On Platform="iOS" Value="Black" />
-                                        <On Platform="Android" Value="Black" />
-                                    </OnPlatform>
-                                </effects:ShadowEffect.Color>
-                            </effects:ShadowEffect>
-                        </Label.Effects>
-                    </Label>
+                    <Label TextColor="White" HorizontalTextAlignment="Center"  FontSize="Large"  Text="Indice: "/>
+
                     <ListView ItemsSource="{Binding ActualStep.Clues}" RowHeight="150">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
                                     <Frame VerticalOptions="Start" HorizontalOptions="Center">
-                                        <Label TextColor="White" Text="{Binding Clue.Description}">
-                                            <Label.Effects>
-                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                    <effects:ShadowEffect.Color>
-                                                        <OnPlatform x:TypeArguments="Color">
-                                                            <On Platform="iOS" Value="Black" />
-                                                            <On Platform="Android" Value="Black" />
-                                                        </OnPlatform>
-                                                    </effects:ShadowEffect.Color>
-                                                </effects:ShadowEffect>
-                                            </Label.Effects>
-                                        </Label>
+                                        <Label TextColor="White" Text="{Binding Clue.Description}"/>
                                     </Frame>
                                 </ViewCell>
                             </DataTemplate>

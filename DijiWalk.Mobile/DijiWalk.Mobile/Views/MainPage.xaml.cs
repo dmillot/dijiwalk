@@ -12,15 +12,6 @@ namespace DijiWalk.Mobile.Views
             InitializeComponent();
         }
 
-        private void BtnActualGame_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
-
-        private void BtnActualGame_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
 
         private void BtnClose_Pressed(object sender, EventArgs e)
         {
@@ -34,16 +25,5 @@ namespace DijiWalk.Mobile.Views
             (sender as ImageButton).Margin = new Thickness(0);
         }
 
-        private void BtnClassement_TouchedUp(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, false); //Animation UP 
-        }
-
-        private void BtnClassement_TouchedDown(object sender, EventArgs e)
-        {
-            ButtonAnimation.TouchedBtn(sender, true); //Animation Down 
-        }
-
-       
     }
 }

@@ -43,46 +43,72 @@ namespace DijiWalk.Business
         /// </summary>
         /// <param name="player">Id of the player</param>
         /// <returns>Actual game</returns>
-        public async Task<Game> GetActualGame(int idPlayer)
+        public async Task<List<Game>> GetMobileInfo(int idPlayer)
         {
-            var actualGame = await (from game in _context.Games
-                        join play in _context.Plays
-                         on game.Id equals play.IdGame
-                        join teamplayer in _context.Teamplayers
-                         on play.IdTeam equals teamplayer.IdTeam
-                        join player in _context.Players
-                         on teamplayer.IdPlayer equals player.Id
-                        where DateTime.Now >= game.CreationDate && play.EndDate == null && player.Id == idPlayer
-                        select game)
-                        .Include(tr => tr.TeamRoutes).ThenInclude(rs => rs.RouteStep).ThenInclude(s => s.Step)
-                        .Include(p => p.Plays).ThenInclude(t => t.Team)
-                        .FirstOrDefaultAsync();
-
-            actualGame.TeamRoutes = actualGame.TeamRoutes.Select(t => {
+            var games = new List<Game>();
+            var idTeams = await _context.Teamplayers.Where(tp => tp.IdPlayer == idPlayer).Select(tp => tp.IdTeam).ToListAsync();
+            var idGames = await _context.Plays.Where(p => idTeams.Contains(p.IdTeam)).Select(g => g.IdGame).ToListAsync();
+            var currentGame = await _context.Games.Where(g => idGames.Contains(g.Id) && DateTime.Now >= g.CreationDate && g.FinalTime == null)
+                .Include(tr => tr.TeamRoutes).ThenInclude(rs => rs.RouteStep)
+                .Include(p => p.Plays).ThenInclude(t => t.Team)
+                .Include(r => r.Route).ThenInclude(rs => rs.RouteSteps).ThenInclude(s => s.Step)
+                .FirstOrDefaultAsync();
+            var idCurrentGame = currentGame.Id;
+            currentGame.TeamRoutes = currentGame.TeamRoutes.Where(tr => idTeams.Contains(tr.IdTeam)).OrderBy(x => x.StepOrder).Select(t => {
                 t.Game = null;
                 t.Team = null;
-                t.RouteStep.Step.Clues = new HashSet<Clue>();
-                t.RouteStep.Step.StepTags = new HashSet<StepTag>();
-                t.RouteStep.Step.RouteSteps = new HashSet<RouteStep>();
-                t.RouteStep.Step.StepValidations = new HashSet<StepValidation>();
-                t.RouteStep.Step.Missions = new HashSet<Mission>();
-                t.RouteStep.TeamRoutes = new HashSet<TeamRoute>();
-                t.RouteStep.Route = null;
+                t.RouteStep = null;
                 return t;
             }).ToList();
 
-            actualGame.Plays = actualGame.Plays.Select(p => {
+            currentGame.Plays = currentGame.Plays.Select(p => {
                 p.Game = null;
-                p.Team.TeamAnswers = new HashSet<TeamAnswer>();
-                p.Team.TeamPlayers = new HashSet<TeamPlayer>();
-                p.Team.TeamRoutes = new HashSet<TeamRoute>();
-                p.Team.Organizer = null;
-                p.Team.Plays = new HashSet<Play>();
-                p.Team.Captain = null;
+                if (idTeams.Contains(p.IdTeam))
+                {
+
+                    p.Team.TeamAnswers = new HashSet<TeamAnswer>();
+                    p.Team.TeamPlayers = new HashSet<TeamPlayer>();
+                    p.Team.TeamRoutes = new HashSet<TeamRoute>();
+                    p.Team.Organizer = null;
+                    p.Team.Plays = new HashSet<Play>();
+                    p.Team.Captain = null;
+                } else
+                {
+                    p.Team = null;
+                }
                 return p;
             }).ToList();
 
-            return actualGame;
+            currentGame.Plays = currentGame.Plays.Where(p => p.Team != null).ToList();
+
+            currentGame.Route.Organizer = null;
+            currentGame.Route.RouteTags = new HashSet<RouteTag>();
+            currentGame.Route.Games = new HashSet<Game>();
+            currentGame.Route.RouteSteps = currentGame.Route.RouteSteps.Select(rs =>
+            {
+                rs.Route = null;
+                rs.TeamRoutes = null;
+                rs.Step.StepTags = new HashSet<StepTag>();
+                rs.Step.RouteSteps = new HashSet<RouteStep>();
+                rs.Step.StepValidations = new HashSet<StepValidation>();
+                rs.Step.Missions = new HashSet<Mission>();
+                rs.TeamRoutes = new HashSet<TeamRoute>();
+                rs.Route = null;
+                return rs;
+            }).ToList();
+            games.Add(currentGame);
+            var gamesPrevious = await _context.Games.Where(g => idGames.Contains(g.Id) && idCurrentGame != g.Id).ToListAsync();
+            
+            games.AddRange(gamesPrevious.Select(gp => {
+                gp.Organizer = null;
+                gp.Route = null;
+                gp.TeamAnswers = new HashSet<TeamAnswer>();
+                gp.TeamRoutes = new HashSet<TeamRoute>();
+                gp.Transport = null;
+                gp.Plays = new HashSet<Play>();
+                return gp;
+            }).ToList());
+            return games;
         }
 
         /// <summary>
@@ -113,29 +139,29 @@ namespace DijiWalk.Business
         /// <returns>Current step</returns>
         public async Task<Step> GetCurrentStep(int idPlayer)
         {
-            Step currentStep = new Step();
-            var actualGame = await this.GetActualGame(idPlayer);
-            if (actualGame != null)
-            {
-                var currentTeam = await _context.Teamplayers.Where(t => t.IdPlayer == idPlayer).Select(x => x.IdTeam).FirstOrDefaultAsync();
+            //Step currentStep = new Step();
+            //var actualGame = await this.GetActualGame(idPlayer);
+            //if (actualGame != null)
+            //{
+            //    var currentTeam = await _context.Teamplayers.Where(t => t.IdPlayer == idPlayer).Select(x => x.IdTeam).FirstOrDefaultAsync();
 
-                var allSteps = await _context.Teamroutes
-                    .Where(t => t.IdGame == actualGame.Id && t.IdTeam == currentTeam)
-                    .Include(rt => rt.RouteStep).ThenInclude(s => s.Step)
-                    .OrderBy(x => x.StepOrder)
-                    .ToListAsync();
+            //    var allSteps = await _context.Teamroutes
+            //        .Where(t => t.IdGame == actualGame.Id && t.IdTeam == currentTeam)
+            //        .Include(rt => rt.RouteStep).ThenInclude(s => s.Step)
+            //        .OrderBy(x => x.StepOrder)
+            //        .ToListAsync();
 
-                foreach (var item in allSteps)
-                {
-                    if (item.ValidationDate == null)
-                    {
-                        currentStep = item.RouteStep.Step;
-                        break;
-                    }
-                }
-            }
+            //    foreach (var item in allSteps)
+            //    {
+            //        if (item.ValidationDate == null)
+            //        {
+            //            currentStep = item.RouteStep.Step;
+            //            break;
+            //        }
+            //    }
+            //}
 
-            return currentStep;
+            return new Step();
         }
     }
 }

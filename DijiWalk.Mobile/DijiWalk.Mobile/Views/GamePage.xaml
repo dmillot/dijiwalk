@@ -13,6 +13,9 @@
              x:Class="DijiWalk.Mobile.Views.GamePage"
              Title="Jeu"
              BackgroundColor="#D18D28">
+    <ContentPage.Resources>
+        <converters:IntToStringConverter x:Key="IntToString"/>
+    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -25,162 +28,32 @@
         </Grid.ColumnDefinitions>
 
         <StackLayout Spacing="15" Grid.RowSpan="2" Grid.ColumnSpan="3" Margin="0,30,0,0">
-            <Label Text="{Binding ActualGame.Id, StringFormat='Jeu n°{0}'}" HorizontalOptions="CenterAndExpand" FontSize="35" TextColor="{StaticResource WhiteColor}">
-                <Label.Effects>
-                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                        <effects:ShadowEffect.Color>
-                            <OnPlatform x:TypeArguments="Color">
-                                <On Platform="iOS" Value="Black" />
-                                <On Platform="Android" Value="Black" />
-                            </OnPlatform>
-                        </effects:ShadowEffect.Color>
-                    </effects:ShadowEffect>
-                </Label.Effects>
-            </Label>
-            <Label Text="{Binding ActualGame.CreationDate, StringFormat='{0:MMMM dd, yyyy}'}" HorizontalOptions="CenterAndExpand" FontSize="Subtitle" TextColor="{StaticResource WhiteColor}">
-                <Label.Effects>
-                    <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                        <effects:ShadowEffect.Color>
-                            <OnPlatform x:TypeArguments="Color">
-                                <On Platform="iOS" Value="Black" />
-                                <On Platform="Android" Value="Black" />
-                            </OnPlatform>
-                        </effects:ShadowEffect.Color>
-                    </effects:ShadowEffect>
-                </Label.Effects>
-            </Label>
-            <Grid HeightRequest="170" Margin="25,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="1"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="1"/>
-                </Grid.RowDefinitions>
-                <BoxView Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ShadowBtnActualStep" Color="{StaticResource SecondaryDarkColor}"  CornerRadius="3" Margin="3,3,0,0"/>
-                <flex:FlexButton x:Name="BtnActualStep" Padding="10" IconPadding="0,0,15,0" CornerRadius="3" IconTintEnabled="True" Icon="step.png" IconOrientation="Left" Text="ÉTAPE ACTUELLE" ForegroundColor="{StaticResource LightColor}"
-                BackgroundColor="{StaticResource SecondaryColor}" HighlightBackgroundColor="{StaticResource SecondaryDarkColor}" HighlightForegroundColor="{StaticResource LightDarkColor}" FontAttributes="Bold" TouchedDown="BtnActualStep_TouchedDown" TouchedUp="BtnActualStep_TouchedUp" ClickedCommand="{Binding NavigateToStepPage}"/>
-            </Grid>
-            <renderedViews:HorizontalListView ColumnCount="4" ItemHeight="95" ItemWidth="95" ItemsSource="{Binding Steps}" Margin="25,15"
-                ListLayout="Linear" SnapStyle="None"  IsEnabled="true"  TapCommand="{Binding PopUpStep}">
-                <renderedViews:HorizontalListView.ItemTemplate>
+            <Label Text="{Binding ActualGame.Id, StringFormat='Jeu n°{0}'}" HorizontalOptions="CenterAndExpand" FontSize="35" TextColor="{StaticResource WhiteColor}"/>
+            <Label Text="{Binding ActualGame.CreationDate, StringFormat='{0:MMMM dd, yyyy}'}" HorizontalOptions="CenterAndExpand" FontSize="Subtitle" TextColor="{StaticResource WhiteColor}"/>
+            <Button x:Name="BtnActualStep" Padding="10" CornerRadius="3" FontSize="30" Margin="20,0,20,0" Text="ÉTAPE ACTUELLE" TextColor="{StaticResource LightColor}"
+                BackgroundColor="{StaticResource SecondaryColor}" FontAttributes="Bold"  Command="{Binding NavigateToStepPage}"/>
+            <CollectionView  ItemsSource="{Binding Steps}" Margin="0,15" HeightRequest="95" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="CenterAndExpand" IsEnabled="true" >
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="25"/>
-                                </Grid.RowDefinitions>
-                                <svg:SvgCachedImage Grid.ColumnSpan="3" Grid.RowSpan="1" WidthRequest="50" HeightRequest="50" Source="marker.svg" ReplaceStringMap="{Binding ColorValidation}"/>
-                                <Label Text="{Binding Step.Id}" Grid.Column="1" Grid.Row="1" FontSize="15" TextColor="{StaticResource LightColor}" HorizontalTextAlignment="Center" FontAttributes="Bold" VerticalTextAlignment="End" Margin="0,0,0,10">
-                                    <Label.Effects>
-                                        <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                            <effects:ShadowEffect.Color>
-                                                <OnPlatform x:TypeArguments="Color">
-                                                    <On Platform="iOS" Value="Black" />
-                                                    <On Platform="Android" Value="Black" />
-                                                </OnPlatform>
-                                            </effects:ShadowEffect.Color>
-                                        </effects:ShadowEffect>
-                                    </Label.Effects>
-                                </Label>
-                                <svg:SvgCachedImage Grid.Row="1" WidthRequest="30" HeightRequest="30" Source="path.svg" ReplaceStringMap="{Binding ColorValidation}" TranslationY="-5" IsVisible="{Binding NotFirst}"/>
-                                <svg:SvgCachedImage Grid.Column="2" Grid.Row="1" WidthRequest="30" HeightRequest="30" Source="path.svg" ReplaceStringMap="{Binding ColorValidation}" TranslationY="-5" IsVisible="{Binding NotLast}"/>
-                            </Grid>
-                        </ViewCell>
+                        <Grid Padding="0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <svg:SvgCachedImage Grid.ColumnSpan="3" Grid.RowSpan="1" WidthRequest="50" HeightRequest="50" Source="marker.svg" ReplaceStringMap="{Binding ColorValidation}"/>
+                            <Label Text="{Binding Id}" Grid.Column="1" Grid.Row="1" FontSize="15" TextColor="{StaticResource LightColor}" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                            <svg:SvgCachedImage Grid.Row="1" WidthRequest="30" HeightRequest="30" Source="path.svg" ReplaceStringMap="{Binding ColorValidation}" TranslationY="-5" IsVisible="{Binding NotFirst}"/>
+                            <svg:SvgCachedImage Grid.Column="2" Grid.Row="1" WidthRequest="30" HeightRequest="30" Source="path.svg" ReplaceStringMap="{Binding ColorValidation}" TranslationY="-5" IsVisible="{Binding NotLast}"/>
+                        </Grid>
                     </DataTemplate>
-                </renderedViews:HorizontalListView.ItemTemplate>
-            </renderedViews:HorizontalListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-
-            <!--<ListView x:Name="ListViewGroupes" ItemsSource="{Binding Groupes}" SeparatorVisibility="Default" SeparatorColor="{StaticResource SecondaryDarkColor}" HasUnevenRows="True" CachingStrategy="RecycleElement,RecycleElementAndDataTemplate" ItemTapped="ListViewGroupes_ItemTapped">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <StackLayout>
-                                    <Grid HeightRequest="50">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Text="{Binding Name}" FontSize="Title" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" FontAttributes="Bold">
-                                            <Label.Effects>
-                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                    <effects:ShadowEffect.Color>
-                                                        <OnPlatform x:TypeArguments="Color">
-                                                            <On Platform="iOS" Value="Black" />
-                                                            <On Platform="Android" Value="Black" />
-                                                        </OnPlatform>
-                                                    </effects:ShadowEffect.Color>
-                                                </effects:ShadowEffect>
-                                            </Label.Effects>
-                                        </Label>
-                                        <Label Grid.Column="1" Text="{x:Static fontawesome:FontAwesomeIcons.ChevronDown}" FontFamily="{StaticResource FontAwesomeSolid}" VerticalTextAlignment="Center" TextColor="{StaticResource LightColor}" FontSize="30" Margin="0,0,5,0"/>
-                                    </Grid>
-                                    <ListView ItemsSource="{Binding TeamPlayers}" SeparatorVisibility="Default" SeparatorColor="{StaticResource SecondaryDarkColor}" IsEnabled="False" IsVisible="{Binding IsSelected}"  CachingStrategy="RecycleElement,RecycleElementAndDataTemplate" RowHeight="50">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <ViewCell>
-                                                    <StackLayout Orientation="Horizontal" Margin="5,0,0,0" Padding="5">
-                                                        <ffimageloading:CachedImage  DownsampleToViewSize="true" Source="{Binding Player.Picture}">
-                                                            <ffimageloading:CachedImage.Transformations>
-                                                                <fftransformations:CircleTransformation />
-                                                            </ffimageloading:CachedImage.Transformations>
-                                                        </ffimageloading:CachedImage>
-                                                        <Label Text="{x:Static fontawesome:FontAwesomeIcons.Star}" FontFamily="{StaticResource FontAwesomeSolid}" VerticalTextAlignment="Center" TextColor="{StaticResource LightColor}" IsVisible="{Binding IsCapitaine}" FontSize="30">
-                                                            <Label.Effects>
-                                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                                    <effects:ShadowEffect.Color>
-                                                                        <OnPlatform x:TypeArguments="Color">
-                                                                            <On Platform="iOS" Value="Black" />
-                                                                            <On Platform="Android" Value="Black" />
-                                                                        </OnPlatform>
-                                                                    </effects:ShadowEffect.Color>
-                                                                </effects:ShadowEffect>
-                                                            </Label.Effects>
-                                                        </Label>
-                                                        <Label Text="{Binding Player.FirstName}" FontSize="Subtitle" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" FontAttributes="Bold">
-                                                            <Label.Effects>
-                                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                                    <effects:ShadowEffect.Color>
-                                                                        <OnPlatform x:TypeArguments="Color">
-                                                                            <On Platform="iOS" Value="Black" />
-                                                                            <On Platform="Android" Value="Black" />
-                                                                        </OnPlatform>
-                                                                    </effects:ShadowEffect.Color>
-                                                                </effects:ShadowEffect>
-                                                            </Label.Effects>
-                                                        </Label>
-                                                        <Label Text="{Binding Player.LastName}" FontSize="Subtitle" TextColor="{StaticResource LightColor}" VerticalTextAlignment="Center" FontAttributes="Bold">
-                                                            <Label.Effects>
-                                                                <effects:ShadowEffect Radius="5" DistanceX="5" DistanceY="5">
-                                                                    <effects:ShadowEffect.Color>
-                                                                        <OnPlatform x:TypeArguments="Color">
-                                                                            <On Platform="iOS" Value="Black" />
-                                                                            <On Platform="Android" Value="Black" />
-                                                                        </OnPlatform>
-                                                                    </effects:ShadowEffect.Color>
-                                                                </effects:ShadowEffect>
-                                                            </Label.Effects>
-                                                        </Label>
-                                                    </StackLayout>
-                                                </ViewCell>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </StackLayout>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>-->
         </StackLayout>
         <AbsoluteLayout HorizontalOptions="CenterAndExpand" Margin="0,10,0,0" TranslationX="10">
             <BoxView x:Name="ShadowBtnBack" Color="{StaticResource SecondaryDarkColor}" HeightRequest="50" WidthRequest="50" CornerRadius="100" Margin="3,3,0,0"/>

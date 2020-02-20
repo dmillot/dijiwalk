@@ -74,12 +74,12 @@ namespace DijiWalk.WebApplication.Controllers
         /// Method to get actual game of a player
         /// </summary>
         /// <returns></returns>
-        [HttpGet("actual/{id}")]
-        public async Task<IActionResult> GetActualGame(int id)
+        [HttpGet("mobile/{id}")]
+        public async Task<IActionResult> GetMobileInfo(int id)
         {
             try
             {
-                return this.Ok(await this._repository.GetActualGame(id));
+                return this.Ok(await this._repository.GetMobileInfo(id));
             }
             catch (Exception e)
             {

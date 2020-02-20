@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace DijiWalk.Mobile.Services
 {
@@ -19,7 +20,7 @@ namespace DijiWalk.Mobile.Services
         /// <returns></returns>
         public async Task<bool> ValidationImage(Validate validate)
         {
-            return JsonConvert.DeserializeObject<bool>(await CommonService.Post("step/validate", validate));
+            return JsonConvert.DeserializeObject<bool>(await CommonService.Post(String.Concat(Application.Current.Properties["url"], "step/validate"), validate));
         }
     }
 }

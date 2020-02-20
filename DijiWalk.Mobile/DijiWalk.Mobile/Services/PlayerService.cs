@@ -34,7 +34,7 @@ namespace DijiWalk.Mobile.Services
             return JsonConvert.DeserializeObject<Player>(await CommonService.GetId(id, typeof(Player)));
         }
 
-        public async Task<Game> GetActualGame(int playerId)
+        public async Task<List<Game>> GetMobileInfo(int playerId)
         {
             var json = "";
 
@@ -42,7 +42,7 @@ namespace DijiWalk.Mobile.Services
             {
                 try
                 {
-                    var response = await client.GetAsync(String.Concat(Application.Current.Properties["url"], typeof(Player).Name.ToLower(), "/actual/", playerId));
+                    var response = await client.GetAsync(String.Concat(Application.Current.Properties["url"], typeof(Player).Name.ToLower(), "/mobile/", playerId));
                     if (!response.IsSuccessStatusCode)
                         throw new ApiException(JsonConvert.DeserializeObject<ApiException>(await response.Content.ReadAsStringAsync()), response.StatusCode);
                     else
@@ -58,7 +58,7 @@ namespace DijiWalk.Mobile.Services
                 }
             }
 
-            return JsonConvert.DeserializeObject<Game>(json);
+            return JsonConvert.DeserializeObject<List<Game>>(json);
         }
 
         public async Task<List<Game>> GetPreviousGames(int playerId)

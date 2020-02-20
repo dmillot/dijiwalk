@@ -19,7 +19,6 @@ namespace DijiWalk.Mobile.ViewModels
         #region Properties
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToStepPage { get; set; }
-        public DelegateCommand<object> NavigateToChatPage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
         public DelegateCommand<object> ValidatePhoto { get; set; }
 
@@ -37,6 +36,27 @@ namespace DijiWalk.Mobile.ViewModels
                 SetProperty(ref _actualStep, value);
             }
         }
+
+        private ViewPlayer _user;
+        private Game _actualGame;
+        public Game ActualGame
+        {
+            get { return _actualGame; }
+            set
+            {
+                SetProperty(ref _actualGame, value);
+            }
+        }
+
+        public ViewPlayer User
+        {
+            get { return _user; }
+            set
+            {
+                SetProperty(ref _user, value);
+            }
+        }
+
         #endregion
 
         public ValidationPageViewModel(INavigationService navigationService, IValidationService validationService, IPlayerService playerService, IStringExtension stringExtension)
@@ -46,7 +66,6 @@ namespace DijiWalk.Mobile.ViewModels
             this._playerService = playerService;
             this._stringExtension = stringExtension;
             this.NavigateToStepPage = new DelegateCommand<object>(GoToStep);
-            this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
             this.ValidatePhoto = new DelegateCommand<object>(Validate);
         }
@@ -58,17 +77,15 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToStep(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(EtapePage), null);
+            var navigationParams = new NavigationParameters
+            {
+                { "user", User },
+                { "allInfo", ActualGame },
+                { "step", ActualStep }
+            };
+            this.NavigationService.NavigateAsync(nameof(EtapePage), navigationParams);
         }
 
-        /// <summary>
-        /// Fonction appelée quand l'utilisateur veut aller sur la page de chat.
-        /// </summary>
-        /// <param name="parameters">Command parameter</param>
-        void GoToChat(object parameters)
-        {
-            
-        }
 
         /// <summary>
         /// Fonction appelée quand l'utilisateur veut se déconnecter.
@@ -76,6 +93,7 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToLogin(object parameters)
         {
+            App.User = null;
             this.NavigationService.NavigateAsync(nameof(LoginPage), null);
         }
         #endregion
@@ -87,30 +105,23 @@ namespace DijiWalk.Mobile.ViewModels
 
         public async void Validate(object parameters)
         {
+            var filename = $"{ActualStep.Name}-jeu{ActualGame.Id}-team{ActualGame.Plays.FirstOrDefault().Team.Name}-{DateTime.Now.Day}-{DateTime.Now.Month}-{DateTime.Now.Year}";
 
-            //var test = 1;
+            byte[] imageArray = System.IO.File.ReadAllBytes(Photo.Path);
+            string base64ImageRepresentation = Convert.ToBase64String(imageArray);
 
-            //var idTeamsOfPlayer = Player.TeamPlayers.Select(t => t.IdTeam).ToList();
+            Validate validate = new Validate
+            {
+                IdGame = ActualGame.Id,
+                IdPlayer = User.Id,
+                Filename = filename,
+                Picture = String.Concat("data:image/jpg;base64,",base64ImageRepresentation),
+                IdStep = ActualStep.Id,
+                IdTeam = ActualGame.Plays.FirstOrDefault().IdTeam
+            };
 
-            //var test1 = Step.Name;
-            //var test2 = Game.Id;
+            var uploadedImage = await _validationService.ValidationImage(validate);
 
-            //var filename = _stringExtension.RemoveDiacriticsAndWhiteSpace(Step.Name + "-jeu" + Game.Id + DateTime.Now);
-
-            //byte[] imageArray = System.IO.File.ReadAllBytes(Photo.Path);
-            //string base64ImageRepresentation = Convert.ToBase64String(imageArray);
-
-            //Validate validate = new Validate
-            //{
-            //    IdGame = Game.Id,
-            //    IdPlayer = App.User.Id,
-            //    Filename = filename,
-            //    Picture = base64ImageRepresentation,
-            //    IdStep = Step.Id,
-            //    IdTeam = Game.Plays.Where(g => idTeamsOfPlayer.Contains(g.IdTeam)).FirstOrDefault().IdTeam
-            //};
-
-            //var uploadedImage = await _validationService.ValidationImage(validate);
         }
 
         #region OnNavigatedFunction
@@ -121,6 +132,9 @@ namespace DijiWalk.Mobile.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
+            ActualGame = parameters.GetValue<Game>("allInfo");
+            User = parameters.GetValue<ViewPlayer>("user");
+            ActualStep = parameters.GetValue<ViewStep>("step");
         }
         #endregion
     }

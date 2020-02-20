@@ -26,7 +26,7 @@ namespace DijiWalk.Mobile.Services.Interfaces
         /// <returns>La liste des anciennes games</returns>
         Task<List<Game>> GetPreviousGames(int id);
 
-        Task<Game> GetActualGame(int playerId);
+        Task<List<Game>> GetMobileInfo(int playerId);
 
         Task<Step> GetCurrentStep(int playerId);
     }

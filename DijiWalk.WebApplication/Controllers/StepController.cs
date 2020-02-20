@@ -19,7 +19,7 @@ namespace DijiWalk.WebApplication.Controllers
     /// <summary>
     /// Controller for the Step
     /// </summary>
-    [Route("api/[controller]"), ApiController, Authorize]
+    [Route("api/[controller]"), ApiController]
     public class StepController : Controller
     {
         /// <summary>

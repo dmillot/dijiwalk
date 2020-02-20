@@ -9,6 +9,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace DijiWalk.Mobile.ViewModels
 {
@@ -20,7 +21,6 @@ namespace DijiWalk.Mobile.ViewModels
         public INavigationService NavigationService { get; private set; }
         public DelegateCommand<object> NavigateToQuizzPage { get; set; }
         public DelegateCommand<object> NavigateToValidationPage { get; set; }
-        public DelegateCommand<object> NavigateToChatPage { get; set; }
         public DelegateCommand<object> NavigateToGamePage { get; set; }
         public DelegateCommand<object> NavigateToLoginPage { get; set; }
         public Step Step { get; set; }
@@ -34,6 +34,27 @@ namespace DijiWalk.Mobile.ViewModels
                 SetProperty(ref _actualStep, value);
             }
         }
+
+        private ViewPlayer _user;
+        private Game _actualGame;
+        public Game ActualGame
+        {
+            get { return _actualGame; }
+            set
+            {
+                SetProperty(ref _actualGame, value);
+            }
+        }
+
+        public ViewPlayer User
+        {
+            get { return _user; }
+            set
+            {
+                SetProperty(ref _user, value);
+            }
+        }
+
         #endregion
         public EtapePageViewModel(INavigationService navigationService, IStepService stepService, IPlayerService playerService)
         {
@@ -44,7 +65,6 @@ namespace DijiWalk.Mobile.ViewModels
 
             this.NavigateToQuizzPage = new DelegateCommand<object>(GoToQuizz);
             this.NavigateToValidationPage = new DelegateCommand<object>(GoToValidation);
-            this.NavigateToChatPage = new DelegateCommand<object>(GoToChat);
             this.NavigateToGamePage = new DelegateCommand<object>(GoToGame);
             this.NavigateToLoginPage = new DelegateCommand<object>(GoToLogin);
         }
@@ -57,7 +77,13 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Id quizz</param>
         void GoToQuizz(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(QuizzPage), null);
+            var navigationParams = new NavigationParameters
+            {
+                { "user", User },
+                { "allInfo", ActualGame },
+                { "step", ActualStep }
+            };
+            this.NavigationService.NavigateAsync(nameof(QuizzPage), navigationParams);
         }
 
         /// <summary>
@@ -68,19 +94,11 @@ namespace DijiWalk.Mobile.ViewModels
         {
             var navigationParams = new NavigationParameters
             {
+                { "user", User },
+                { "allInfo", ActualGame },
                 { "step", ActualStep }
             };
-
             this.NavigationService.NavigateAsync(nameof(ValidationPage), navigationParams);
-        }
-
-        /// <summary>
-        /// Fonction appelée quand l'utilisateur veut aller sur la page de chat.
-        /// </summary>
-        /// <param name="parameters">Command parameter</param>
-        void GoToChat(object parameters)
-        {
-            //this.NavigationService.NavigateAsync(nameof(ChatPage), null); TO DO /////////////////////////////////////////////////////////////
         }
 
         /// <summary>
@@ -89,6 +107,7 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToLogin(object parameters)
         {
+            App.User = null;
             this.NavigationService.NavigateAsync(nameof(LoginPage), null);
         }
 
@@ -98,7 +117,12 @@ namespace DijiWalk.Mobile.ViewModels
         /// <param name="parameters">Command parameter</param>
         void GoToGame(object parameters)
         {
-            this.NavigationService.NavigateAsync(nameof(GamePage), null);
+            var navigationParams = new NavigationParameters
+            {
+                { "user", User },
+                { "allInfo", ActualGame }
+            };
+            this.NavigationService.NavigateAsync(nameof(GamePage), navigationParams);
         }
         #endregion
 
@@ -109,17 +133,11 @@ namespace DijiWalk.Mobile.ViewModels
 
         }
 
-        public async void OnNavigatedTo(INavigationParameters parameters)
+        public void OnNavigatedTo(INavigationParameters parameters)
         {
-            var response = await _playerService.GetCurrentStep(App.User.Id);
-            this.ActualStep = new ViewStep
-            {
-                Id = response.Id,
-                Name = response.Name,
-                Description = response.Description,
-                CreationDate = response.CreationDate,
-                Clues = response.Clues
-            };
+            ActualGame = parameters.GetValue<Game>("allInfo");
+            User = parameters.GetValue<ViewPlayer>("user");
+            ActualStep = parameters.GetValue<ViewStep>("step");
         }
 
         #endregion
